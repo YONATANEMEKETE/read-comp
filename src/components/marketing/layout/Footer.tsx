@@ -25,7 +25,7 @@ const Footer = () => {
               A quiet space for thoughtful reading.
             </p>
             <p className="text-[10px] font-bold uppercase tracking-widest text-[#a8a29e]">
-              © 2024 Noted Built for readers who like to think while they read.
+              © 2025 Noted Built for readers who like to think while they read.
             </p>
           </div>
           <div className="flex items-center gap-8 mt-4 md:mt-0">
