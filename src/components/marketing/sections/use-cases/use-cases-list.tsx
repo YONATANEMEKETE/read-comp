@@ -15,6 +15,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const useCases = [
   {
@@ -28,9 +29,7 @@ const useCases = [
       'Chapter-by-chapter summaries',
     ],
     cta: 'Elevate your research',
-    visualIcon: (
-      <BookOpen className="size-24 text-[#e7e5e4] dark:text-[#292524]" />
-    ),
+    image: '/images/use-case-1.png',
     bg: 'bg-[#F5F5F0] dark:bg-[#2A2826]',
     border: 'border-y border-stone-200 dark:border-stone-800',
   },
@@ -45,9 +44,7 @@ const useCases = [
       'Deep-focus reading mode',
     ],
     cta: 'Start your collection',
-    visualIcon: (
-      <Sparkles className="size-24 text-[#e7e5e4] dark:text-[#292524]" />
-    ),
+    image: '/images/use-case-2.png',
     bg: 'bg-[#FDFBF7] dark:bg-[#1C1917]',
     border: '',
   },
@@ -62,9 +59,7 @@ const useCases = [
       'Secure, private knowledge library',
     ],
     cta: 'Optimize your insights',
-    visualIcon: (
-      <Target className="size-24 text-[#e7e5e4] dark:text-[#292524]" />
-    ),
+    image: '/images/use-case-3.png',
     bg: 'bg-[#EFEBE9] dark:bg-[#322F2D]',
     border: 'border-y border-stone-200 dark:border-stone-800',
   },
@@ -73,7 +68,7 @@ const useCases = [
     description:
       'Design syllabi, lecture notes, or articles with precision. Draft insights directly alongside your primary sources, ensuring every reference is accurate and accessible.',
     icon: (
-      <Presentation className="size-8 text-stone-700 dark:text-stone-300" />
+      <Presentation className="size-8 text-orange-700 dark:text-orange-400" />
     ),
     benefits: [
       'Structured lecture preparation',
@@ -81,9 +76,7 @@ const useCases = [
       'Organized reference database',
     ],
     cta: 'Prepare with precision',
-    visualIcon: (
-      <Users className="size-24 text-[#e7e5e4] dark:text-[#292524]" />
-    ),
+    image: '/images/use-case-4.png',
     bg: 'bg-[#FDFBF7] dark:bg-[#1C1917]',
     border: '',
   },
@@ -143,18 +136,26 @@ const UseCasesList = () => {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
                 transition={transition}
-                className={`flex-1 ${isEven ? 'md:order-2' : 'md:order-1'} w-full`}
+                className={`flex-1 ${isEven ? 'md:order-2' : 'md:order-1'} w-full group`}
               >
                 <div className="relative aspect-4/3 bg-stone-200 dark:bg-stone-800/50 rounded-3xl overflow-hidden flex items-center justify-center border border-stone-300/50 dark:border-stone-700/50 shadow-2xl">
                   {/* Background Pattern */}
                   <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#44403c_1px,transparent_1px)] bg-[size:24px_24px] opacity-30" />
 
-                  <div className="relative z-10 transition-transform duration-700 group-hover:scale-110">
-                    {useCase.visualIcon}
+                  <div className="relative w-full h-full p-6 md:p-10 transition-transform duration-700 group-hover:scale-105">
+                    <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl">
+                      <Image
+                        src={useCase.image}
+                        alt={useCase.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                      />
+                    </div>
                   </div>
 
                   {/* Glassmorphic card overlay for premium feel */}
-                  <div className="absolute bottom-6 right-6 p-4 bg-white/40 dark:bg-black/40 backdrop-blur-md rounded-xl border border-white/20 dark:border-white/10 hidden md:block">
+                  <div className="absolute bottom-6 right-6 p-4 bg-white/40 dark:bg-black/40 backdrop-blur-md rounded-xl border border-white/20 dark:border-white/10 hidden md:block z-10">
                     <div className="h-2 w-32 bg-white/60 dark:bg-white/20 rounded-full mb-2" />
                     <div className="h-2 w-24 bg-white/40 dark:bg-white/10 rounded-full" />
                   </div>
