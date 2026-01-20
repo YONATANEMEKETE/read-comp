@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter, EB_Garamond } from 'next/font/google';
+import { Inter, Noto_Serif } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/marketing/layout/Navbar';
 
@@ -10,9 +10,9 @@ const inter = Inter({
   display: 'swap',
 });
 
-const ebGaramond = EB_Garamond({
+const notoSerif = Noto_Serif({
   subsets: ['latin'],
-  weight: ['400', '500'],
+  weight: ['300', '400', '500', '600', '700'],
   variable: '--font-serif',
   display: 'swap',
 });
@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${ebGaramond.variable} antialiased font-sans`}
+        className={`${inter.variable} ${notoSerif.variable} antialiased font-sans`}
       >
         {children}
       </body>

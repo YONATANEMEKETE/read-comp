@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html class="" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sign In - Noted</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    primary: "#9a8470",
+                    "warm-bg": "#faf9f6",
+                    "sepia-divider": "#e5ddd3",
+                    "dusty-rose": "#cda2a2",
+                    "sage-green": "#9fb1a2",
+                    "muted-blue": "#a5b2bd",
+                    "background-dark": "#1d1a15",
+                    "sidebar-dark": "#111318"
+                },
+                fontFamily: {
+                    display: ["Noto Serif", "serif"],
+                    sans: ["Inter", "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", "'Segoe UI'", "Roboto", "'Helvetica Neue'", "Arial", "sans-serif"]
+                },
+                borderRadius: {
+                    DEFAULT: "0.5rem",
+                    lg: "0.75rem",
+                    xl: "1rem",
+                    '2xl': '1.5rem',
+                    '3xl': '2rem',
+                    full: "9999px"
+                },
+                boxShadow: {
+                    'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                    'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.03)',
+                    'card': '0 10px 40px -10px rgba(60, 50, 40, 0.08)'
+                }
+            }
+        }
+    };
+</script>
+<style type="text/tailwindcss">
+    body {
+        background-color: theme('colors.warm-bg');
+    }
+    .input-field {
+        @apply w-full px-4 py-3 rounded-xl bg-white dark:bg-stone-800 border border-sepia-divider dark:border-stone-700 text-stone-900 dark:text-stone-200 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300;
+    }
+    .btn-primary {
+        @apply w-full flex items-center justify-center py-3.5 rounded-xl bg-primary text-white font-medium shadow-soft hover:bg-primary/90 active:scale-[0.98] transition-all duration-300;
+    }
+</style>
+</head>
+<body class="bg-warm-bg dark:bg-background-dark font-sans text-stone-800 dark:text-stone-200 h-screen overflow-hidden flex items-center justify-center relative">
+<div class="absolute inset-0 pointer-events-none overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cream-dust.png')] opacity-30"></div>
+<div class="absolute -top-40 -right-40 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-40 -left-40 w-96 h-96 bg-dusty-rose/5 rounded-full blur-3xl"></div>
+</div>
+<div class="relative w-full max-w-md p-6">
+<div class="flex flex-col items-center mb-10">
+<div class="bg-primary/10 dark:bg-primary/20 p-3 rounded-2xl text-primary mb-4 shadow-sm border border-primary/5">
+<span class="material-symbols-outlined text-[32px]">book_2</span>
+</div>
+<h1 class="text-stone-900 dark:text-white text-3xl font-bold tracking-tight font-display">Noted</h1>
+<p class="text-stone-500 text-sm mt-1 font-display italic">Your scholarly companion</p>
+</div>
+<div class="bg-white/80 dark:bg-sidebar-dark/80 backdrop-blur-xl border border-white/50 dark:border-stone-700 shadow-card rounded-3xl p-8 sm:p-10">
+<div class="text-center mb-8">
+<h2 class="text-2xl font-display font-semibold text-stone-900 dark:text-white mb-2">Welcome Back</h2>
+<p class="text-stone-500 text-sm">Please sign in to continue your reading.</p>
+</div>
+<form class="space-y-5" onsubmit="event.preventDefault();">
+<div>
+<label class="block text-xs font-bold uppercase tracking-widest text-stone-500 mb-2 ml-1" for="email">Email Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 text-[20px]">mail</span>
+<input class="input-field pl-11" id="email" placeholder="scholar@example.com" type="email"/>
+</div>
+</div>
+<div>
+<label class="block text-xs font-bold uppercase tracking-widest text-stone-500 mb-2 ml-1" for="password">Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 text-[20px]">lock</span>
+<input class="input-field pl-11" id="password" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<div class="flex items-center justify-between text-sm">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="w-4 h-4 text-primary bg-stone-100 border-stone-300 rounded focus:ring-primary/20 focus:ring-offset-0 cursor-pointer" type="checkbox"/>
+<span class="text-stone-500 group-hover:text-stone-700 transition-colors">Remember me</span>
+</label>
+<a class="text-primary hover:text-primary/80 font-medium transition-colors" href="#">Forgot Password?</a>
+</div>
+<button class="btn-primary mt-2 group">
+<span>Sign In</span>
+<span class="material-symbols-outlined ml-2 text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</form>
+<div class="mt-8 pt-6 border-t border-sepia-divider dark:border-stone-800 text-center">
+<p class="text-stone-500 text-sm">
+                    Don't have an account? 
+                    <a class="text-primary font-semibold hover:text-primary/80 transition-colors ml-1" href="#">Create an account</a>
+</p>
+</div>
+</div>
+<div class="mt-8 text-center">
+<p class="text-stone-400 text-xs font-display italic">“There is no friend as loyal as a book.”</p>
+</div>
+</div>
+
+</body></html>

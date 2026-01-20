@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html class="" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sign Up - Noted</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    primary: "#9a8470",
+                    "warm-bg": "#faf9f6",
+                    "sepia-divider": "#e5ddd3",
+                    "dusty-rose": "#cda2a2",
+                    "sage-green": "#9fb1a2",
+                    "muted-blue": "#a5b2bd",
+                    "background-dark": "#1d1a15",
+                    "sidebar-dark": "#111318"
+                },
+                fontFamily: {
+                    display: ["Noto Serif", "serif"],
+                    sans: ["Inter", "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", "'Segoe UI'", "Roboto", "'Helvetica Neue'", "Arial", "sans-serif"]
+                },
+                borderRadius: {
+                    DEFAULT: "0.5rem",
+                    lg: "0.75rem",
+                    xl: "1rem",
+                    '2xl': '1.5rem',
+                    full: "9999px"
+                },
+                boxShadow: {
+                    'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                    'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.03)'
+                }
+            }
+        }
+    };
+</script>
+<style type="text/tailwindcss">::-webkit-scrollbar {
+    width: 6px
+    }
+::-webkit-scrollbar-track {
+    background: transparent
+    }
+::-webkit-scrollbar-thumb {
+    background-color: #e5ddd3;
+    border-radius: 10px
+    }
+.dark ::-webkit-scrollbar-thumb {
+    background-color: #334155
+    }
+body {
+    background-color: theme("colors.warm-bg")
+    }.bg-grain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0.03;
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuBHvYFSbyMqK-_qkz41dwi8aRUFyy1zef_jYW2rZaqTKSb9qeFK5N4xZl3IXmOl26ahu3tU4zNPirF1LnRbj4bwvhMxyxOQQ5XNc_5QdWkWtp4XH1-RgGKSjjsM6VkwZj8XUi8hF88OJrLil85mnncS9Js5rO4hQuiBstrw1UGymntu4vC2aT8oKlyZu654P6wHNE4z4RA8n2RJoO91w_pKK6CidE2o86PJDEQbhx7bob3rXi3V68ufOeDou03b60CwQ_BwEsTZqhZG)
+    }</style>
+</head>
+<body class="bg-warm-bg dark:bg-background-dark font-sans text-stone-800 dark:text-stone-200 h-screen overflow-hidden flex flex-col items-center justify-center selection:bg-primary/30 selection:text-stone-900 relative">
+<div class="bg-grain"></div>
+<div class="w-full max-w-md p-8 relative z-10">
+<div class="mb-8 text-center">
+<div class="inline-flex items-center justify-center p-3 mb-4 rounded-xl bg-primary/10 dark:bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-[32px]">book_2</span>
+</div>
+<h1 class="text-3xl font-bold tracking-tight font-display text-stone-900 dark:text-white">Noted</h1>
+</div>
+<div class="bg-white dark:bg-sidebar-dark rounded-3xl border border-sepia-divider dark:border-stone-800 shadow-soft p-8 md:p-10 backdrop-blur-sm bg-opacity-80 dark:bg-opacity-80">
+<h2 class="text-2xl font-display font-semibold text-center mb-1 text-stone-900 dark:text-white">Start Your Journey</h2>
+<p class="text-stone-500 dark:text-stone-400 text-center text-sm mb-8 font-display italic">Your personal library awaits.</p>
+<form action="#" class="space-y-5" method="POST">
+<div class="space-y-1.5">
+<label class="block text-xs font-bold uppercase tracking-widest text-stone-500 dark:text-stone-400 ml-1" for="username">Username</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-3 text-stone-400 text-[20px] pointer-events-none transition-colors group-focus-within:text-primary">person</span>
+<input class="block w-full pl-11 pr-4 py-3 bg-warm-bg dark:bg-stone-800/60 border border-sepia-divider/60 dark:border-stone-700 rounded-xl text-sm text-stone-900 dark:text-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all shadow-inner-soft" id="username" name="username" placeholder="Choose a username" required="" type="text"/>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="block text-xs font-bold uppercase tracking-widest text-stone-500 dark:text-stone-400 ml-1" for="email">Email</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-3 text-stone-400 text-[20px] pointer-events-none transition-colors group-focus-within:text-primary">mail</span>
+<input class="block w-full pl-11 pr-4 py-3 bg-warm-bg dark:bg-stone-800/60 border border-sepia-divider/60 dark:border-stone-700 rounded-xl text-sm text-stone-900 dark:text-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all shadow-inner-soft" id="email" name="email" placeholder="your@email.com" required="" type="email"/>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="block text-xs font-bold uppercase tracking-widest text-stone-500 dark:text-stone-400 ml-1" for="password">Password</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-3 text-stone-400 text-[20px] pointer-events-none transition-colors group-focus-within:text-primary">lock</span>
+<input class="block w-full pl-11 pr-4 py-3 bg-warm-bg dark:bg-stone-800/60 border border-sepia-divider/60 dark:border-stone-700 rounded-xl text-sm text-stone-900 dark:text-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all shadow-inner-soft" id="password" name="password" placeholder="Create a password" required="" type="password"/>
+</div>
+</div>
+<div class="pt-4">
+<button class="w-full flex items-center justify-center gap-2 rounded-xl h-12 bg-primary hover:bg-primary/90 text-white text-sm font-medium shadow-soft hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-[0.98]" type="button">
+<span>Join Noted</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</form>
+<div class="mt-8 pt-6 border-t border-dashed border-sepia-divider dark:border-stone-700 text-center">
+<p class="text-sm text-stone-500 dark:text-stone-400">
+                Already a member? 
+                <a class="font-medium text-primary hover:text-stone-800 dark:hover:text-stone-200 transition-colors underline decoration-primary/30 hover:decoration-primary underline-offset-4" href="#">Sign In</a>
+</p>
+</div>
+</div>
+<div class="mt-8 text-center opacity-60 hover:opacity-100 transition-opacity">
+<p class="text-[11px] uppercase tracking-widest text-stone-400 font-bold">© 2024 Noted Library</p>
+</div>
+</div>
+
+</body></html>
