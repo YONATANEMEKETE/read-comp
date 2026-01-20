@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Who Noted Is For - Use Cases</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#D97706",
+              "background-light": "#FDFBF7",
+              "background-dark": "#1C1917",
+              "surface-light": "#FFFFFF",
+              "surface-dark": "#292524",
+              stone: {
+                  50: '#fafaf9',
+                  100: '#f5f5f4',
+                  200: '#e7e5e4',
+                  300: '#d6d3d1',
+                  400: '#a8a29e',
+                  500: '#78716c',
+                  600: '#57534e',
+                  700: '#44403c',
+                  800: '#292524',
+                  900: '#1c1917',
+              },
+              earth: {
+                100: '#EFEBE9',200: '#D7CCC8',300: '#F5F5F4',400: '#E6E0D8',500: '#DBCFB8',}
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+<style type="text/tailwindcss">
+        :root {
+            --primary: #D97706;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            letter-spacing: -0.02em;
+        }
+        .hero-title {
+            line-height: 0.95;
+        }
+        .abstract-icon {
+            background: linear-gradient(135deg, var(--primary) 0%, #B45309 100%);
+            clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
+        }
+        #mobile-menu {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        #mobile-menu.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-10px);
+        }
+        #mobile-menu:not(.hidden) {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-stone-900 dark:text-stone-100 transition-colors duration-300 selection:bg-primary selection:text-white">
+<nav class="fixed top-0 w-full z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-stone-200/60 dark:border-stone-800/60">
+<div class="max-w-screen-2xl mx-auto px-6 lg:px-12">
+<div class="flex justify-between items-center h-16">
+<div class="flex items-center space-x-12">
+<span class="text-xl font-black tracking-tighter uppercase">Noted.</span>
+<div class="hidden md:flex items-center space-x-8 text-[11px] font-bold uppercase tracking-widest text-stone-500 dark:text-stone-400">
+<a class="hover:text-primary transition-colors" href="#">Home</a>
+<a class="hover:text-primary transition-colors" href="#">How It Works</a>
+<a class="hover:text-primary transition-colors" href="#">Features</a>
+<a class="hover:text-primary text-primary transition-colors" href="#">Use Cases</a>
+<a class="hover:text-primary transition-colors" href="#">FAQ</a>
+</div>
+</div>
+<div class="hidden md:flex items-center space-x-6">
+<button class="text-xs font-bold uppercase tracking-wider hover:text-primary transition-colors">Log in</button>
+<button class="bg-stone-900 dark:bg-stone-50 text-white dark:text-stone-900 px-5 py-2 text-xs font-black uppercase tracking-widest hover:bg-primary dark:hover:bg-primary dark:hover:text-white transition-all">
+                    Join
+                </button>
+</div>
+<button class="md:hidden text-stone-900 dark:text-stone-100 focus:outline-none" id="mobile-menu-btn">
+<span class="material-symbols-outlined text-3xl">menu</span>
+</button>
+</div>
+</div>
+<div class="hidden absolute top-16 left-0 w-full bg-background-light dark:bg-background-dark border-b border-stone-200 dark:border-stone-800 shadow-xl px-6 py-8 flex flex-col space-y-6 md:hidden h-[calc(100vh-4rem)] overflow-y-auto" id="mobile-menu">
+<div class="flex flex-col space-y-6 text-sm font-bold uppercase tracking-widest text-stone-600 dark:text-stone-300">
+<a class="hover:text-primary transition-colors py-2 border-b border-stone-100 dark:border-stone-800/50" href="#">Home</a>
+<a class="hover:text-primary transition-colors py-2 border-b border-stone-100 dark:border-stone-800/50" href="#">How It Works</a>
+<a class="hover:text-primary transition-colors py-2 border-b border-stone-100 dark:border-stone-800/50" href="#">Features</a>
+<a class="hover:text-primary text-primary transition-colors py-2 border-b border-stone-100 dark:border-stone-800/50" href="#">Use Cases</a>
+<a class="hover:text-primary transition-colors py-2" href="#">FAQ</a>
+</div>
+<div class="pt-6 border-t border-stone-200 dark:border-stone-800 flex flex-col space-y-4">
+<button class="text-sm font-bold uppercase tracking-wider hover:text-primary transition-colors py-2 text-left">Log in</button>
+<button class="w-full bg-stone-900 dark:bg-stone-50 text-white dark:text-stone-900 px-5 py-4 text-sm font-black uppercase tracking-widest hover:bg-primary dark:hover:bg-primary dark:hover:text-white transition-all text-center">
+                Join Noted
+            </button>
+</div>
+</div>
+</nav>
+<script>
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = menuBtn.querySelector('span');
+    menuBtn.addEventListener('click', () => {
+        const isHidden = mobileMenu.classList.contains('hidden');
+        if (isHidden) {
+            mobileMenu.classList.remove('hidden');
+            menuIcon.textContent = 'close';
+        } else {
+            mobileMenu.classList.add('hidden');
+            menuIcon.textContent = 'menu';
+        }
+    });
+</script>
+<main class="pt-24">
+<section class="px-6 lg:px-12 mb-20 md:mb-32">
+<div class="max-w-screen-xl mx-auto text-center">
+<span class="text-primary font-black uppercase tracking-widest text-xs mb-4 block">Who is Noted for?</span>
+<h1 class="hero-title text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter text-stone-900 dark:text-stone-50 mb-8 uppercase px-2">
+                BUILT FOR DEEP<br/>THINKERS.
+            </h1>
+<p class="text-lg md:text-xl font-light text-stone-600 dark:text-stone-400 max-w-2xl mx-auto leading-relaxed px-4">
+                Whether you're studying for a degree or learning for life, Noted adapts to your reading style.
+            </p>
+</div>
+</section>
+<section class="py-20 bg-[#F5F5F0] dark:bg-[#2A2826] border-y border-stone-200 dark:border-stone-800">
+<div class="max-w-screen-xl mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+<div class="order-2 md:order-1">
+<div class="w-16 h-16 bg-orange-100 dark:bg-orange-900/30 rounded-2xl flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-orange-600 dark:text-orange-500 text-3xl">school</span>
+</div>
+<h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-6 text-stone-900 dark:text-stone-100">Students</h2>
+<p class="text-lg md:text-xl text-stone-600 dark:text-stone-400 font-light leading-relaxed mb-8">
+                    Turn assigned reading into retained knowledge. Highlight key concepts, summarize chapters in the margins, and build a searchable database of everything you've learned this semester.
+                </p>
+<ul class="space-y-4 mb-8">
+<li class="flex items-start space-x-3 text-stone-700 dark:text-stone-300 font-medium">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5">check_circle</span>
+<span>Organize notes by course or module</span>
+</li>
+<li class="flex items-start space-x-3 text-stone-700 dark:text-stone-300 font-medium">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5">check_circle</span>
+<span>Export citations instantly</span>
+</li>
+<li class="flex items-start space-x-3 text-stone-700 dark:text-stone-300 font-medium">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5">check_circle</span>
+<span>Search across all your textbooks</span>
+</li>
+</ul>
+<a class="inline-flex items-center text-primary font-black uppercase tracking-widest text-xs hover:text-stone-900 dark:hover:text-stone-100 transition-colors" href="#">
+                    Start your semester right
+                    <span class="material-symbols-outlined text-base ml-2">arrow_forward</span>
+</a>
+</div>
+<div class="order-1 md:order-2 flex justify-center md:justify-end">
+<div class="relative w-full max-w-md aspect-[4/5] bg-stone-200 dark:bg-stone-800 rounded-lg overflow-hidden flex items-center justify-center">
+<span class="material-symbols-outlined text-stone-300 dark:text-stone-700 text-9xl">menu_book</span>
+<div class="absolute inset-0 bg-gradient-to-tr from-orange-50/50 to-transparent dark:from-orange-900/10 pointer-events-none"></div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-20 bg-[#FDFBF7] dark:bg-[#1C1917]">
+<div class="max-w-screen-xl mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+<div class="flex justify-center md:justify-start">
+<div class="relative w-full max-w-md aspect-[4/5] bg-stone-100 dark:bg-stone-800 rounded-lg overflow-hidden flex items-center justify-center border border-stone-200 dark:border-stone-700">
+<span class="material-symbols-outlined text-stone-300 dark:text-stone-600 text-9xl">psychology</span>
+</div>
+</div>
+<div>
+<div class="w-16 h-16 bg-amber-100 dark:bg-amber-900/30 rounded-2xl flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-amber-600 dark:text-amber-500 text-3xl">auto_stories</span>
+</div>
+<h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-6 text-stone-900 dark:text-stone-100">Self-learners</h2>
+<p class="text-lg md:text-xl text-stone-600 dark:text-stone-400 font-light leading-relaxed mb-8">
+                    Read for growth, not just completion. Connect ideas across different books and build your own personal knowledge graph. Noted helps you synthesize wisdom from multiple sources.
+                </p>
+<ul class="space-y-4 mb-8">
+<li class="flex items-start space-x-3 text-stone-700 dark:text-stone-300 font-medium">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5">check_circle</span>
+<span>Create topic-based collections</span>
+</li>
+<li class="flex items-start space-x-3 text-stone-700 dark:text-stone-300 font-medium">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5">check_circle</span>
+<span>Bi-directional linking between notes</span>
+</li>
+<li class="flex items-start space-x-3 text-stone-700 dark:text-stone-300 font-medium">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5">check_circle</span>
+<span>Review highlights with spaced repetition</span>
+</li>
+</ul>
+<a class="inline-flex items-center text-primary font-black uppercase tracking-widest text-xs hover:text-stone-900 dark:hover:text-stone-100 transition-colors" href="#">
+                    Build your library
+                    <span class="material-symbols-outlined text-base ml-2">arrow_forward</span>
+</a>
+</div>
+</div>
+</section>
+<section class="py-20 bg-[#EFEBE9] dark:bg-[#322F2D] border-y border-stone-200 dark:border-stone-800">
+<div class="max-w-screen-xl mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+<div class="order-2 md:order-1">
+<div class="w-16 h-16 bg-stone-200 dark:bg-stone-700 rounded-2xl flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-stone-700 dark:text-stone-300 text-3xl">podium</span>
+</div>
+<h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-6 text-stone-900 dark:text-stone-100">Lecturers</h2>
+<p class="text-lg md:text-xl text-stone-600 dark:text-stone-400 font-light leading-relaxed mb-8">
+                    Prepare your material with precision. Annotate primary texts for your syllabus, draft lecture points directly alongside the source material, and keep your references perfectly organized.
+                </p>
+<ul class="space-y-4 mb-8">
+<li class="flex items-start space-x-3 text-stone-700 dark:text-stone-300 font-medium">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5">check_circle</span>
+<span>Structure reading lists for students</span>
+</li>
+<li class="flex items-start space-x-3 text-stone-700 dark:text-stone-300 font-medium">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5">check_circle</span>
+<span>Annotate PDFs for presentation</span>
+</li>
+<li class="flex items-start space-x-3 text-stone-700 dark:text-stone-300 font-medium">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5">check_circle</span>
+<span>Private research notes</span>
+</li>
+</ul>
+<a class="inline-flex items-center text-primary font-black uppercase tracking-widest text-xs hover:text-stone-900 dark:hover:text-stone-100 transition-colors" href="#">
+                    Plan your next course
+                    <span class="material-symbols-outlined text-base ml-2">arrow_forward</span>
+</a>
+</div>
+<div class="order-1 md:order-2 flex justify-center md:justify-end">
+<div class="relative w-full max-w-md aspect-[4/5] bg-stone-300 dark:bg-stone-800/50 rounded-lg overflow-hidden flex items-center justify-center">
+<span class="material-symbols-outlined text-stone-400 dark:text-stone-600 text-9xl">import_contacts</span>
+</div>
+</div>
+</div>
+</section>
+<section class="py-20 bg-[#FDFBF7] dark:bg-[#1C1917]">
+<div class="max-w-screen-xl mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+<div class="flex justify-center md:justify-start">
+<div class="relative w-full max-w-md aspect-[4/5] bg-stone-100 dark:bg-stone-900 rounded-lg overflow-hidden flex items-center justify-center border border-stone-200 dark:border-stone-800">
+<span class="material-symbols-outlined text-stone-300 dark:text-stone-700 text-9xl">work</span>
+</div>
+</div>
+<div>
+<div class="w-16 h-16 bg-orange-50 dark:bg-orange-900/20 rounded-2xl flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-orange-700 dark:text-orange-400 text-3xl">business_center</span>
+</div>
+<h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-6 text-stone-900 dark:text-stone-100">Professionals</h2>
+<p class="text-lg md:text-xl text-stone-600 dark:text-stone-400 font-light leading-relaxed mb-8">
+                    Stay ahead in your field. Process whitepapers, reports, and industry analysis efficiently. Turn information overload into actionable insights for your next project or meeting.
+                </p>
+<ul class="space-y-4 mb-8">
+<li class="flex items-start space-x-3 text-stone-700 dark:text-stone-300 font-medium">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5">check_circle</span>
+<span>Collaborate on shared documents</span>
+</li>
+<li class="flex items-start space-x-3 text-stone-700 dark:text-stone-300 font-medium">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5">check_circle</span>
+<span>Secure, private cloud storage</span>
+</li>
+<li class="flex items-start space-x-3 text-stone-700 dark:text-stone-300 font-medium">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5">check_circle</span>
+<span>Integration with productivity tools</span>
+</li>
+</ul>
+<a class="inline-flex items-center text-primary font-black uppercase tracking-widest text-xs hover:text-stone-900 dark:hover:text-stone-100 transition-colors" href="#">
+                    Optimize your workflow
+                    <span class="material-symbols-outlined text-base ml-2">arrow_forward</span>
+</a>
+</div>
+</div>
+</section>
+<section class="py-24 md:py-32 bg-stone-900 text-white text-center">
+<div class="max-w-screen-xl mx-auto px-6 lg:px-12">
+<h2 class="text-4xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter mb-8 leading-none">
+                Whatever you read,<br/>make it yours.
+            </h2>
+<p class="text-lg md:text-2xl font-light text-stone-400 mb-12 max-w-2xl mx-auto">
+                Join thousands of thinkers who have changed the way they read.
+            </p>
+<div class="flex flex-col md:flex-row justify-center gap-4">
+<button class="w-full md:w-auto bg-primary text-white text-lg font-black py-5 md:py-6 px-16 uppercase tracking-widest hover:bg-white hover:text-stone-900 transition-all">
+                    Get Started Free
+                </button>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-stone-100 dark:bg-stone-950 py-16 border-t border-stone-200 dark:border-stone-800">
+<div class="max-w-screen-xl mx-auto px-6 lg:px-12">
+<div class="flex flex-col md:flex-row justify-between items-center md:items-center gap-8 text-center md:text-left">
+<div>
+<span class="text-2xl font-black tracking-tighter uppercase mb-4 block">Noted.</span>
+<p class="text-[10px] font-bold uppercase tracking-widest text-stone-500 mb-2">A quiet space for thoughtful reading.</p>
+<p class="text-[10px] font-bold uppercase tracking-widest text-stone-400">© 2024 Noted Built for readers who like to think while they read.</p>
+</div>
+<div class="flex items-center gap-8 mt-4 md:mt-0">
+<a aria-label="LinkedIn" class="text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 transition-colors duration-300" href="#">
+<svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path>
+</svg>
+</a>
+<a aria-label="GitHub" class="text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 transition-colors duration-300" href="#">
+<svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.42-1.305.763-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path>
+</svg>
+</a>
+<a aria-label="Email" class="text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 transition-colors duration-300" href="mailto:hello@noted.com">
+<svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path>
+</svg>
+</a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>
