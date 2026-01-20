@@ -1,10 +1,19 @@
+'use client';
+
 import React from 'react';
 import { Linkedin, Github, Mail } from 'lucide-react';
+import { motion } from 'motion/react';
 
 const Footer = () => {
   return (
     <footer className="bg-[#f5f5f4] dark:bg-[#0c0a09] py-16 border-t border-[#e7e5e4] dark:border-[#292524]">
-      <div className="max-w-screen-xl mx-auto px-6 lg:px-12">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="max-w-screen-xl mx-auto px-6 lg:px-12"
+      >
         <div className="flex flex-col md:flex-row justify-between items-center md:items-center gap-8 text-center md:text-left">
           <div>
             <span className="text-2xl font-black tracking-tighter uppercase mb-4 block text-[#1c1917] dark:text-[#fafaf9]">
@@ -41,7 +50,7 @@ const Footer = () => {
             </a>
           </div>
         </div>
-      </div>
+      </motion.div>
     </footer>
   );
 };
