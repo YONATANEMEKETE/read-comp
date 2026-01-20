@@ -7,6 +7,8 @@ import { ListFilter } from 'lucide-react';
 import { motion } from 'motion/react';
 
 const LandingHero = () => {
+  const transition = { duration: 0.8, ease: [0.16, 1, 0.3, 1] as any };
+
   return (
     <section className="relative min-h-screen flex flex-col justify-center items-center px-6 pt-24 pb-12 bg-[#FDFBF7] dark:bg-[#1C1917] overflow-hidden">
       {/* Ambient Background Elements */}
@@ -32,9 +34,19 @@ const LandingHero = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
-        className="relative z-10 max-w-screen-xl w-full flex flex-col items-center text-center"
+        transition={transition}
+        className="relative z-10 max-w-7xl w-full flex flex-col items-center text-center"
       >
+        {/* Badge System */}
+        <motion.span
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...transition, delay: 0.1 }}
+          className="text-[#D97706] font-black tracking-[0.3em] uppercase text-[10px] mb-6 block"
+        >
+          Product v1.0 — Now Live
+        </motion.span>
+
         {/* Abstract Icon */}
         <motion.div
           initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
@@ -57,7 +69,7 @@ const LandingHero = () => {
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ ...transition, delay: 0.3 }}
           className="text-5xl sm:text-6xl md:text-8xl font-black tracking-tighter text-[#1c1917] dark:text-[#fafaf9] mb-6 md:mb-8 uppercase max-w-5xl px-2 leading-[0.95]"
         >
           READ. THINK. NOTE.
@@ -71,7 +83,7 @@ const LandingHero = () => {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          transition={{ ...transition, delay: 0.4 }}
           className="text-lg md:text-2xl font-light text-[#78716c] dark:text-[#a8a29e] max-w-3xl mb-12 leading-tight px-4 font-serif"
         >
           Read PDFs and write notes without leaving the page. Your thoughts stay
@@ -82,7 +94,7 @@ const LandingHero = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
+          transition={{ ...transition, delay: 0.5 }}
           className="w-full max-w-md px-4"
         >
           <Button

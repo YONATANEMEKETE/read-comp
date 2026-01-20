@@ -15,9 +15,9 @@ import {
 const steps = [
   {
     order: 'Step 01',
-    title: 'Upload your PDF',
+    title: 'Curate your Library',
     description:
-      'Simply drag and drop your reading material. We support PDF and EPUB formats to get you started immediately without formatting headaches.',
+      'Upload your personal collection of textbooks, research papers, or non-fiction PDFs. Organize your reading list in one focused library.',
     icon: <Upload className="size-8 text-[#a8a29e]" />,
     visual: (
       <div className="w-48 h-32 border-2 border-dashed border-[#e7e5e4] dark:border-[#292524] rounded-lg flex flex-col items-center justify-center gap-3 bg-[#FDFBF7]/50 dark:bg-[#1C1917]/50 backdrop-blur-sm z-10 transition-transform group-hover:scale-105 duration-500">
@@ -30,9 +30,9 @@ const steps = [
   },
   {
     order: 'Step 02',
-    title: 'Noted analyzes content',
+    title: 'Immersive Reading',
     description:
-      'Our AI quietly reads alongside you, identifying key themes, characters, and complex arguments without interrupting your flow.',
+      'Open any book in a dedicated, clutter-free reading view. Our smooth PDF engine ensures your focus stays on the text, not the tools.',
     icon: <Sparkles className="size-8 text-[#D97706]" />,
     visual: (
       <div className="w-48 bg-[#FDFBF7] dark:bg-[#1C1917] border border-[#e7e5e4] dark:border-[#292524] rounded shadow-sm p-4 flex flex-col gap-2 z-10 transition-transform group-hover:scale-105 duration-500">
@@ -51,9 +51,9 @@ const steps = [
   },
   {
     order: 'Step 03',
-    title: 'Get notes & questions',
+    title: 'Think beside the Book',
     description:
-      'Receive thoughtful summaries and probing questions that help you engage deeper with the text and uncover new perspectives.',
+      'Capture notes, save meaningful quotes, and create story insights directly beside the page you are reading. Every thought remains linked to its source.',
     icon: <Quote className="size-8 text-[#D97706]" />,
     visual: (
       <div className="w-48 bg-[#FFFDF5] dark:bg-[#292524] border-l-4 border-[#D97706] shadow-md p-4 relative z-10 transition-transform group-hover:scale-105 duration-500">
@@ -71,9 +71,9 @@ const steps = [
   },
   {
     order: 'Step 04',
-    title: 'Save and revisit',
+    title: 'Never lose your context',
     description:
-      'Your insights are stored securely in your personal library. Revisit your notes anytime to refresh your memory or spark new ideas.',
+      'Reading progress, notes, and quotes are saved automatically. Return whenever you want and pick up exactly where you left off, with all your thinking preserved.',
     icon: <Bookmark className="size-8 text-[#a8a29e]" />,
     visual: (
       <div className="grid grid-cols-2 gap-3 w-48 z-10 transition-transform group-hover:scale-105 duration-500">
@@ -95,9 +95,11 @@ const steps = [
 ];
 
 const Steps = () => {
+  const transition = { duration: 0.8, ease: [0.16, 1, 0.3, 1] as any };
+
   return (
     <section className="bg-[#FDFBF7] dark:bg-[#1C1917] py-20 md:py-28">
-      <div className="max-w-4xl mx-auto px-6 relative">
+      <div className="max-w-7xl mx-auto px-6 relative">
         {/* Central Line */}
         <div className="hidden md:block absolute left-1/2 top-10 bottom-10 w-px bg-[#e7e5e4] dark:bg-[#292524] -translate-x-1/2" />
 
@@ -110,14 +112,14 @@ const Steps = () => {
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.8 }}
+                transition={transition}
                 className="relative flex flex-col md:flex-row items-center gap-10 md:gap-20"
               >
                 {/* Text Content */}
                 <div
                   className={`w-full md:w-1/2 flex flex-col ${isEven ? 'md:order-2 md:items-start text-center md:text-left' : 'md:order-1 md:items-end text-center md:text-right'}`}
                 >
-                  <span className="inline-block bg-[#D97706]/10 text-[#D97706] font-bold px-3 py-1 rounded-full text-[10px] tracking-widest uppercase mb-4">
+                  <span className="inline-block bg-[#D97706]/10 text-[#D97706] font-black tracking-[0.3em] uppercase px-3 py-1 rounded-full text-[10px] mb-4">
                     {step.order}
                   </span>
                   <h2 className="text-3xl md:text-4xl font-serif text-[#1c1917] dark:text-[#fafaf9] mb-4">
@@ -135,9 +137,9 @@ const Steps = () => {
                 <div
                   className={`w-full md:w-1/2 flex justify-center ${isEven ? 'md:order-1' : 'md:order-2'}`}
                 >
-                  <div className="group w-full max-w-sm bg-white dark:bg-[#292524] border border-[#e7e5e4] dark:border-[#44403c] rounded-2xl p-8 aspect-[4/3] flex items-center justify-center relative overflow-hidden transition-all hover:bg-[#fafaf9] dark:hover:bg-[#2c2826] hover:shadow-xl hover:shadow-[#000000]/5 cursor-default">
+                  <div className="group w-full max-w-sm bg-white dark:bg-[#292524] border border-[#e7e5e4] dark:border-[#44403c] rounded-2xl p-8 aspect-4/3 flex items-center justify-center relative overflow-hidden transition-all hover:bg-[#fafaf9] dark:hover:bg-[#2c2826] hover:shadow-xl hover:shadow-[#000000]/5 cursor-default">
                     {/* Background Pattern */}
-                    <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#44403c_1px,transparent_1px)] [background-size:16px_16px] opacity-20" />
+                    <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#44403c_1px,transparent_1px)] bg-size-[16px_16px] opacity-20" />
 
                     {/* Floating Decorative Circles */}
                     <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-[#e7e5e4]/20 dark:bg-[#44403c]/20 rounded-full blur-2xl" />
