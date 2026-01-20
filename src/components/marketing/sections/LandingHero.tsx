@@ -37,7 +37,7 @@ const LandingHero = () => {
         </h1>
 
         {/* Hero Description */}
-        <p className="text-lg md:text-2xl font-light text-[#78716c] dark:text-[#a8a29e] max-w-3xl mb-12 leading-tight px-4">
+        <p className="text-lg md:text-2xl font-light text-[#78716c] dark:text-[#a8a29e] max-w-3xl mb-12 leading-tight px-4 font-serif">
           Read PDFs and write notes without leaving the page. Your thoughts stay
           connected to the book.
         </p>
