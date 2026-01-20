@@ -27,7 +27,7 @@ const UseCasesCta = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ ...transition, delay: 0.2 }}
-              className="text-4xl md:text-8xl font-black uppercase tracking-tighter mb-10 leading-[0.9] text-center"
+              className="text-4xl md:text-7xl font-black uppercase tracking-tighter mb-10 leading-[0.9] text-center"
             >
               Whatever you read,
               <br />

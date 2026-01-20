@@ -105,7 +105,7 @@ const UseCasesList = () => {
                 <div className="w-16 h-16 bg-white dark:bg-stone-800 rounded-2xl flex items-center justify-center mb-8 shadow-sm border border-stone-100 dark:border-stone-700">
                   {useCase.icon}
                 </div>
-                <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 text-[#1c1917] dark:text-stone-100">
+                <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-6 text-[#1c1917] dark:text-stone-100">
                   {useCase.title}
                 </h2>
                 <p className="text-xl text-[#78716c] dark:text-[#a8a29e] font-light leading-relaxed mb-8">

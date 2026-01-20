@@ -8,29 +8,29 @@ import Link from 'next/link';
 
 const faqs = [
   {
-    question: 'How does Noted sync with my library?',
+    question: 'What makes Noted different from a standard PDF reader?',
     answer:
-      "Noted connects directly to your local file system or cloud storage providers like Dropbox and Google Drive. Once you import a book (PDF or EPUB), we create a secure local index. Your reading progress and notes are synced across devices whenever you're online, but the files themselves stay where you put them.",
+      'Most readers treat notes as a separate layer or file. Noted bridges the gap by keeping your thinking directly beside the book. By preserving the original context of every insight, we make your knowledge easier to revisit, recall, and synthesize.',
+  },
+  {
+    question: 'How do Story Insights work?',
+    answer:
+      "Our system identifies key narrative threads and complex arguments within your non-fiction books. It automatically generates 'Story Insights'—structured summaries that help you grasp the essential points of a chapter while keeping all your highlights linked to the original text.",
   },
   {
     question: 'Is my reading data private?',
     answer:
-      'Absolutely. We believe your thoughts are your own. Noted uses end-to-end encryption for your notes and highlights. We do not scan your books, sell your reading habits, or use your content to train AI models without your explicit, opt-in permission.',
+      'Absolutely. We believe your thoughts are your own. Noted uses end-to-end encryption for your notes and highlights. We do not scan your private library for advertising, and we never use your notes to train AI models without your explicit, opt-in permission.',
   },
   {
-    question: 'Can I export my notes?',
+    question: 'Can I export my notes for other tools?',
     answer:
-      'Yes. Data portability is a core value of Noted. You can export your highlights and margin notes at any time in multiple formats, including Markdown (for Obsidian/Notion), Plain Text, PDF, and CSV. You are never locked in.',
+      'Yes. Data portability is central to Noted. You can export your highlights, margin notes, and story insights in Markdown (perfect for Obsidian or Notion), Plain Text, or PDF. Your thinking is never locked in.',
   },
   {
     question: 'Does it work offline?',
     answer:
-      "Noted is a Progressive Web App (PWA). Once you've loaded a book, it is cached locally on your device. You can read, highlight, and write notes completely offline. Changes will sync to the cloud the next time you connect to the internet.",
-  },
-  {
-    question: 'Is there a student discount?',
-    answer:
-      'We offer a 50% discount for students and educators with a valid .edu email address. Simply sign up for the free trial and email our support team with your proof of enrollment to have the discount applied to your account.',
+      "Yes. Once a book is added to your library, it is cached locally. You can read, highlight, and capture notes without an internet connection. Your changes will sync automatically the next time you're online.",
   },
 ];
 
@@ -57,7 +57,7 @@ const FaqItem = ({
           {question}
         </span>
         <div
-          className={`flex-shrink-0 mt-1 md:mt-0 transition-transform duration-300 ${isOpen ? 'rotate-180 text-[#D97706]' : 'text-[#a8a29e] group-hover:text-[#D97706]'}`}
+          className={`shrink-0 mt-1 md:mt-0 transition-transform duration-300 ${isOpen ? 'rotate-180 text-[#D97706]' : 'text-[#a8a29e] group-hover:text-[#D97706]'}`}
         >
           {isOpen ? <Minus className="size-6" /> : <Plus className="size-6" />}
         </div>
@@ -96,7 +96,7 @@ const Faq = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={transition}
-            className="font-sans text-4xl md:text-5xl lg:text-7xl font-bold text-[#1c1917] dark:text-[#fafaf9] mb-6 tracking-tight"
+            className="text-5xl md:text-7xl font-black tracking-tighter text-[#1c1917] dark:text-[#fafaf9] mb-8 uppercase leading-[0.9] text-center"
           >
             Frequently Asked Questions
           </motion.h1>
