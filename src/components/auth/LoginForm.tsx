@@ -159,7 +159,7 @@ export function LoginForm() {
             )}
           />
 
-          {/* <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center justify-between text-sm">
             <FormField
               control={form.control}
               name="rememberMe"
@@ -179,13 +179,13 @@ export function LoginForm() {
                 </FormItem>
               )}
             />
-            <Link
+            {/* <Link
               href="/forgot-password"
               className="text-primary hover:text-primary/80 font-semibold transition-colors underline-offset-4 hover:underline"
             >
               Forgot Password?
-            </Link>
-          </div> */}
+            </Link> */}
+          </div>
 
           <Button
             type="submit"

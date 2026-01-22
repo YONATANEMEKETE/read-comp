@@ -87,6 +87,8 @@ export const signinAction = async (
 
   const { email, password, rememberMe } = validatedFields.data;
 
+  console.log(email, password, rememberMe);
+
   try {
     await auth.api.signInEmail({
       body: {
