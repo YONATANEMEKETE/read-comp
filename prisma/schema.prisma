@@ -19,6 +19,13 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
+  // App Relations
+  uploadedBooks Book[]    @relation("UserUploads")
+  userBooks     UserBook[]
+  notes         Note[]
+  quotes        Quote[]
+  stories       Story[]
+
   @@unique([email])
   @@map("user")
 }
@@ -69,4 +76,114 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+// ============================================
+// Noted Core Models
+// ============================================
+
+enum ReadingStatus {
+  NEW
+  READING
+  FINISHED
+}
+
+model Book {
+  id            String    @id @default(cuid())
+  title         String
+  author        String?
+  thumbnailUrl  String?
+  pdfUrl        String
+  fileKey       String    // For Uploadthing file management
+
+  // Privacy System
+  // - If `uploaderId` exists: Private book, only visible to uploader
+  // - If `isSuggested` is true: Global book, visible to all users
+  isSuggested   Boolean   @default(false)
+  uploaderId    String?
+  uploader      User?     @relation("UserUploads", fields: [uploaderId], references: [id])
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime? // Soft delete
+
+  // Relations
+  userProgress  UserBook[]
+  notes         Note[]
+  quotes        Quote[]
+  stories       Story[]
+
+  @@map("book")
+}
+
+model UserBook {
+  id            String        @id @default(cuid())
+  userId        String
+  bookId        String
+
+  status        ReadingStatus @default(NEW)
+  isFavorite    Boolean       @default(false)
+  progressPage  Int           @default(1)
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  deletedAt     DateTime?     // Soft delete
+
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book          Book          @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, bookId])
+  @@map("user_book")
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+
+  userId    String
+  bookId    String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime? // Soft delete
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@map("note")
+}
+
+model Quote {
+  id          String   @id @default(cuid())
+  text        String   @db.Text
+  citedPerson String?  // The author/speaker of the quote
+
+  userId      String
+  bookId      String
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime? // Soft delete
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book        Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@map("quote")
+}
+
+model Story {
+  id        String   @id @default(cuid())
+  content   String   @db.Text // The structured takeaway/insight
+
+  userId    String
+  bookId    String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime? // Soft delete
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@map("story")
 }
