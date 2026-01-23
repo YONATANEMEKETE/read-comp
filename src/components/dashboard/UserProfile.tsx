@@ -16,11 +16,28 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { SidebarMenuButton } from '@/components/ui/sidebar';
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
 export function UserProfile() {
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
   const { theme, setTheme } = useTheme();
+
+  if (isPending) {
+    return (
+      <SidebarMenuButton
+        size="lg"
+        className="flex items-center gap-3 px-3 py-2.5 h-auto rounded-xl bg-sidebar-accent/50 border border-sidebar-border/50 pointer-events-none"
+      >
+        <Skeleton className="h-9 w-9 rounded-full shrink-0" />
+        <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+          <Skeleton className="h-3.5 w-24 rounded-md" />
+          <Skeleton className="h-2.5 w-16 rounded-md" />
+        </div>
+        <ChevronUp size={18} className="text-sidebar-foreground/40" />
+      </SidebarMenuButton>
+    );
+  }
 
   const user = session?.user;
   const initials = user?.name
@@ -38,7 +55,7 @@ export function UserProfile() {
           size="lg"
           className="flex items-center gap-3 px-3 py-2.5 h-auto rounded-xl bg-sidebar-accent/50 border border-sidebar-border/50 cursor-pointer transition-all hover:shadow-soft hover:bg-sidebar-accent/80 group data-[state=open]:bg-sidebar-accent text-sidebar-foreground"
         >
-          <Avatar className="size-9 border border-sidebar-border/30 shadow-sm transition-transform duration-200">
+          <Avatar className="size-9 border border-sidebar-border/30 shadow-sm transition-transform duration-200 group-hover:scale-105">
             <AvatarImage src={user?.image || undefined} />
             <AvatarFallback className="bg-sidebar-primary/20 text-sidebar-primary font-bold text-xs">
               {initials}
@@ -49,7 +66,7 @@ export function UserProfile() {
               {user?.name || 'Guest User'}
             </span>
             <span className="text-[10px] font-bold uppercase tracking-widest text-sidebar-foreground/50 truncate text-left">
-              {user?.email ? 'Premium Reader' : 'Welcome'}
+              {user?.email || 'Welcome'}
             </span>
           </div>
           <ChevronUp
