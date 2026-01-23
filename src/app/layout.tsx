@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter, Noto_Serif } from 'next/font/google';
 import './globals.css';
+import { ThemeProvider } from '@/components/ThemeProvider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -32,7 +33,14 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${notoSerif.variable} antialiased font-sans`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
