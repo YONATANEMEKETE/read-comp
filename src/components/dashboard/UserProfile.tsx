@@ -94,7 +94,7 @@ export function UserProfile() {
                 setTheme('light');
               }}
               className={cn(
-                'flex-1 h-8 text-xs font-semibold rounded-lg transition-all',
+                'flex-1 h-8 text-xs font-semibold rounded-lg transition-all cursor-pointer',
                 theme === 'light'
                   ? 'bg-popover shadow-sm text-foreground border border-border/20'
                   : 'text-muted-foreground hover:text-foreground',
@@ -111,7 +111,7 @@ export function UserProfile() {
                 setTheme('dark');
               }}
               className={cn(
-                'flex-1 h-8 text-xs font-semibold rounded-lg transition-all',
+                'flex-1 h-8 text-xs font-semibold rounded-lg transition-all cursor-pointer',
                 theme === 'dark'
                   ? 'bg-popover shadow-sm text-foreground border border-border/20'
                   : 'text-muted-foreground hover:text-foreground',

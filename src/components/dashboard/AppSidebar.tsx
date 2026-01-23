@@ -75,7 +75,7 @@ export function AppSidebar() {
                     asChild
                     isActive={pathname === item.href}
                     className={cn(
-                      'px-2.5 py-1.5 rounded-lg transition-colors duration-200 h-auto border border-transparent',
+                      'px-2.5 py-1.5 rounded-lg transition-colors duration-200 h-auto border border-transparent cursor-pointer',
                       pathname === item.href
                         ? 'bg-sidebar-accent text-sidebar-accent-foreground font-semibold'
                         : 'text-sidebar-foreground/60 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground',
@@ -115,7 +115,7 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="px-2.5 py-2 h-auto rounded-lg text-sidebar-foreground/60 hover:bg-sidebar-accent/50 transition-colors font-medium border border-transparent"
+              className="px-2.5 py-2 h-auto rounded-lg text-sidebar-foreground/60 hover:bg-sidebar-accent/50 transition-colors font-medium border border-transparent cursor-pointer"
             >
               <Link href="/read/settings" className="flex items-center gap-3">
                 <Settings size={18} className="text-sidebar-foreground/40" />
