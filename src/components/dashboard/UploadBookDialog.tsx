@@ -154,7 +154,9 @@ export function UploadBookDialog({
     }
     // 32MB limit matching core.ts
     if (file.size > 32 * 1024 * 1024) {
-      toast.error('File is too large. Max size is 32MB.');
+      toast.error('File is too large. Max size is 32MB.', {
+        position: 'bottom-right',
+      });
       return false;
     }
     return true;
@@ -207,32 +209,37 @@ export function UploadBookDialog({
   const handleSave = async () => {
     if (!uploadedUrl || !thumbnailUrl) return;
 
-    setIsSaving(true);
-    try {
-      const result = await createBookAction({
-        title,
-        author,
-        pdfUrl: uploadedUrl,
-        thumbnailUrl: thumbnailUrl,
-      });
+    // Capture values before closing/resetting
+    const bookData = {
+      title,
+      author,
+      pdfUrl: uploadedUrl,
+      thumbnailUrl: thumbnailUrl,
+    };
 
-      if (result.success) {
-        toast.success(result.message);
-        handleClose();
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.error('Failed to save book:', error);
-      toast.error('An unexpected error occurred.');
-    } finally {
-      setIsSaving(false);
-    }
+    // Close dialog immediately
+    handleClose(true); // invalidating the check for isSaving inside handleClose for this specific call
+
+    // Show promise toast
+    toast.promise(
+      createBookAction(bookData).then((result) => {
+        if (!result.success) {
+          throw new Error(result.message);
+        }
+        return result;
+      }),
+      {
+        loading: 'Adding your book...',
+        success: 'Book added successfully!',
+        error: (err) => `Failed to add book: ${err.message}`,
+        position: 'top-right',
+      },
+    );
   };
 
-  const handleClose = () => {
-    // Prevent closing while uploading or saving
-    if (status === 'uploading' || isSaving) return;
+  const handleClose = (force = false) => {
+    // Prevent closing while uploading or saving (unless forced)
+    if (!force && (status === 'uploading' || isSaving)) return;
 
     setSelectedFile(null);
     setTitle('');
@@ -276,7 +283,12 @@ export function UploadBookDialog({
     !isSaving;
 
   return (
-    <Dialog open={open} onOpenChange={(val) => !val && handleClose()}>
+    <Dialog
+      open={open}
+      onOpenChange={(val) => {
+        if (!val) handleClose();
+      }}
+    >
       <DialogContent
         showCloseButton={false}
         className="sm:max-w-[480px] bg-background border-border rounded-3xl p-8"
@@ -288,7 +300,7 @@ export function UploadBookDialog({
       >
         {!status || (status !== 'uploading' && !isSaving) ? (
           <button
-            onClick={handleClose}
+            onClick={() => handleClose()}
             className="absolute top-6 right-6 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
           >
             <X size={20} />
@@ -468,7 +480,7 @@ export function UploadBookDialog({
                 placeholder="e.g. The Midnight Library"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                disabled={status === 'uploading' || isSaving}
+                disabled={isSaving}
                 className="w-full px-4 py-2.5 bg-card border-border rounded-md text-foreground placeholder-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary shadow-inner-soft text-sm"
               />
             </div>
@@ -486,7 +498,7 @@ export function UploadBookDialog({
                 placeholder="e.g. Matt Haig"
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
-                disabled={status === 'uploading' || isSaving}
+                disabled={isSaving}
                 className="w-full px-4 py-2.5 bg-card border-border rounded-md text-foreground placeholder-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary shadow-inner-soft text-sm"
               />
             </div>
@@ -496,7 +508,7 @@ export function UploadBookDialog({
           <div className="grid grid-cols-2 gap-3 pt-2">
             <Button
               variant="outline"
-              onClick={handleClose}
+              onClick={() => handleClose()}
               disabled={status === 'uploading' || isSaving}
               className="px-4 py-3 rounded-xl border-border text-muted-foreground font-medium hover:bg-muted hover:text-foreground transition-colors text-sm cursor-pointer"
             >
@@ -505,7 +517,7 @@ export function UploadBookDialog({
 
             <Button
               onClick={handleSave}
-              disabled={!isReadyToAdd}
+              disabled={!isReadyToAdd || status === 'uploading'}
               className="px-4 py-3 rounded-xl bg-primary text-primary-foreground font-medium shadow-sm hover:bg-primary/90 transition-all active:scale-[0.98] text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {isCoverGenerating ? (

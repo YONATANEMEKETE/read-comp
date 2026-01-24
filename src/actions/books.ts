@@ -82,7 +82,6 @@ export async function createBookAction(
     const result = book;
 
     // 4. Revalidate cache
-    revalidatePath('/dashboard');
     revalidatePath('/read');
 
     return {
