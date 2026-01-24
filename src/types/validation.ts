@@ -47,3 +47,12 @@ export const resetPasswordSchema = z
   });
 
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+
+export const uploadBookSchema = z.object({
+  title: z.string().min(1, 'Title is required').max(255),
+  author: z.string().min(1, 'Author is required').max(255),
+  thumbnailUrl: z.string().url('Invalid thumbnail URL'),
+  pdfUrl: z.string().url('Invalid PDF URL'),
+});
+
+export type UploadBookInput = z.infer<typeof uploadBookSchema>;
