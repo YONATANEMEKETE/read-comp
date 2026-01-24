@@ -2,7 +2,9 @@
 
 import * as React from 'react';
 import { Search, LayoutGrid, List, Filter, Check } from 'lucide-react';
+import { motion } from 'motion/react';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
   Popover,
@@ -10,13 +12,10 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useViewStore } from '@/store/useViewStore';
 
 export function DashboardHeader() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const view = (searchParams.get('view') as 'grid' | 'list') || 'grid';
-
+  const { view, setView } = useViewStore();
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
   const [filters, setFilters] = React.useState({
     reading: true,
@@ -24,25 +23,17 @@ export function DashboardHeader() {
     finished: false,
   });
 
-  const setView = (newView: 'grid' | 'list') => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('view', newView);
-    router.push(`?${params.toString()}`, { scroll: false });
-  };
-
   return (
-    <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-6 md:px-10 py-6 bg-warm-bg/80 dark:bg-background-dark/90 backdrop-blur-sm sticky top-0 z-20 transition-all duration-300">
-      <div className="flex items-center gap-8 flex-1">
+    <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-6 md:px-10 py-3 bg-background/80 backdrop-blur-sm sticky top-0 z-20 ">
+      <div className="flex items-center gap-4 flex-1">
         <div className="md:hidden">
           <SidebarTrigger />
         </div>
-        <h2 className="text-2xl font-bold text-stone-900 dark:text-white tracking-tight font-display italic">
-          Library
-        </h2>
-        <div className="relative group hidden md:flex items-center w-full max-w-md">
-          <Search className="absolute left-4 text-stone-400 w-5 h-5 pointer-events-none transition-colors group-focus-within:text-primary" />
+        <h2 className="text-xl font-bold text-foreground font-sans">Library</h2>
+        <div className="relative group hidden md:flex items-center w-full max-w-xs ml-4">
+          <Search className="absolute left-3 text-muted-foreground w-4 h-4 pointer-events-none transition-colors group-focus-within:text-primary" />
           <Input
-            className="w-full pl-11 pr-12 py-5 bg-white dark:bg-stone-800/40 border-none rounded-full text-sm text-stone-700 dark:text-stone-200 placeholder-stone-400 focus-visible:ring-2 focus-visible:ring-primary/20 shadow-inner-soft transition-all"
+            className="w-full pl-9 pr-4 h-9 bg-card dark:bg-stone-800/20 border border-border/80 rounded-full text-sm text-foreground placeholder-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/30 shadow-none transition-all"
             placeholder="Find a book or author..."
             type="text"
           />
@@ -50,45 +41,66 @@ export function DashboardHeader() {
       </div>
 
       <div className="flex items-center gap-4">
-        <div className="flex items-center p-1 rounded-full bg-stone-100 dark:bg-stone-800/50 border border-sepia-divider/40">
-          <button
+        <div className="flex items-center p-1 rounded-full bg-secondary/30 border border-border/50 shadow-inner overflow-hidden relative">
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setView('grid')}
             className={cn(
-              'p-2 rounded-full transition-all duration-200 cursor-pointer',
+              'rounded-full w-8 h-8 transition-colors relative z-10 cursor-pointer',
               view === 'grid'
-                ? 'bg-white dark:bg-stone-700 shadow-soft text-primary'
-                : 'text-stone-400 hover:text-stone-900 dark:hover:text-stone-200',
+                ? 'text-primary'
+                : 'text-muted-foreground hover:text-foreground hover:bg-transparent',
             )}
           >
-            <LayoutGrid className="h-5 w-5" />
-          </button>
-          <button
+            <LayoutGrid size={16} />
+            {view === 'grid' && (
+              <motion.div
+                layoutId="view-active"
+                className="absolute inset-0 bg-background shadow-sm rounded-full -z-10"
+                transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+              />
+            )}
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setView('list')}
             className={cn(
-              'p-2 rounded-full transition-all duration-200 cursor-pointer',
+              'rounded-full w-8 h-8 transition-colors relative z-10 cursor-pointer',
               view === 'list'
-                ? 'bg-white dark:bg-stone-700 shadow-soft text-primary'
-                : 'text-stone-400 hover:text-stone-900 dark:hover:text-stone-200',
+                ? 'text-primary'
+                : 'text-muted-foreground hover:text-foreground hover:bg-transparent',
             )}
           >
-            <List className="h-5 w-5" />
-          </button>
+            <List size={16} />
+            {view === 'list' && (
+              <motion.div
+                layoutId="view-active"
+                className="absolute inset-0 bg-background shadow-sm rounded-full -z-10"
+                transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+              />
+            )}
+          </Button>
         </div>
 
         <Popover open={isFilterOpen} onOpenChange={setIsFilterOpen}>
           <PopoverTrigger asChild>
-            <button
+            <Button
+              variant="outline"
+              size="icon"
               className={cn(
-                'size-10 rounded-full flex items-center justify-center transition-all cursor-pointer border',
+                'rounded-full w-9 h-9 border transition-all active:scale-95 shadow-sm cursor-pointer',
                 isFilterOpen
-                  ? 'bg-primary text-white border-primary'
-                  : 'bg-primary/10 text-primary border-sepia-divider/50 hover:bg-primary/20',
+                  ? 'bg-background text-primary border-primary/50'
+                  : 'bg-background text-primary hover:bg-primary/10 hover:border-primary/50',
               )}
             >
-              <Filter className="h-5 w-5" />
-            </button>
+              <Filter size={16} />
+            </Button>
           </PopoverTrigger>
           <PopoverContent className="w-60 p-5 rounded-2xl shadow-xl border-border/60 bg-popover mr-6 mt-2">
+            <div className="absolute -top-1.5 right-4 size-2.5 bg-popover border-t border-l border-border/60 rotate-45 transform"></div>
             <h4 className="font-display font-bold text-foreground mb-4 text-[15px] tracking-tight">
               Filter by Status
             </h4>

@@ -3,7 +3,7 @@
 import { BookWithProgress } from '@/types/book';
 import { BookCard } from './BookCard';
 import { cn } from '@/lib/utils';
-import { useSearchParams } from 'next/navigation';
+import { useViewStore } from '@/store/useViewStore';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
@@ -12,8 +12,7 @@ interface YourListProps {
 }
 
 export function YourList({ books }: YourListProps) {
-  const searchParams = useSearchParams();
-  const view = (searchParams.get('view') as 'grid' | 'list') || 'grid';
+  const { view } = useViewStore();
 
   return (
     <section className="mb-14">
@@ -25,7 +24,7 @@ export function YourList({ books }: YourListProps) {
         </div>
 
         <Link
-          href="/read/your-libraries"
+          href="/read/yourlibraries"
           className="group flex items-center gap-2 text-[10px] font-bold text-primary hover:text-stone-900 dark:hover:text-stone-200 transition-colors uppercase tracking-widest"
         >
           View All
@@ -41,7 +40,7 @@ export function YourList({ books }: YourListProps) {
         )}
       >
         {books.map((book) => (
-          <BookCard key={book.id} book={book} view={view} />
+          <BookCard key={`${book.id}-${view}`} book={book} view={view} />
         ))}
 
         {view === 'grid' && (

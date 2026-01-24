@@ -3,7 +3,7 @@
 import { BookWithProgress } from '@/types/book';
 import { BookCard } from './BookCard';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
+import { useViewStore } from '@/store/useViewStore';
 import { cn } from '@/lib/utils';
 
 interface SuggestedListProps {
@@ -11,8 +11,7 @@ interface SuggestedListProps {
 }
 
 export function SuggestedList({ books }: SuggestedListProps) {
-  const searchParams = useSearchParams();
-  const view = (searchParams.get('view') as 'grid' | 'list') || 'grid';
+  const { view } = useViewStore();
 
   return (
     <section className="mb-12">
@@ -41,7 +40,7 @@ export function SuggestedList({ books }: SuggestedListProps) {
         )}
       >
         {books.map((book) => (
-          <BookCard key={book.id} book={book} view={view} />
+          <BookCard key={`${book.id}-${view}`} book={book} view={view} />
         ))}
       </div>
     </section>
