@@ -21,6 +21,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { UserProfile } from './UserProfile';
 import { cn } from '@/lib/utils';
+import { Logo } from '../common/Logo';
 
 const navItems = [
   {
@@ -47,13 +48,7 @@ export function AppSidebar() {
     <Sidebar className="border-r border-sidebar-border bg-sidebar/50 backdrop-blur-md">
       <SidebarHeader className="p-6 pb-4 border-b border-sidebar-border/50">
         <Link href="/" className="flex gap-3 items-center">
-          <Image
-            src="/logo.png"
-            alt="Noted Logo"
-            width={32}
-            height={32}
-            className="w-8 h-8 rounded-lg"
-          />
+          <Logo />
           <div className="flex flex-col">
             <h1 className="text-sidebar-foreground text-2xl font-bold tracking-tight font-sans">
               Noted
