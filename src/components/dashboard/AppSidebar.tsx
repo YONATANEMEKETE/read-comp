@@ -31,7 +31,7 @@ const navItems = [
   },
   {
     title: 'Your Books',
-    href: '/read/my-books',
+    href: '/read/yourlibraries',
     icon: BookOpenText,
   },
   {

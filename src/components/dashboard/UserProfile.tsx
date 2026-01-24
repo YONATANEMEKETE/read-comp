@@ -96,7 +96,7 @@ export function UserProfile() {
               className={cn(
                 'flex-1 h-8 text-xs font-semibold rounded-lg transition-all cursor-pointer',
                 theme === 'light'
-                  ? 'bg-popover shadow-sm text-foreground border border-border/20'
+                  ? 'bg-popover hover:bg-popover shadow-sm text-foreground border border-border/20'
                   : 'text-muted-foreground hover:text-foreground',
               )}
             >
@@ -104,7 +104,6 @@ export function UserProfile() {
               Light
             </Button>
             <Button
-              variant="ghost"
               size="sm"
               onClick={(e) => {
                 e.stopPropagation();
@@ -113,8 +112,8 @@ export function UserProfile() {
               className={cn(
                 'flex-1 h-8 text-xs font-semibold rounded-lg transition-all cursor-pointer',
                 theme === 'dark'
-                  ? 'bg-popover shadow-sm text-foreground border border-border/20'
-                  : 'text-muted-foreground hover:text-foreground',
+                  ? 'shadow-sm text-foreground border border-border/20'
+                  : 'text-muted-foreground hover:text-foreground bg-transparent hover:bg-transparent',
               )}
             >
               <Moon size={14} className="mr-1.5" />

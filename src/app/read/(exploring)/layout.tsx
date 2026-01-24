@@ -1,11 +1,8 @@
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
-import {
-  SidebarProvider,
-  SidebarTrigger,
-  SidebarInset,
-} from '@/components/ui/sidebar';
+import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 
-export default function ReadLayout({
+export default function ExploringLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -15,6 +12,7 @@ export default function ReadLayout({
       <div className="flex h-screen w-full bg-background text-foreground overflow-hidden">
         <AppSidebar />
         <SidebarInset className="flex flex-col min-w-0 overflow-hidden relative bg-transparent">
+          <DashboardHeader />
           {children}
         </SidebarInset>
       </div>
