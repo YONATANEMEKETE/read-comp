@@ -21,6 +21,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { BookStatusBadge } from './BookStatusBadge';
 
 interface BookCardProps {
   book: BookWithProgress;
@@ -42,9 +43,11 @@ export function BookCard({ book, view = 'grid' }: BookCardProps) {
   if (view === 'list') {
     return (
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="group grid grid-cols-[60px_1fr_40px] md:grid-cols-[60px_1fr_120px_130px_100px] gap-8 items-center px-8 py-4 rounded-2xl cursor-pointer bg-transparent border border-dashed border-[#e5ddd3]/60 dark:border-stone-800 transition-all duration-300 hover:bg-white hover:dark:bg-stone-800"
+        variants={{
+          hidden: { opacity: 0, y: 20 },
+          visible: { opacity: 1, y: 0 },
+        }}
+        className="group grid grid-cols-[60px_1fr_40px] md:grid-cols-[60px_1fr_120px_130px_100px] gap-8 items-center px-8 py-4 rounded-2xl cursor-pointer bg-transparent border border-dashed border-sepia-divider/60 dark:border-stone-800 transition-all duration-300 hover:bg-white hover:dark:bg-stone-800"
       >
         {/* Cover */}
         <div className="w-12 shrink-0">
@@ -78,21 +81,7 @@ export function BookCard({ book, view = 'grid' }: BookCardProps) {
 
         {/* Status */}
         <div className="hidden md:flex items-center">
-          {isReading && (
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#9fb1a2]/10 text-[#9fb1a2] border border-[#9fb1a2]/20">
-              Reading
-            </span>
-          )}
-          {isFinished && (
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#cda2a2]/10 text-[#cda2a2] border border-[#cda2a2]/20">
-              Finished
-            </span>
-          )}
-          {!isReading && !isFinished && (
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#a5b2bd]/10 text-[#a5b2bd] border border-[#a5b2bd]/20">
-              On Shelf
-            </span>
-          )}
+          <BookStatusBadge status={book.userProgress?.status || 'NEW'} />
         </div>
 
         {/* Options */}
@@ -129,8 +118,10 @@ export function BookCard({ book, view = 'grid' }: BookCardProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
+      variants={{
+        hidden: { opacity: 0, scale: 0.9 },
+        visible: { opacity: 1, scale: 1 },
+      }}
       className="book-card group cursor-pointer flex flex-col"
     >
       <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1),0_8px_10px_-6px_rgba(0,0,0,0.1)] mb-4 transition-transform duration-300 hover:-translate-y-1">
@@ -149,23 +140,10 @@ export function BookCard({ book, view = 'grid' }: BookCardProps) {
         </div>
 
         {/* Status Badges (Top Left) */}
-        <div className="absolute top-3 left-3">
-          {isReading && (
-            <span className="px-2 py-0.5 rounded-full bg-[#a5b2bd] text-[9px] font-bold text-white uppercase tracking-wider">
-              Reading
-            </span>
-          )}
-          {isFinished && (
-            <span className="px-2 py-0.5 rounded-full bg-[#9fb1a2] text-[9px] font-bold text-white uppercase tracking-wider">
-              Finished
-            </span>
-          )}
-          {!isReading && !isFinished && (
-            <span className="px-2 py-0.5 rounded-full bg-stone-400 text-[9px] font-bold text-white uppercase tracking-wider">
-              On Shelf
-            </span>
-          )}
-        </div>
+        <BookStatusBadge
+          status={book.userProgress?.status || 'NEW'}
+          className="absolute top-3 left-3 px-2 py-0.5"
+        />
 
         {/* Favorite Icon (Top Right) */}
         {isFavorite && (

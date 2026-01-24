@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { useViewStore } from '@/store/useViewStore';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { motion } from 'motion/react';
 
 interface YourListProps {
   books: BookWithProgress[];
@@ -13,6 +14,16 @@ interface YourListProps {
 
 export function YourList({ books }: YourListProps) {
   const { view } = useViewStore();
+
+  const container = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
 
   return (
     <section className="mb-14">
@@ -32,7 +43,11 @@ export function YourList({ books }: YourListProps) {
         </Link>
       </div>
 
-      <div
+      <motion.div
+        key={view}
+        variants={container}
+        initial="hidden"
+        animate="visible"
         className={cn(
           view === 'grid'
             ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8'
@@ -44,16 +59,22 @@ export function YourList({ books }: YourListProps) {
         ))}
 
         {view === 'grid' && (
-          <div className="flex flex-col opacity-60">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, scale: 0.9 },
+              visible: { opacity: 1, scale: 1 },
+            }}
+            className="flex flex-col opacity-60"
+          >
             <div className="aspect-3/4 w-full rounded-2xl border-2 border-dashed border-sepia-divider mb-4 flex flex-col items-center justify-center group cursor-pointer hover:border-primary/50 transition-colors">
               <span className="text-stone-300 text-4xl mb-2 font-light">+</span>
               <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400">
                 Add Book
               </span>
             </div>
-          </div>
+          </motion.div>
         )}
-      </div>
+      </motion.div>
     </section>
   );
 }
