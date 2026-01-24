@@ -1,19 +1,41 @@
 'use client';
 
-import { BookWithProgress } from '@/types/book';
 import { BookCard } from './BookCard';
 import { ArrowRight } from 'lucide-react';
 import { useViewStore } from '@/store/useViewStore';
+import { useFilterStore } from '@/store/useFilterStore';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { motion } from 'motion/react';
+import { MOCK_BOOKS } from '@/lib/mock-data';
 
-interface SuggestedListProps {
-  books: BookWithProgress[];
-}
-
-export function SuggestedList({ books }: SuggestedListProps) {
+export function SuggestedList() {
   const { view } = useViewStore();
+  const { filters } = useFilterStore();
+
+  // Check if ANY filter is active
+  const hasActiveFilters =
+    filters.reading || filters.onShelf || filters.finished;
+
+  // Filter SUGGESTED BOOKS
+  const books = MOCK_BOOKS.filter((b) => {
+    // Only include suggested books
+    if (!b.isSuggested) return false;
+
+    // If NO filters are active, show ALL suggested books
+    if (!hasActiveFilters) return true;
+
+    // Get the book's status (READING, FINISHED, or NEW/undefined for On Shelf)
+    const status = b.userProgress?.status;
+
+    // Check if this book matches any active filter (OR logic)
+    if (status === 'READING' && filters.reading) return true;
+    if (status === 'FINISHED' && filters.finished) return true;
+    if ((status === 'NEW' || !status) && filters.onShelf) return true;
+
+    // If no filter matches, don't show this book
+    return false;
+  }).slice(0, 12); // Limit to 12 books
 
   const container = {
     hidden: { opacity: 0 },
