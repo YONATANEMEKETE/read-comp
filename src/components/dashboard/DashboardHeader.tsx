@@ -9,6 +9,7 @@ import {
   ChevronDown,
   Check,
 } from 'lucide-react';
+import { motion } from 'motion/react';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -40,7 +41,7 @@ export function DashboardHeader() {
         <div className="relative group hidden md:flex items-center w-full max-w-xs ml-4">
           <Search className="absolute left-3 text-muted-foreground w-4 h-4 pointer-events-none transition-colors group-focus-within:text-primary" />
           <Input
-            className="w-full pl-9 pr-4 h-9 bg-card dark:bg-stone-800/40 border-none rounded-full text-sm text-foreground placeholder-muted-foreground focus-visible:ring-1 focus-visible:ring-primary/20 shadow-inner"
+            className="w-full pl-9 pr-4 h-9 bg-card dark:bg-stone-800/20 border border-border/80 rounded-full text-sm text-foreground placeholder-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/30 shadow-none transition-all"
             placeholder="Find a book or author..."
             type="text"
           />
@@ -48,32 +49,46 @@ export function DashboardHeader() {
       </div>
 
       <div className="flex items-center gap-4">
-        <div className="flex items-center p-1 rounded-full bg-muted border border-border/40">
+        <div className="flex items-center p-1 rounded-full bg-secondary/30 border border-border/50 shadow-inner overflow-hidden relative">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setView('grid')}
             className={cn(
-              'rounded-full w-8 h-8 transition-all hover:bg-transparent hover:text-foreground cursor-pointer',
+              'rounded-full w-8 h-8 transition-colors relative z-10 cursor-pointer',
               view === 'grid'
-                ? 'bg-background shadow-sm text-primary hover:text-primary'
-                : 'text-muted-foreground',
+                ? 'text-primary'
+                : 'text-muted-foreground hover:text-foreground hover:bg-transparent',
             )}
           >
             <LayoutGrid size={16} />
+            {view === 'grid' && (
+              <motion.div
+                layoutId="view-active"
+                className="absolute inset-0 bg-background shadow-sm rounded-full -z-10"
+                transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+              />
+            )}
           </Button>
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setView('list')}
             className={cn(
-              'rounded-full w-8 h-8 transition-all hover:bg-transparent hover:text-foreground cursor-pointer',
+              'rounded-full w-8 h-8 transition-colors relative z-10 cursor-pointer',
               view === 'list'
-                ? 'bg-background shadow-sm text-primary hover:text-primary'
-                : 'text-muted-foreground',
+                ? 'text-primary'
+                : 'text-muted-foreground hover:text-foreground hover:bg-transparent',
             )}
           >
             <List size={16} />
+            {view === 'list' && (
+              <motion.div
+                layoutId="view-active"
+                className="absolute inset-0 bg-background shadow-sm rounded-full -z-10"
+                transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+              />
+            )}
           </Button>
         </div>
 
@@ -83,10 +98,10 @@ export function DashboardHeader() {
               variant="outline"
               size="icon"
               className={cn(
-                'rounded-full w-9 h-9 border transition-all active:scale-95 hover:bg-primary/20 hover:text-primary hover:border-border cursor-pointer',
+                'rounded-full w-9 h-9 border transition-all active:scale-95 shadow-sm cursor-pointer',
                 isFilterOpen
-                  ? 'bg-primary/10 text-primary border-border'
-                  : 'bg-primary/10 text-primary border-border',
+                  ? 'bg-background text-primary border-primary/50'
+                  : 'bg-background text-primary hover:bg-primary/10 hover:border-primary/50',
               )}
             >
               <Filter size={16} />
