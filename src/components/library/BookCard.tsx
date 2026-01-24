@@ -44,7 +44,7 @@ export function BookCard({ book, view = 'grid' }: BookCardProps) {
     return (
       <motion.div
         variants={{
-          hidden: { opacity: 0, y: 20 },
+          hidden: { opacity: 0, y: 5 },
           visible: { opacity: 1, y: 0 },
         }}
         className="group grid grid-cols-[60px_1fr_40px] md:grid-cols-[60px_1fr_120px_130px_100px] gap-8 items-center px-8 py-4 rounded-2xl cursor-pointer bg-transparent border border-dashed border-sepia-divider/60 dark:border-stone-800 transition-all duration-300 hover:bg-white hover:dark:bg-stone-800"
