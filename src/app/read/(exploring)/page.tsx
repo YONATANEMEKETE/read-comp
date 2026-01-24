@@ -6,7 +6,7 @@ import { SuggestedList } from '@/components/library/SuggestedList';
 import { Suspense } from 'react';
 
 function LibraryContent() {
-  const yourBooks = MOCK_BOOKS.filter((b) => b.userProgress);
+  const yourBooks = MOCK_BOOKS.filter((b) => !b.isSuggested);
   const suggestedBooks = MOCK_BOOKS.filter((b) => b.isSuggested);
 
   return (

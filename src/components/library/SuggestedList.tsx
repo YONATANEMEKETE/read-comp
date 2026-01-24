@@ -6,6 +6,8 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useViewStore } from '@/store/useViewStore';
 import { cn } from '@/lib/utils';
 
+import Link from 'next/link';
+
 interface SuggestedListProps {
   books: BookWithProgress[];
 }
@@ -22,14 +24,13 @@ export function SuggestedList({ books }: SuggestedListProps) {
             Suggested For You
           </h3>
         </div>
-        <div className="flex gap-2">
-          <button className="size-9 flex items-center justify-center rounded-full border border-sepia-divider bg-white dark:bg-stone-800 text-stone-400 hover:text-primary transition-all shadow-soft cursor-pointer">
-            <ArrowLeft className="h-4.5 w-4.5" />
-          </button>
-          <button className="size-9 flex items-center justify-center rounded-full border border-sepia-divider bg-white dark:bg-stone-800 text-stone-400 hover:text-primary transition-all shadow-soft cursor-pointer">
-            <ArrowRight className="h-4.5 w-4.5" />
-          </button>
-        </div>
+        <Link
+          href="/read/explore"
+          className="group flex items-center gap-2 text-[10px] font-bold text-primary hover:text-stone-900 dark:hover:text-stone-200 transition-colors uppercase tracking-widest"
+        >
+          Explore More
+          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+        </Link>
       </div>
 
       <div
