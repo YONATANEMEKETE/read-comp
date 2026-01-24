@@ -1,0 +1,103 @@
+import { BookWithProgress } from '@/types/book';
+
+export const MOCK_BOOKS: BookWithProgress[] = [
+  {
+    id: '1',
+    title: 'The Great Gatsby',
+    author: 'F. Scott Fitzgerald',
+    thumbnailUrl:
+      'https://images.unsplash.com/photo-1543005187-9ebebbe21910?w=800&q=80',
+    pdfUrl: '#',
+    isSuggested: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    userProgress: {
+      id: 'up1',
+      userId: 'u1',
+      bookId: '1',
+      status: 'READING',
+      isFavorite: true,
+      progressPage: 45,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      book: {} as any,
+    },
+  },
+  {
+    id: '2',
+    title: '1984',
+    author: 'George Orwell',
+    thumbnailUrl:
+      'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&q=80',
+    pdfUrl: '#',
+    isSuggested: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: '3',
+    title: 'The Hobbit',
+    author: 'J.R.R. Tolkien',
+    thumbnailUrl:
+      'https://images.unsplash.com/photo-1621351123023-73f0f3bc30e3?w=800&q=80',
+    pdfUrl: '#',
+    isSuggested: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    userProgress: {
+      id: 'up3',
+      userId: 'u1',
+      bookId: '3',
+      status: 'FINISHED',
+      isFavorite: false,
+      progressPage: 310,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      book: {} as any,
+    },
+  },
+  {
+    id: '4',
+    title: 'Atomic Habits',
+    author: 'James Clear',
+    thumbnailUrl:
+      'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=800&q=80',
+    pdfUrl: '#',
+    isSuggested: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: '5',
+    title: 'Brave New World',
+    author: 'Aldous Huxley',
+    thumbnailUrl:
+      'https://images.unsplash.com/photo-1541963463532-d68292c34b19?w=800&q=80',
+    pdfUrl: '#',
+    isSuggested: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    userProgress: {
+      id: 'up5',
+      userId: 'u1',
+      bookId: '5',
+      status: 'NEW',
+      isFavorite: false,
+      progressPage: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      book: {} as any,
+    },
+  },
+  {
+    id: '6',
+    title: 'Deep Work',
+    author: 'Cal Newport',
+    thumbnailUrl:
+      'https://images.unsplash.com/photo-1512428559083-a4979b2b51ff?w=800&q=80',
+    pdfUrl: '#',
+    isSuggested: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];

@@ -44,7 +44,7 @@
   --color-dusty-rose: #cda2a2;
   --color-sage-green: #9fb1a2;
   --color-muted-blue: #a5b2bd;
-  --color-background-dark: #1d1a15;
+  --color-background-dark: #09090b;
   --color-sidebar-dark: #111318;
 
   --radius-sm: calc(var(--radius) - 4px);
@@ -57,6 +57,8 @@
 
   --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
   --shadow-inner-soft: inset 0 2px 4px 0 rgba(0, 0, 0, 0.03);
+  --shadow-book:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
 }
 
 :root {
@@ -95,7 +97,7 @@
 }
 
 .dark {
-  --background: #1d1a15;
+  --background: #09090b;
   --foreground: #e7e5e4;
   --card: #111318;
   --card-foreground: #e7e5e4;

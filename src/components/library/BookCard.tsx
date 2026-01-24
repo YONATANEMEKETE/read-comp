@@ -1,0 +1,186 @@
+'use client';
+
+import { BookWithProgress } from '@/types/book';
+import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  MoreVertical,
+  Play,
+  CheckCircle2,
+  Clock,
+  Heart,
+  BookOpen,
+} from 'lucide-react';
+import Image from 'next/image';
+import { cn } from '@/lib/utils';
+import { motion } from 'motion/react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
+interface BookCardProps {
+  book: BookWithProgress;
+  view?: 'grid' | 'list';
+}
+
+export function BookCard({ book, view = 'grid' }: BookCardProps) {
+  const isReading = book.userProgress?.status === 'READING';
+  const isFinished = book.userProgress?.status === 'FINISHED';
+  const isFavorite = book.userProgress?.isFavorite;
+
+  // Format date for list view (using simplistic formatting for now)
+  const dateAdded = new Date(book.createdAt).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+
+  if (view === 'list') {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="group grid grid-cols-[60px_1fr_40px] md:grid-cols-[60px_1fr_120px_130px_100px] gap-8 items-center px-8 py-4 rounded-2xl cursor-pointer bg-transparent border border-dashed border-[#e5ddd3]/60 dark:border-stone-800 transition-all duration-300 hover:bg-white hover:dark:bg-stone-800"
+      >
+        {/* Cover */}
+        <div className="w-12 shrink-0">
+          <div className="aspect-[3/4] w-full rounded-md shadow-sm bg-cover bg-center border border-[#e5ddd3]/30 overflow-hidden relative">
+            <Image
+              src={book.thumbnailUrl}
+              alt={book.title}
+              fill
+              className="object-cover"
+            />
+          </div>
+        </div>
+
+        {/* Title & Author */}
+        <div className="min-w-0 flex flex-col justify-center">
+          <div className="flex items-center gap-2">
+            <h4 className="font-display text-lg font-semibold text-stone-900 dark:text-white truncate">
+              {book.title}
+            </h4>
+            {isFavorite && (
+              <Heart className="h-4 w-4 text-[#cda2a2] fill-current" />
+            )}
+          </div>
+          <p className="text-sm text-stone-500 italic">{book.author}</p>
+        </div>
+
+        {/* Date Added */}
+        <div className="hidden md:block text-sm text-stone-400 font-sans">
+          {dateAdded}
+        </div>
+
+        {/* Status */}
+        <div className="hidden md:flex items-center">
+          {isReading && (
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#9fb1a2]/10 text-[#9fb1a2] border border-[#9fb1a2]/20">
+              Reading
+            </span>
+          )}
+          {isFinished && (
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#cda2a2]/10 text-[#cda2a2] border border-[#cda2a2]/20">
+              Finished
+            </span>
+          )}
+          {!isReading && !isFinished && (
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#a5b2bd]/10 text-[#a5b2bd] border border-[#a5b2bd]/20">
+              On Shelf
+            </span>
+          )}
+        </div>
+
+        {/* Options */}
+        <div className="flex justify-end gap-3">
+          <button
+            className={cn(
+              'size-9 flex items-center justify-center rounded-full transition-all',
+              isReading
+                ? 'bg-[#9a8470] text-white shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)] hover:scale-105'
+                : 'bg-stone-100 dark:bg-stone-700 text-stone-400 hover:bg-[#9a8470] hover:text-white shadow-[inset_0_2px_4px_0_rgba(0,0,0,0.03)]',
+            )}
+            title={isReading ? 'Continue Reading' : 'Start Reading'}
+          >
+            <Play className="h-5 w-5 fill-current" />
+          </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="size-9 flex items-center justify-center rounded-full text-stone-400 hover:text-stone-600 transition-colors">
+                <MoreVertical className="h-[22px] w-[22px]" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>View Details</DropdownMenuItem>
+              <DropdownMenuItem>Mark as Finished</DropdownMenuItem>
+              <DropdownMenuItem className="text-destructive">
+                Remove from Library
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="book-card group cursor-pointer flex flex-col"
+    >
+      <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1),0_8px_10px_-6px_rgba(0,0,0,0.1)] mb-4 transition-transform duration-300 hover:-translate-y-1">
+        <Image
+          src={book.thumbnailUrl}
+          alt={book.title}
+          fill
+          className="object-cover"
+        />
+
+        {/* Hover Overlay */}
+        <div className="play-overlay absolute inset-0 bg-black/30 opacity-0 transition-opacity flex items-center justify-center backdrop-blur-[2px] group-hover:opacity-100">
+          <div className="size-12 rounded-full bg-white/90 text-[#9a8470] flex items-center justify-center shadow-lg transform scale-90 group-hover:scale-100 transition-transform">
+            <Play className="h-8 w-8 fill-current translate-x-0.5" />
+          </div>
+        </div>
+
+        {/* Status Badges (Top Left) */}
+        <div className="absolute top-3 left-3">
+          {isReading && (
+            <span className="px-2 py-0.5 rounded-full bg-[#a5b2bd] text-[9px] font-bold text-white uppercase tracking-wider">
+              Reading
+            </span>
+          )}
+          {isFinished && (
+            <span className="px-2 py-0.5 rounded-full bg-[#9fb1a2] text-[9px] font-bold text-white uppercase tracking-wider">
+              Finished
+            </span>
+          )}
+          {!isReading && !isFinished && (
+            <span className="px-2 py-0.5 rounded-full bg-stone-400 text-[9px] font-bold text-white uppercase tracking-wider">
+              On Shelf
+            </span>
+          )}
+        </div>
+
+        {/* Favorite Icon (Top Right) */}
+        {isFavorite && (
+          <div className="absolute top-3 right-3 text-[#cda2a2]">
+            <Heart className="h-5 w-5 fill-current" />
+          </div>
+        )}
+      </div>
+
+      <h4 className="font-display text-base font-semibold text-stone-900 dark:text-white leading-tight mb-1 line-clamp-1">
+        {book.title}
+      </h4>
+      <p className="text-xs text-stone-500 italic line-clamp-1">
+        {book.author}
+      </p>
+    </motion.div>
+  );
+}
