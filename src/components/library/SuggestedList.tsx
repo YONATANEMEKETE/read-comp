@@ -44,7 +44,7 @@ export function SuggestedList({ books }: SuggestedListProps) {
       </div>
 
       <motion.div
-        key={view}
+        key={`${view}-${books.length}`}
         variants={container}
         initial="hidden"
         animate="visible"
@@ -55,7 +55,7 @@ export function SuggestedList({ books }: SuggestedListProps) {
         )}
       >
         {books.map((book) => (
-          <BookCard key={`${book.id}-${view}`} book={book} view={view} />
+          <BookCard key={book.id} book={book} view={view} />
         ))}
       </motion.div>
     </section>

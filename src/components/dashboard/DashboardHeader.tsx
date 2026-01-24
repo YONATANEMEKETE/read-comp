@@ -13,15 +13,12 @@ import {
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { useViewStore } from '@/store/useViewStore';
+import { useFilterStore } from '@/store/useFilterStore';
 
 export function DashboardHeader() {
   const { view, setView } = useViewStore();
+  const { filters, setFilters } = useFilterStore(); // Get filters from global store
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
-  const [filters, setFilters] = React.useState({
-    reading: true,
-    onShelf: false,
-    finished: false,
-  });
 
   return (
     <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-6 md:px-10 py-3 bg-background/80 backdrop-blur-sm sticky top-0 z-20 ">
