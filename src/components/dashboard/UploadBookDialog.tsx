@@ -229,7 +229,7 @@ export function UploadBookDialog({
         return result;
       }),
       {
-        loading: 'Adding your book...',
+        loading: 'Adding your book... a moment.',
         success: 'Book added successfully!',
         error: (err) => `Failed to add book: ${err.message}`,
         position: 'top-right',
