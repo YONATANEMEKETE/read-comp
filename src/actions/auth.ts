@@ -118,4 +118,19 @@ export const signinAction = async (
   }
 };
 
-export const signoutAction = async () => {};
+export const signoutAction = async (): Promise<void> => {
+  try {
+    await auth.api.signOut({
+      headers: {
+        // This ensures cookies are properly cleared
+        'Content-Type': 'application/json',
+      },
+    });
+  } catch (error) {
+    console.error('Signout error:', error);
+    // Even if there's an error, we still redirect to login
+  }
+
+  // Redirect to login page after signout
+  redirect('/login');
+};

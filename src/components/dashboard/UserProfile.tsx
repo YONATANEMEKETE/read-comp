@@ -2,8 +2,9 @@
 
 import * as React from 'react';
 import { LogOut, Sun, Moon, ChevronUp } from 'lucide-react';
-import { useSession, signOut } from '@/lib/auth-client';
+import { useSession } from '@/lib/auth-client';
 import { useTheme } from 'next-themes';
+import { signoutAction } from '@/actions/auth';
 
 import {
   DropdownMenu,
@@ -22,6 +23,17 @@ import { cn } from '@/lib/utils';
 export function UserProfile() {
   const { data: session, isPending } = useSession();
   const { theme, setTheme } = useTheme();
+  const [isSigningOut, setIsSigningOut] = React.useState(false);
+
+  const handleSignOut = async () => {
+    setIsSigningOut(true);
+    try {
+      await signoutAction();
+    } catch (error) {
+      console.error('Error signing out:', error);
+      setIsSigningOut(false);
+    }
+  };
 
   if (isPending) {
     return (
@@ -126,14 +138,17 @@ export function UserProfile() {
 
         <div className="p-1">
           <DropdownMenuItem
-            onClick={() => signOut()}
-            className="gap-3 px-3 py-2 rounded-xl text-muted-foreground focus:bg-destructive/10 focus:text-destructive transition-all font-medium cursor-pointer group"
+            onClick={handleSignOut}
+            disabled={isSigningOut}
+            className="gap-3 px-3 py-2 rounded-xl text-muted-foreground focus:bg-destructive/10 focus:text-destructive transition-all font-medium cursor-pointer group disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <LogOut
               size={18}
               className="group-focus:text-destructive transition-colors"
             />
-            <span className="text-sm">Log Out</span>
+            <span className="text-sm">
+              {isSigningOut ? 'Logging out...' : 'Log Out'}
+            </span>
           </DropdownMenuItem>
         </div>
       </DropdownMenuContent>
