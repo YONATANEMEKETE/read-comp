@@ -97,7 +97,6 @@ export function DashboardHeader() {
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-60 p-5 rounded-2xl shadow-xl border-border/60 bg-popover mr-6 mt-2">
-            <div className="absolute -top-1.5 right-4 size-2.5 bg-popover border-t border-l border-border/60 rotate-45 transform"></div>
             <h4 className="font-display font-bold text-foreground mb-4 text-[15px] tracking-tight">
               Filter by Status
             </h4>
