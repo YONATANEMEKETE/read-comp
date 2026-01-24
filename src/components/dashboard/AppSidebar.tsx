@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { UserProfile } from './UserProfile';
+import { UploadBookDialog } from './UploadBookDialog';
 import { cn } from '@/lib/utils';
 import { Logo } from '../common/Logo';
 
@@ -43,6 +44,7 @@ const navItems = [
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const [uploadDialogOpen, setUploadDialogOpen] = React.useState(false);
 
   return (
     <Sidebar className="border-r border-sidebar-border bg-sidebar/50 backdrop-blur-md">
@@ -98,9 +100,12 @@ export function AppSidebar() {
         <div className="my-2 border-t border-sidebar-border/50 opacity-50" />
 
         <div className="px-2 pt-2 pb-2">
-          <Button className="w-full h-10 rounded-xl bg-sidebar-primary hover:bg-sidebar-primary/90 text-sidebar-primary-foreground text-sm font-semibold shadow-sm transition-all active:scale-[0.98] gap-2.5 group border-none cursor-pointer">
+          <Button
+            onClick={() => setUploadDialogOpen(true)}
+            className="w-full h-10 rounded-xl bg-sidebar-primary hover:bg-sidebar-primary/90 text-sidebar-primary-foreground text-sm font-semibold shadow-sm transition-all active:scale-[0.98] gap-2.5 group border-none cursor-pointer"
+          >
             <Upload size={16} />
-            <span>Upload PDF</span>
+            <span>Upload a Book</span>
           </Button>
         </div>
       </SidebarContent>
@@ -124,6 +129,11 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
+
+      <UploadBookDialog
+        open={uploadDialogOpen}
+        onOpenChange={setUploadDialogOpen}
+      />
     </Sidebar>
   );
 }
