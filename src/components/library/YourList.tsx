@@ -11,10 +11,12 @@ import { ArrowRight } from 'lucide-react';
 import { motion } from 'motion/react';
 import { getUserBooks } from '@/actions/books';
 import { useQuery } from '@tanstack/react-query';
+import { useSearchStore } from '@/store/useSearchStore';
 
 export function YourList() {
   const { view } = useViewStore();
   const { filters } = useFilterStore();
+  const { searchTerm } = useSearchStore();
 
   const {
     data: books = [],
@@ -41,12 +43,19 @@ export function YourList() {
   const hasActiveFilters =
     filters.reading || filters.onShelf || filters.finished;
 
-  // Filter YOUR BOOKS based on status (client-side filtering)
+  // Filter YOUR BOOKS based on status and search term (client-side filtering)
   const filteredBooks = isLoading
     ? []
     : books
         .filter((b) => {
-          // If NO filters are active, show ALL books
+          // Apply search filter first - check if book title or author matches search term
+          const matchesSearch = !searchTerm ||
+            b.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            b.author.toLowerCase().includes(searchTerm.toLowerCase());
+
+          if (!matchesSearch) return false;
+
+          // If NO filters are active, show books that match search
           if (!hasActiveFilters) return true;
 
           // Get the book's status (READING, FINISHED, or NEW/undefined for On Shelf)

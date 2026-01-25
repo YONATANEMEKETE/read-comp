@@ -11,10 +11,12 @@ import Link from 'next/link';
 import { motion } from 'motion/react';
 import { getSuggestedBooks } from '@/actions/books';
 import { useQuery } from '@tanstack/react-query';
+import { useSearchStore } from '@/store/useSearchStore';
 
 export function SuggestedList() {
   const { view } = useViewStore();
   const { filters } = useFilterStore();
+  const { searchTerm } = useSearchStore();
 
   const {
     data: books = [],
@@ -41,16 +43,20 @@ export function SuggestedList() {
   const hasActiveFilters =
     filters.reading || filters.onShelf || filters.finished;
 
-  // Filter SUGGESTED BOOKS (client-side filtering)
+  // Filter SUGGESTED BOOKS based on status and search term (client-side filtering)
   const filteredBooks = isLoading
     ? []
     : books
         .filter((b) => {
-          // Note: b.isSuggested is implicit since we fetched from getSuggestedBooks/schema
-          // BUT we should verify if the mock data had explicit 'isSuggested' and we are replicating logic
-          // Our action returns books where isSuggested=true. So we don't need to filter by it again unless we want to be safe.
+          // Apply search filter first - check if book title or author matches search term
+          const matchesSearch =
+            !searchTerm ||
+            b.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            b.author.toLowerCase().includes(searchTerm.toLowerCase());
 
-          // If NO filters are active, show ALL suggested books
+          if (!matchesSearch) return false;
+
+          // If NO filters are active, show books that match search
           if (!hasActiveFilters) return true;
 
           // Get the book's status (READING, FINISHED, or NEW/undefined for On Shelf)

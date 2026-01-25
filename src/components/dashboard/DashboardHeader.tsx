@@ -14,10 +14,12 @@ import {
 import { cn } from '@/lib/utils';
 import { useViewStore } from '@/store/useViewStore';
 import { useFilterStore } from '@/store/useFilterStore';
+import { useSearchStore } from '@/store/useSearchStore';
 
 export function DashboardHeader() {
   const { view, setView } = useViewStore();
   const { filters, setFilters } = useFilterStore(); // Get filters from global store
+  const { searchTerm, setSearchTerm } = useSearchStore();
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
 
   return (
@@ -33,6 +35,8 @@ export function DashboardHeader() {
             className="w-full pl-9 pr-4 h-9 bg-card dark:bg-stone-800/20 border border-border/80 rounded-full text-sm text-foreground placeholder-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/30 shadow-none transition-all"
             placeholder="Find a book or author..."
             type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
       </div>
