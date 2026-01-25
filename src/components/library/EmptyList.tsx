@@ -24,7 +24,7 @@ export function EmptyList({
   return (
     <div
       className={cn(
-        'flex flex-col items-center justify-center py-16 bg-white/40 dark:bg-stone-800/20 rounded-3xl border border-dashed border-sepia-divider',
+        'flex flex-col items-center justify-center w-full min-h-[70vh] py-16 bg-white/40 dark:bg-stone-800/20 rounded-3xl border border-dashed border-sepia-divider',
         className,
       )}
     >

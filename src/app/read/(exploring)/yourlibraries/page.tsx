@@ -9,7 +9,11 @@ import { cn } from '@/lib/utils';
 import { useViewStore } from '@/store/useViewStore';
 import { useFilterStore } from '@/store/useFilterStore';
 import { motion } from 'motion/react';
-import { getUserBooks, updateBookFavoriteAction, updateBookDeleteAction } from '@/actions/books';
+import {
+  getUserBooks,
+  updateBookFavoriteAction,
+  updateBookDeleteAction,
+} from '@/actions/books';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSearchStore } from '@/store/useSearchStore';
 import { useState } from 'react';
@@ -45,16 +49,16 @@ export default function YourLibraryPage() {
         // Handle different possible structures of cached data
         if (Array.isArray(old)) {
           // If it's a simple array of books
-          return old.map(b =>
+          return old.map((b) =>
             b.id === bookId
               ? {
                   ...b,
                   userProgress: {
                     ...b.userProgress,
-                    isFavorite: isFavorite
-                  }
+                    isFavorite: isFavorite,
+                  },
                 }
-              : b
+              : b,
           );
         } else if (old.pages) {
           // If it's a paginated response
@@ -69,13 +73,13 @@ export default function YourLibraryPage() {
                           ...b,
                           userProgress: {
                             ...b.userProgress,
-                            isFavorite: isFavorite
-                          }
+                            isFavorite: isFavorite,
+                          },
                         }
-                      : b
+                      : b,
                   )
-                : page.books
-            }))
+                : page.books,
+            })),
           };
         } else if (old.books) {
           // If it's an object with a books property
@@ -88,12 +92,12 @@ export default function YourLibraryPage() {
                         ...b,
                         userProgress: {
                           ...b.userProgress,
-                          isFavorite: isFavorite
-                        }
+                          isFavorite: isFavorite,
+                        },
                       }
-                    : b
+                    : b,
                 )
-              : old.books
+              : old.books,
           };
         }
 
@@ -126,7 +130,7 @@ export default function YourLibraryPage() {
         // Handle different possible structures of cached data
         if (Array.isArray(old)) {
           // If it's a simple array of books
-          return old.filter(b => b.id !== bookId);
+          return old.filter((b) => b.id !== bookId);
         } else if (old.pages) {
           // If it's a paginated response
           return {
@@ -135,8 +139,8 @@ export default function YourLibraryPage() {
               ...page,
               books: Array.isArray(page.books)
                 ? page.books.filter((b: any) => b.id !== bookId)
-                : page.books
-            }))
+                : page.books,
+            })),
           };
         } else if (old.books) {
           // If it's an object with a books property
@@ -144,7 +148,7 @@ export default function YourLibraryPage() {
             ...old,
             books: Array.isArray(old.books)
               ? old.books.filter((b: any) => b.id !== bookId)
-              : old.books
+              : old.books,
           };
         }
 
@@ -181,33 +185,33 @@ export default function YourLibraryPage() {
   // Filter YOUR BOOKS based on status and search term (client-side filtering)
   const filteredBooks = isLoading
     ? []
-    : books
-        .filter((b) => {
-          // Apply search filter first - check if book title or author matches search term
-          const matchesSearch = !searchTerm ||
-            b.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            b.author.toLowerCase().includes(searchTerm.toLowerCase());
+    : books.filter((b) => {
+        // Apply search filter first - check if book title or author matches search term
+        const matchesSearch =
+          !searchTerm ||
+          b.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          b.author.toLowerCase().includes(searchTerm.toLowerCase());
 
-          if (!matchesSearch) return false;
+        if (!matchesSearch) return false;
 
-          // If NO filters are active, show books that match search
-          if (!hasActiveFilters) return true;
+        // If NO filters are active, show books that match search
+        if (!hasActiveFilters) return true;
 
-          // Get the book's status (READING, FINISHED, or NEW/undefined for On Shelf)
-          const status = b.userProgress?.status;
+        // Get the book's status (READING, FINISHED, or NEW/undefined for On Shelf)
+        const status = b.userProgress?.status;
 
-          // Check if this book matches any active filter (OR logic)
-          if (status === 'READING' && filters.reading) return true;
-          if (status === 'FINISHED' && filters.finished) return true;
-          if ((status === 'NEW' || !status) && filters.onShelf) return true;
+        // Check if this book matches any active filter (OR logic)
+        if (status === 'READING' && filters.reading) return true;
+        if (status === 'FINISHED' && filters.finished) return true;
+        if ((status === 'NEW' || !status) && filters.onShelf) return true;
 
-          // If no filter matches, don't show this book
-          return false;
-        });
+        // If no filter matches, don't show this book
+        return false;
+      });
 
   if (filteredBooks.length === 0 && !isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+      <div className="px-2">
         <EmptyList
           title="Your library is empty"
           description="Upload your first PDF to start your reading journey and build your personal collection."
@@ -237,9 +241,12 @@ export default function YourLibraryPage() {
     <div className="py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-10">
-          <h1 className="text-2xl font-bold text-stone-900 dark:text-white mb-2">Your Library</h1>
+          <h1 className="text-2xl font-bold text-stone-900 dark:text-white mb-2">
+            Your Library
+          </h1>
           <p className="text-stone-600 dark:text-stone-400">
-            {filteredBooks.length} book{filteredBooks.length !== 1 ? 's' : ''} in your collection
+            {filteredBooks.length} book{filteredBooks.length !== 1 ? 's' : ''}{' '}
+            in your collection
           </p>
         </div>
 
@@ -259,9 +266,15 @@ export default function YourLibraryPage() {
           ) : (
             <>
               {filteredBooks.map((book) => (
-                <BookCard key={book.id} book={book} view={view} onToggleFavorite={handleToggleFavorite} onDelete={handleDelete} />
+                <BookCard
+                  key={book.id}
+                  book={book}
+                  view={view}
+                  onToggleFavorite={handleToggleFavorite}
+                  onDelete={handleDelete}
+                />
               ))}
-              
+
               {/* Add upload button at the end if in grid view */}
               {view === 'grid' && (
                 <motion.div
