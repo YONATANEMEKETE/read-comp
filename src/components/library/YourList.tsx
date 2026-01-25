@@ -1,6 +1,7 @@
 'use client';
 
 import { BookCard } from './BookCard';
+import { BookCardSkeletons } from './BookCardSkeleton';
 import { cn } from '@/lib/utils';
 import { useViewStore } from '@/store/useViewStore';
 import { useFilterStore } from '@/store/useFilterStore';
@@ -25,10 +26,6 @@ export function YourList() {
 
   console.log(books);
 
-  if (isLoading)
-    return (
-      <div className="text-sm text-stone-500">Loading your library...</div>
-    );
   if (isError)
     return (
       <div className="text-sm text-red-500">Failed to load your library.</div>
@@ -39,8 +36,9 @@ export function YourList() {
     filters.reading || filters.onShelf || filters.finished;
 
   // Filter YOUR BOOKS based on status (client-side filtering)
-  const filteredBooks = books
-    .filter((b) => {
+  const filteredBooks = isLoading
+    ? []
+    : books.filter((b) => {
       // If NO filters are active, show ALL books
       if (!hasActiveFilters) return true;
 
@@ -54,8 +52,7 @@ export function YourList() {
 
       // If no filter matches, don't show this book
       return false;
-    })
-    .slice(0, 5); // Limit to 5 books
+    }).slice(0, 5); // Limit to 5 books
 
   if (filteredBooks.length === 0 && !isLoading) {
     return (
@@ -94,7 +91,7 @@ export function YourList() {
       </div>
 
       <motion.div
-        key={`${view}-${filteredBooks.length}`}
+        key={`${view}-${isLoading ? 'loading' : filteredBooks.length}`}
         variants={container}
         initial="hidden"
         animate="visible"
@@ -104,25 +101,31 @@ export function YourList() {
             : 'flex flex-col gap-4',
         )}
       >
-        {filteredBooks.map((book) => (
-          <BookCard key={book.id} book={book} view={view} />
-        ))}
+        {isLoading ? (
+          <BookCardSkeletons count={5} view={view} />
+        ) : (
+          <>
+            {filteredBooks.map((book) => (
+              <BookCard key={book.id} book={book} view={view} />
+            ))}
 
-        {view === 'grid' && filteredBooks.length > 0 && (
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, scale: 0.9 },
-              visible: { opacity: 1, scale: 1 },
-            }}
-            className="flex flex-col opacity-60"
-          >
-            <div className="aspect-3/4 w-full rounded-2xl border-2 border-dashed border-sepia-divider mb-4 flex flex-col items-center justify-center group cursor-pointer hover:border-primary/50 transition-colors">
-              <span className="text-stone-300 text-4xl mb-2 font-light">+</span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400">
-                Add Book
-              </span>
-            </div>
-          </motion.div>
+            {view === 'grid' && filteredBooks.length > 0 && (
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, scale: 0.9 },
+                  visible: { opacity: 1, scale: 1 },
+                }}
+                className="flex flex-col opacity-60"
+              >
+                <div className="aspect-3/4 w-full rounded-2xl border-2 border-dashed border-sepia-divider mb-4 flex flex-col items-center justify-center group cursor-pointer hover:border-primary/50 transition-colors">
+                  <span className="text-stone-300 text-4xl mb-2 font-light">+</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400">
+                    Add Book
+                  </span>
+                </div>
+              </motion.div>
+            )}
+          </>
         )}
       </motion.div>
     </section>

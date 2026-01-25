@@ -1,6 +1,7 @@
 'use client';
 
 import { BookCard } from './BookCard';
+import { BookCardSkeletons } from './BookCardSkeleton';
 import { ArrowRight } from 'lucide-react';
 import { useViewStore } from '@/store/useViewStore';
 import { useFilterStore } from '@/store/useFilterStore';
@@ -25,8 +26,6 @@ export function SuggestedList() {
 
   console.log(books);
 
-  if (isLoading)
-    return <div className="text-sm text-stone-500">Loading suggestions...</div>;
   if (isError)
     return (
       <div className="text-sm text-red-500">Failed to load suggestions.</div>
@@ -37,27 +36,29 @@ export function SuggestedList() {
     filters.reading || filters.onShelf || filters.finished;
 
   // Filter SUGGESTED BOOKS (client-side filtering)
-  const filteredBooks = books
-    .filter((b) => {
-      // Note: b.isSuggested is implicit since we fetched from getSuggestedBooks/schema
-      // BUT we should verify if the mock data had explicit 'isSuggested' and we are replicating logic
-      // Our action returns books where isSuggested=true. So we don't need to filter by it again unless we want to be safe.
+  const filteredBooks = isLoading
+    ? []
+    : books
+        .filter((b) => {
+          // Note: b.isSuggested is implicit since we fetched from getSuggestedBooks/schema
+          // BUT we should verify if the mock data had explicit 'isSuggested' and we are replicating logic
+          // Our action returns books where isSuggested=true. So we don't need to filter by it again unless we want to be safe.
 
-      // If NO filters are active, show ALL suggested books
-      if (!hasActiveFilters) return true;
+          // If NO filters are active, show ALL suggested books
+          if (!hasActiveFilters) return true;
 
-      // Get the book's status (READING, FINISHED, or NEW/undefined for On Shelf)
-      const status = b.userProgress?.status;
+          // Get the book's status (READING, FINISHED, or NEW/undefined for On Shelf)
+          const status = b.userProgress?.status;
 
-      // Check if this book matches any active filter (OR logic)
-      if (status === 'READING' && filters.reading) return true;
-      if (status === 'FINISHED' && filters.finished) return true;
-      if ((status === 'NEW' || !status) && filters.onShelf) return true;
+          // Check if this book matches any active filter (OR logic)
+          if (status === 'READING' && filters.reading) return true;
+          if (status === 'FINISHED' && filters.finished) return true;
+          if ((status === 'NEW' || !status) && filters.onShelf) return true;
 
-      // If no filter matches, don't show this book
-      return false;
-    })
-    .slice(0, 12); // Limit to 12 books
+          // If no filter matches, don't show this book
+          return false;
+        })
+        .slice(0, 12); // Limit to 12 books
 
   const container = {
     hidden: { opacity: 0 },
@@ -88,7 +89,7 @@ export function SuggestedList() {
       </div>
 
       <motion.div
-        key={`${view}-${filteredBooks.length}`}
+        key={`${view}-${isLoading ? 'loading' : filteredBooks.length}`}
         variants={container}
         initial="hidden"
         animate="visible"
@@ -98,9 +99,13 @@ export function SuggestedList() {
             : 'flex flex-col gap-4',
         )}
       >
-        {filteredBooks.map((book) => (
-          <BookCard key={book.id} book={book} view={view} />
-        ))}
+        {isLoading ? (
+          <BookCardSkeletons count={5} view={view} />
+        ) : (
+          filteredBooks.map((book) => (
+            <BookCard key={book.id} book={book} view={view} />
+          ))
+        )}
       </motion.div>
     </section>
   );
