@@ -11,7 +11,7 @@ import { useFilterStore } from '@/store/useFilterStore';
 import Link from 'next/link';
 import { ArrowRight, Upload } from 'lucide-react';
 import { motion } from 'motion/react';
-import { getUserBooks, updateBookFavoriteAction } from '@/actions/books';
+import { getUserBooks, updateBookFavoriteAction, updateBookDeleteAction } from '@/actions/books';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSearchStore } from '@/store/useSearchStore';
 import { useState } from 'react';
@@ -113,6 +113,57 @@ export function YourList() {
       // Revert the optimistic update on error
       queryClient.setQueryData(['user-books'], previousBooks);
       toast.error('Failed to update favorite status. Please try again.');
+    }
+  };
+
+  const handleDelete = async (bookId: string) => {
+    // Get the current cached data to restore in case of error
+    const previousBooks = queryClient.getQueryData(['user-books']);
+
+    try {
+      // Optimistically update the cache to remove the book
+      queryClient.setQueryData(['user-books'], (old: any) => {
+        if (!old) return old;
+
+        // Handle different possible structures of cached data
+        if (Array.isArray(old)) {
+          // If it's a simple array of books
+          return old.filter(b => b.id !== bookId);
+        } else if (old.pages) {
+          // If it's a paginated response
+          return {
+            ...old,
+            pages: old.pages.map((page: any) => ({
+              ...page,
+              books: Array.isArray(page.books)
+                ? page.books.filter((b: any) => b.id !== bookId)
+                : page.books
+            }))
+          };
+        } else if (old.books) {
+          // If it's an object with a books property
+          return {
+            ...old,
+            books: Array.isArray(old.books)
+              ? old.books.filter((b: any) => b.id !== bookId)
+              : old.books
+          };
+        }
+
+        return old;
+      });
+
+      // Call the server action
+      const result = await updateBookDeleteAction(bookId);
+
+      if (!result.success) {
+        // Error: throw to trigger catch block
+        throw new Error(result.message);
+      }
+    } catch (error) {
+      // Revert the optimistic update on error
+      queryClient.setQueryData(['user-books'], previousBooks);
+      toast.error('Failed to delete book. Please try again.');
     }
   };
 
@@ -223,7 +274,7 @@ export function YourList() {
           ) : (
             <>
               {filteredBooks.map((book) => (
-                <BookCard key={book.id} book={book} view={view} onToggleFavorite={handleToggleFavorite} />
+                <BookCard key={book.id} book={book} view={view} onToggleFavorite={handleToggleFavorite} onDelete={handleDelete} />
               ))}
 
               {view === 'grid' && filteredBooks.length > 0 && (

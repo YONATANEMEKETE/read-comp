@@ -25,9 +25,10 @@ interface BookCardProps {
   book: BookWithProgress;
   view?: 'grid' | 'list';
   onToggleFavorite?: (bookId: string, isFavorite: boolean) => void;
+  onDelete?: (bookId: string) => void;
 }
 
-export function BookCard({ book, view = 'grid', onToggleFavorite }: BookCardProps) {
+export function BookCard({ book, view = 'grid', onToggleFavorite, onDelete }: BookCardProps) {
   const router = useRouter();
   const isReading = book.userProgress?.status === 'READING';
   const isFinished = book.userProgress?.status === 'FINISHED';
@@ -134,7 +135,7 @@ export function BookCard({ book, view = 'grid', onToggleFavorite }: BookCardProp
               isFavorite={isFavorite}
               onReadNow={handleReadNow}
               onMarkFavorite={() => onToggleFavorite?.(book.id, !isFavorite)}
-              onDelete={() => {}}
+              onDelete={() => onDelete?.(book.id)}
             />
           </div>
         </motion.div>
@@ -197,17 +198,6 @@ export function BookCard({ book, view = 'grid', onToggleFavorite }: BookCardProp
           <p className="text-xs text-stone-500 italic line-clamp-1">
             {book.author}
           </p>
-
-          {/* Dropdown menu for grid view */}
-          <div className="mt-2">
-            <BookDropdownMenu
-              bookType={book.isSuggested ? 'suggested' : 'your-library'}
-              isFavorite={isFavorite}
-              onReadNow={handleReadNow}
-              onMarkFavorite={() => onToggleFavorite?.(book.id, !isFavorite)}
-              onDelete={() => {}}
-            />
-          </div>
         </motion.div>
       </Link>
     </TooltipProvider>

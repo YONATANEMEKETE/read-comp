@@ -115,6 +115,7 @@ export async function getUserBooks(): Promise<BookWithProgress[]> {
         book: {
           isSuggested: false,
         },
+        deletedAt: null, // Only include books that haven't been soft-deleted
       },
       include: {
         book: true,
@@ -270,6 +271,62 @@ export async function updateBookFavoriteAction(
     return {
       success: false,
       message: 'Failed to update book favorite status. Please try again.',
+    };
+  }
+}
+
+export type UpdateBookDeleteActionState = {
+  success: boolean;
+  message: string;
+  data?: any;
+};
+
+export async function updateBookDeleteAction(
+  bookId: string
+): Promise<UpdateBookDeleteActionState> {
+  try {
+    // Get user session
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session || !session.user) {
+      return {
+        success: false,
+        message: 'You must be logged in to delete a book.',
+      };
+    }
+
+    const userId = session.user.id;
+
+    // Update the user book record to mark as deleted (soft delete)
+    const updatedUserBook = await prisma.userBook.update({
+      where: {
+        userId_bookId: {
+          userId,
+          bookId,
+        },
+      },
+      data: {
+        deletedAt: new Date(),
+        updatedAt: new Date(),
+      },
+    });
+
+    // Revalidate the relevant paths
+    revalidatePath('/read');
+    revalidatePath('/read/yourlibraries');
+
+    return {
+      success: true,
+      message: 'Book removed from your library',
+      data: updatedUserBook,
+    };
+  } catch (error) {
+    console.error('Error deleting book:', error);
+    return {
+      success: false,
+      message: 'Failed to delete book. Please try again.',
     };
   }
 }
