@@ -2,6 +2,7 @@
 
 import { BookCard } from './BookCard';
 import { BookCardSkeletons } from './BookCardSkeleton';
+import { FailedToLoadBook } from './FailedToLoadBook';
 import { cn } from '@/lib/utils';
 import { useViewStore } from '@/store/useViewStore';
 import { useFilterStore } from '@/store/useFilterStore';
@@ -19,6 +20,7 @@ export function YourList() {
     data: books = [],
     isLoading,
     isError,
+    refetch,
   } = useQuery({
     queryKey: ['user-books'],
     queryFn: async () => await getUserBooks(),
@@ -28,7 +30,11 @@ export function YourList() {
 
   if (isError)
     return (
-      <div className="text-sm text-red-500">Failed to load your library.</div>
+      <FailedToLoadBook
+        title="Something went wrong while loading your library"
+        description="We couldn't load your collection this time. Please check your connection and try again."
+        onRetry={() => refetch()}
+      />
     );
 
   // Check if ANY filter is active
@@ -38,21 +44,23 @@ export function YourList() {
   // Filter YOUR BOOKS based on status (client-side filtering)
   const filteredBooks = isLoading
     ? []
-    : books.filter((b) => {
-      // If NO filters are active, show ALL books
-      if (!hasActiveFilters) return true;
+    : books
+        .filter((b) => {
+          // If NO filters are active, show ALL books
+          if (!hasActiveFilters) return true;
 
-      // Get the book's status (READING, FINISHED, or NEW/undefined for On Shelf)
-      const status = b.userProgress?.status;
+          // Get the book's status (READING, FINISHED, or NEW/undefined for On Shelf)
+          const status = b.userProgress?.status;
 
-      // Check if this book matches any active filter (OR logic)
-      if (status === 'READING' && filters.reading) return true;
-      if (status === 'FINISHED' && filters.finished) return true;
-      if ((status === 'NEW' || !status) && filters.onShelf) return true;
+          // Check if this book matches any active filter (OR logic)
+          if (status === 'READING' && filters.reading) return true;
+          if (status === 'FINISHED' && filters.finished) return true;
+          if ((status === 'NEW' || !status) && filters.onShelf) return true;
 
-      // If no filter matches, don't show this book
-      return false;
-    }).slice(0, 5); // Limit to 5 books
+          // If no filter matches, don't show this book
+          return false;
+        })
+        .slice(0, 5); // Limit to 5 books
 
   if (filteredBooks.length === 0 && !isLoading) {
     return (
@@ -118,7 +126,9 @@ export function YourList() {
                 className="flex flex-col opacity-60"
               >
                 <div className="aspect-3/4 w-full rounded-2xl border-2 border-dashed border-sepia-divider mb-4 flex flex-col items-center justify-center group cursor-pointer hover:border-primary/50 transition-colors">
-                  <span className="text-stone-300 text-4xl mb-2 font-light">+</span>
+                  <span className="text-stone-300 text-4xl mb-2 font-light">
+                    +
+                  </span>
                   <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400">
                     Add Book
                   </span>

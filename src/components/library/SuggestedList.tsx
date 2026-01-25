@@ -2,6 +2,7 @@
 
 import { BookCard } from './BookCard';
 import { BookCardSkeletons } from './BookCardSkeleton';
+import { FailedToLoadBook } from './FailedToLoadBook';
 import { ArrowRight } from 'lucide-react';
 import { useViewStore } from '@/store/useViewStore';
 import { useFilterStore } from '@/store/useFilterStore';
@@ -19,6 +20,7 @@ export function SuggestedList() {
     data: books = [],
     isLoading,
     isError,
+    refetch,
   } = useQuery({
     queryKey: ['suggested-books'],
     queryFn: async () => await getSuggestedBooks(),
@@ -28,7 +30,11 @@ export function SuggestedList() {
 
   if (isError)
     return (
-      <div className="text-sm text-red-500">Failed to load suggestions.</div>
+      <FailedToLoadBook
+        title="Something went wrong while loading suggestions"
+        description="We couldn't load suggested books this time. Please check your connection and try again."
+        onRetry={() => refetch()}
+      />
     );
 
   // Check if ANY filter is active
