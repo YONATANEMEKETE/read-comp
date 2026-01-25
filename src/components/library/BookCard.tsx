@@ -19,6 +19,7 @@ import { BookStatusBadge } from './BookStatusBadge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Link from 'next/link';
 import { BookDropdownMenu } from '@/components/ui/BookDropdownMenu';
+import { useRouter } from 'next/navigation';
 
 interface BookCardProps {
   book: BookWithProgress;
@@ -26,6 +27,7 @@ interface BookCardProps {
 }
 
 export function BookCard({ book, view = 'grid' }: BookCardProps) {
+  const router = useRouter();
   const isReading = book.userProgress?.status === 'READING';
   const isFinished = book.userProgress?.status === 'FINISHED';
   const isFavorite = book.userProgress?.isFavorite;
@@ -36,6 +38,11 @@ export function BookCard({ book, view = 'grid' }: BookCardProps) {
     month: 'short',
     day: 'numeric',
   });
+
+  const handleReadNow = () => {
+    // Navigate to the book reading page using Next.js router
+    router.push(`/read/${book.id}`);
+  };
 
   if (view === 'list') {
     return (
@@ -70,7 +77,14 @@ export function BookCard({ book, view = 'grid' }: BookCardProps) {
                 </h4>
               </Link>
               {isFavorite && (
-                <Heart className="h-4 w-4 text-[#cda2a2] fill-current" />
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div>
+                      <Heart className="h-4 w-4 text-[#cda2a2] fill-current" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>Your favorite book</TooltipContent>
+                </Tooltip>
               )}
             </div>
             <Link href={`/read/${book.id}`}>
@@ -116,7 +130,7 @@ export function BookCard({ book, view = 'grid' }: BookCardProps) {
             </Tooltip>
             <BookDropdownMenu
               bookType={book.isSuggested ? 'suggested' : 'your-library'}
-              onReadNow={() => {}}
+              onReadNow={handleReadNow}
               onMarkFavorite={() => {}}
               onDelete={() => {}}
             />
@@ -186,7 +200,7 @@ export function BookCard({ book, view = 'grid' }: BookCardProps) {
           <div className="mt-2">
             <BookDropdownMenu
               bookType={book.isSuggested ? 'suggested' : 'your-library'}
-              onReadNow={() => {}}
+              onReadNow={handleReadNow}
               onMarkFavorite={() => {}}
               onDelete={() => {}}
             />
