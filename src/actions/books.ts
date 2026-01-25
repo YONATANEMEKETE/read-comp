@@ -5,6 +5,7 @@ import prisma from '@/lib/prisma';
 import { uploadBookSchema, UploadBookInput } from '@/types/validation';
 import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
+import { BookWithProgress } from '@/types/book';
 
 export type BookActionState = {
   success: boolean;
@@ -95,5 +96,123 @@ export async function createBookAction(
       success: false,
       message: 'Failed to create book. Please try again.',
     };
+  }
+}
+
+export async function getUserBooks(): Promise<BookWithProgress[]> {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session || !session.user) {
+    return [];
+  }
+
+  try {
+    const userBooks = await prisma.userBook.findMany({
+      where: {
+        userId: session.user.id,
+        book: {
+          isSuggested: false,
+        },
+      },
+      include: {
+        book: true,
+      },
+      orderBy: {
+        updatedAt: 'desc',
+      },
+    });
+
+    return userBooks.map((ub) => ({
+      ...ub.book,
+      createdAt: ub.book.createdAt.toISOString(),
+      updatedAt: ub.book.updatedAt.toISOString(),
+      deletedAt: ub.book.deletedAt ? ub.book.deletedAt.toISOString() : null,
+      userProgress: {
+        ...ub,
+        createdAt: ub.createdAt.toISOString(),
+        updatedAt: ub.updatedAt.toISOString(),
+        deletedAt: ub.deletedAt ? ub.deletedAt.toISOString() : null,
+        book: {
+          ...ub.book,
+          createdAt: ub.book.createdAt.toISOString(),
+          updatedAt: ub.book.updatedAt.toISOString(),
+          deletedAt: ub.book.deletedAt ? ub.book.deletedAt.toISOString() : null,
+        },
+      },
+    }));
+  } catch (error) {
+    console.error('Error fetching user books:', error);
+    return [];
+  }
+}
+
+export async function getSuggestedBooks(): Promise<BookWithProgress[]> {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const userId = session?.user?.id;
+
+  try {
+    const suggestedBooks = await prisma.book.findMany({
+      where: {
+        isSuggested: true,
+      },
+      include: {
+        userProgress: userId
+          ? {
+              where: {
+                userId: userId,
+              },
+              take: 1, // Only need one record since userId+bookId is unique
+            }
+          : {
+              where: {
+                userId: {
+                  in: [], // This will return an empty array when no userId
+                },
+              },
+            },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return suggestedBooks.map((book) => {
+      const userProgressRaw = book.userProgress?.[0];
+
+      let userProgress = undefined;
+
+      if (userProgressRaw) {
+        userProgress = {
+          ...userProgressRaw,
+          createdAt: userProgressRaw.createdAt.toISOString(),
+          updatedAt: userProgressRaw.updatedAt.toISOString(),
+          deletedAt: userProgressRaw.deletedAt
+            ? userProgressRaw.deletedAt.toISOString()
+            : null,
+          book: {
+            ...book,
+            createdAt: book.createdAt.toISOString(),
+            updatedAt: book.updatedAt.toISOString(),
+            deletedAt: book.deletedAt ? book.deletedAt.toISOString() : null,
+          },
+        };
+      }
+
+      return {
+        ...book,
+        createdAt: book.createdAt.toISOString(),
+        updatedAt: book.updatedAt.toISOString(),
+        deletedAt: book.deletedAt ? book.deletedAt.toISOString() : null,
+        userProgress,
+      };
+    });
+  } catch (error) {
+    console.error('Error fetching suggested books:', error);
+    return [];
   }
 }

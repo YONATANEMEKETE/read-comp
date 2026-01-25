@@ -7,35 +7,57 @@ import { useFilterStore } from '@/store/useFilterStore';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { motion } from 'motion/react';
-import { MOCK_BOOKS } from '@/lib/mock-data';
+import { getSuggestedBooks } from '@/actions/books';
+import { useQuery } from '@tanstack/react-query';
 
 export function SuggestedList() {
   const { view } = useViewStore();
   const { filters } = useFilterStore();
 
+  const {
+    data: books = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['suggested-books'],
+    queryFn: async () => await getSuggestedBooks(),
+  });
+
+  console.log(books);
+
+  if (isLoading)
+    return <div className="text-sm text-stone-500">Loading suggestions...</div>;
+  if (isError)
+    return (
+      <div className="text-sm text-red-500">Failed to load suggestions.</div>
+    );
+
   // Check if ANY filter is active
   const hasActiveFilters =
     filters.reading || filters.onShelf || filters.finished;
 
-  // Filter SUGGESTED BOOKS
-  const books = MOCK_BOOKS.filter((b) => {
-    // Only include suggested books
-    if (!b.isSuggested) return false;
+  // Filter SUGGESTED BOOKS (client-side filtering)
+  const filteredBooks = books
+    .filter((b) => {
+      // Note: b.isSuggested is implicit since we fetched from getSuggestedBooks/schema
+      // BUT we should verify if the mock data had explicit 'isSuggested' and we are replicating logic
+      // Our action returns books where isSuggested=true. So we don't need to filter by it again unless we want to be safe.
 
-    // If NO filters are active, show ALL suggested books
-    if (!hasActiveFilters) return true;
+      // If NO filters are active, show ALL suggested books
+      if (!hasActiveFilters) return true;
 
-    // Get the book's status (READING, FINISHED, or NEW/undefined for On Shelf)
-    const status = b.userProgress?.status;
+      // Get the book's status (READING, FINISHED, or NEW/undefined for On Shelf)
+      const status = b.userProgress?.status;
 
-    // Check if this book matches any active filter (OR logic)
-    if (status === 'READING' && filters.reading) return true;
-    if (status === 'FINISHED' && filters.finished) return true;
-    if ((status === 'NEW' || !status) && filters.onShelf) return true;
+      // Check if this book matches any active filter (OR logic)
+      if (status === 'READING' && filters.reading) return true;
+      if (status === 'FINISHED' && filters.finished) return true;
+      if ((status === 'NEW' || !status) && filters.onShelf) return true;
 
-    // If no filter matches, don't show this book
-    return false;
-  }).slice(0, 12); // Limit to 12 books
+      // If no filter matches, don't show this book
+      return false;
+    })
+    .slice(0, 12); // Limit to 12 books
 
   const container = {
     hidden: { opacity: 0 },
@@ -66,7 +88,7 @@ export function SuggestedList() {
       </div>
 
       <motion.div
-        key={`${view}-${books.length}`}
+        key={`${view}-${filteredBooks.length}`}
         variants={container}
         initial="hidden"
         animate="visible"
@@ -76,7 +98,7 @@ export function SuggestedList() {
             : 'flex flex-col gap-4',
         )}
       >
-        {books.map((book) => (
+        {filteredBooks.map((book) => (
           <BookCard key={book.id} book={book} view={view} />
         ))}
       </motion.div>

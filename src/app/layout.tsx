@@ -3,6 +3,7 @@ import { Inter, Noto_Serif } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from '@/components/ui/sonner';
+import { QueryProvider } from '@/components/providers/QueryProvider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -34,15 +35,17 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${notoSerif.variable} antialiased font-sans`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <main>{children}</main>
-          <Toaster />
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <main>{children}</main>
+            <Toaster />
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );
