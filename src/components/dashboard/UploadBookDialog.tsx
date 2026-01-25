@@ -26,6 +26,7 @@ import { useUploadThing } from '@/lib/uploadthing';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { extractFirstPageAsImage } from '@/lib/pdf-utils';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface UploadBookDialogProps {
   open: boolean;
@@ -54,6 +55,8 @@ export function UploadBookDialog({
 
   // Saving State (Server Action)
   const [isSaving, setIsSaving] = React.useState(false);
+
+  const queryClient = useQueryClient();
 
   const { startUpload: startPdfUpload, isUploading: isPdfUploading } =
     useUploadThing('pdfUploader', {
@@ -222,10 +225,14 @@ export function UploadBookDialog({
 
     // Show promise toast
     toast.promise(
-      createBookAction(bookData).then((result) => {
+      createBookAction(bookData).then(async (result) => {
         if (!result.success) {
           throw new Error(result.message);
         }
+
+        // Invalidate the user-books query to refresh the list
+        await queryClient.invalidateQueries({ queryKey: ['user-books'] });
+
         return result;
       }),
       {
