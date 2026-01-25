@@ -15,15 +15,10 @@ import {
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { motion } from 'motion/react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { BookStatusBadge } from './BookStatusBadge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Link from 'next/link';
+import { BookDropdownMenu } from '@/components/ui/BookDropdownMenu';
 
 interface BookCardProps {
   book: BookWithProgress;
@@ -119,25 +114,12 @@ export function BookCard({ book, view = 'grid' }: BookCardProps) {
                 {(!book.userProgress?.status || book.userProgress?.status === 'NEW') && 'Start Reading'}
               </TooltipContent>
             </Tooltip>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  className="size-9 flex items-center justify-center rounded-full text-stone-400 hover:text-stone-600 transition-colors"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                >
-                  <MoreVertical className="h-[22px] w-[22px]" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>View Details</DropdownMenuItem>
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>Mark as Finished</DropdownMenuItem>
-                <DropdownMenuItem className="text-destructive" onSelect={(e) => e.preventDefault()}>
-                  Remove from Library
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <BookDropdownMenu
+              bookType={book.isSuggested ? 'suggested' : 'your-library'}
+              onReadNow={() => {}}
+              onMarkFavorite={() => {}}
+              onDelete={() => {}}
+            />
           </div>
         </motion.div>
       </TooltipProvider>
@@ -199,6 +181,16 @@ export function BookCard({ book, view = 'grid' }: BookCardProps) {
           <p className="text-xs text-stone-500 italic line-clamp-1">
             {book.author}
           </p>
+
+          {/* Dropdown menu for grid view */}
+          <div className="mt-2">
+            <BookDropdownMenu
+              bookType={book.isSuggested ? 'suggested' : 'your-library'}
+              onReadNow={() => {}}
+              onMarkFavorite={() => {}}
+              onDelete={() => {}}
+            />
+          </div>
         </motion.div>
       </Link>
     </TooltipProvider>
