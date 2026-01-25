@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { MoreVertical, HeartPlus, Delete, BookOpen } from 'lucide-react';
+import { MoreVertical, BookOpen, Heart, Delete } from 'lucide-react';
 
 type BookType = 'your-library' | 'suggested';
 
 interface BookDropdownMenuProps {
   bookType: BookType;
+  isFavorite?: boolean;
   onReadNow?: () => void;
   onMarkFavorite?: () => void;
   onDelete?: () => void;
@@ -14,6 +15,7 @@ interface BookDropdownMenuProps {
 
 export function BookDropdownMenu({
   bookType,
+  isFavorite = false,
   onReadNow,
   onMarkFavorite,
   onDelete,
@@ -49,8 +51,8 @@ export function BookDropdownMenu({
       ? [
           { label: 'Read Now', icon: BookOpen, action: onReadNow },
           {
-            label: 'Mark as Favorite',
-            icon: HeartPlus,
+            label: isFavorite ? 'Remove from Favorites' : 'Mark as Favorite',
+            icon: Heart,
             action: onMarkFavorite,
           },
           {
@@ -63,8 +65,8 @@ export function BookDropdownMenu({
       : [
           { label: 'Read Now', icon: BookOpen, action: onReadNow },
           {
-            label: 'Mark as Favorite',
-            icon: HeartPlus,
+            label: isFavorite ? 'Remove from Favorites' : 'Mark as Favorite',
+            icon: Heart,
             action: onMarkFavorite,
           },
         ];
@@ -96,7 +98,9 @@ export function BookDropdownMenu({
                 <IconComponent
                   size={20}
                   className={
-                    option.isDangerous
+                    option.label.includes('Remove from Favorites')
+                      ? 'text-[#cda2a2] fill-current' // Filled heart for favorite
+                      : option.isDangerous
                       ? 'text-red-600 dark:text-red-400'
                       : 'text-stone-400'
                   }

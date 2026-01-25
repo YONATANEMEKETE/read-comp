@@ -24,9 +24,10 @@ import { useRouter } from 'next/navigation';
 interface BookCardProps {
   book: BookWithProgress;
   view?: 'grid' | 'list';
+  onToggleFavorite?: (bookId: string, isFavorite: boolean) => void;
 }
 
-export function BookCard({ book, view = 'grid' }: BookCardProps) {
+export function BookCard({ book, view = 'grid', onToggleFavorite }: BookCardProps) {
   const router = useRouter();
   const isReading = book.userProgress?.status === 'READING';
   const isFinished = book.userProgress?.status === 'FINISHED';
@@ -130,8 +131,9 @@ export function BookCard({ book, view = 'grid' }: BookCardProps) {
             </Tooltip>
             <BookDropdownMenu
               bookType={book.isSuggested ? 'suggested' : 'your-library'}
+              isFavorite={isFavorite}
               onReadNow={handleReadNow}
-              onMarkFavorite={() => {}}
+              onMarkFavorite={() => onToggleFavorite?.(book.id, !isFavorite)}
               onDelete={() => {}}
             />
           </div>
@@ -200,8 +202,9 @@ export function BookCard({ book, view = 'grid' }: BookCardProps) {
           <div className="mt-2">
             <BookDropdownMenu
               bookType={book.isSuggested ? 'suggested' : 'your-library'}
+              isFavorite={isFavorite}
               onReadNow={handleReadNow}
-              onMarkFavorite={() => {}}
+              onMarkFavorite={() => onToggleFavorite?.(book.id, !isFavorite)}
               onDelete={() => {}}
             />
           </div>

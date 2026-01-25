@@ -10,11 +10,13 @@ import { useFilterStore } from '@/store/useFilterStore';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { motion } from 'motion/react';
-import { getSuggestedBooks } from '@/actions/books';
-import { useQuery } from '@tanstack/react-query';
+import { getSuggestedBooks, updateBookFavoriteAction } from '@/actions/books';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSearchStore } from '@/store/useSearchStore';
+import { toast } from 'sonner';
 
 export function SuggestedList() {
+  const queryClient = useQueryClient();
   const { view } = useViewStore();
   const { filters } = useFilterStore();
   const { searchTerm } = useSearchStore();
@@ -28,6 +30,87 @@ export function SuggestedList() {
     queryKey: ['suggested-books'],
     queryFn: async () => await getSuggestedBooks(),
   });
+
+  const handleToggleFavorite = async (bookId: string, isFavorite: boolean) => {
+    // Get the current cached data to restore in case of error
+    const previousBooks = queryClient.getQueryData(['suggested-books']);
+
+    try {
+      // Optimistically update the cache
+      queryClient.setQueryData(['suggested-books'], (old: any) => {
+        if (!old) return old;
+
+        // Handle different possible structures of cached data
+        if (Array.isArray(old)) {
+          // If it's a simple array of books
+          return old.map(b =>
+            b.id === bookId
+              ? {
+                  ...b,
+                  userProgress: {
+                    ...b.userProgress,
+                    isFavorite: isFavorite
+                  }
+                }
+              : b
+          );
+        } else if (old.pages) {
+          // If it's a paginated response
+          return {
+            ...old,
+            pages: old.pages.map((page: any) => ({
+              ...page,
+              books: Array.isArray(page.books)
+                ? page.books.map((b: any) =>
+                    b.id === bookId
+                      ? {
+                          ...b,
+                          userProgress: {
+                            ...b.userProgress,
+                            isFavorite: isFavorite
+                          }
+                        }
+                      : b
+                  )
+                : page.books
+            }))
+          };
+        } else if (old.books) {
+          // If it's an object with a books property
+          return {
+            ...old,
+            books: Array.isArray(old.books)
+              ? old.books.map((b: any) =>
+                  b.id === bookId
+                    ? {
+                        ...b,
+                        userProgress: {
+                          ...b.userProgress,
+                          isFavorite: isFavorite
+                        }
+                      }
+                    : b
+                )
+              : old.books
+          };
+        }
+
+        return old;
+      });
+
+      // Call the server action
+      const result = await updateBookFavoriteAction(bookId, isFavorite);
+
+      if (!result.success) {
+        // Error: throw to trigger catch block
+        throw new Error(result.message);
+      }
+    } catch (error) {
+      // Revert the optimistic update on error
+      queryClient.setQueryData(['suggested-books'], previousBooks);
+      toast.error('Failed to update favorite status. Please try again.');
+    }
+  };
 
   console.log(books);
 
@@ -145,7 +228,7 @@ export function SuggestedList() {
           <BookCardSkeletons count={5} view={view} />
         ) : (
           filteredBooks.map((book) => (
-            <BookCard key={book.id} book={book} view={view} />
+            <BookCard key={book.id} book={book} view={view} onToggleFavorite={handleToggleFavorite} />
           ))
         )}
       </motion.div>

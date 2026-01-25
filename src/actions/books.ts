@@ -216,3 +216,60 @@ export async function getSuggestedBooks(): Promise<BookWithProgress[]> {
     return [];
   }
 }
+
+export type UpdateBookFavoriteActionState = {
+  success: boolean;
+  message: string;
+  data?: any;
+};
+
+export async function updateBookFavoriteAction(
+  bookId: string,
+  isFavorite: boolean
+): Promise<UpdateBookFavoriteActionState> {
+  try {
+    // Get user session
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session || !session.user) {
+      return {
+        success: false,
+        message: 'You must be logged in to update book favorite status.',
+      };
+    }
+
+    const userId = session.user.id;
+
+    // Update the user book favorite status
+    const updatedUserBook = await prisma.userBook.update({
+      where: {
+        userId_bookId: {
+          userId,
+          bookId,
+        },
+      },
+      data: {
+        isFavorite,
+        updatedAt: new Date(),
+      },
+    });
+
+    // Revalidate the relevant paths
+    revalidatePath('/read');
+    revalidatePath('/read/yourlibraries');
+
+    return {
+      success: true,
+      message: isFavorite ? 'Book marked as favorite' : 'Book removed from favorites',
+      data: updatedUserBook,
+    };
+  } catch (error) {
+    console.error('Error updating book favorite status:', error);
+    return {
+      success: false,
+      message: 'Failed to update book favorite status. Please try again.',
+    };
+  }
+}
