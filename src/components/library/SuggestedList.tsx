@@ -214,7 +214,7 @@ export function SuggestedList() {
       </div>
 
       <motion.div
-        key={`${view}-${isLoading ? 'loading' : filteredBooks.length}`}
+        key={`${view}-${searchTerm}-${filters.reading}-${filters.onShelf}-${filters.finished}-${isLoading ? 'loading' : filteredBooks.length}`}
         variants={container}
         initial="hidden"
         animate="visible"
