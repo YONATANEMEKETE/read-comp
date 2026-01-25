@@ -81,7 +81,7 @@ export function BookCard({ book, view = 'grid' }: BookCardProps) {
 
         {/* Status */}
         <div className="hidden md:flex items-center">
-          <BookStatusBadge status={book.userProgress?.status || 'NEW'} />
+          <BookStatusBadge status={book.userProgress?.status || 'NEW'} view={view} />
         </div>
 
         {/* Options */}
@@ -142,6 +142,7 @@ export function BookCard({ book, view = 'grid' }: BookCardProps) {
         {/* Status Badges (Top Left) */}
         <BookStatusBadge
           status={book.userProgress?.status || 'NEW'}
+          view={view}
           className="absolute top-3 left-3 px-2 py-0.5"
         />
 

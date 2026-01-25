@@ -87,13 +87,18 @@ export function DashboardHeader() {
               variant="outline"
               size="icon"
               className={cn(
-                'rounded-full w-9 h-9 border transition-all active:scale-95 shadow-sm cursor-pointer',
+                'rounded-full w-9 h-9 border transition-all active:scale-95 shadow-sm cursor-pointer relative',
                 isFilterOpen
                   ? 'bg-background text-primary border-primary/50'
                   : 'bg-background text-primary hover:bg-primary/10 hover:border-primary/50',
               )}
             >
               <Filter size={16} />
+              {!(filters.reading && filters.onShelf && filters.finished) && (
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
+                  {[filters.reading, filters.onShelf, filters.finished].filter(Boolean).length}
+                </span>
+              )}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-60 p-5 rounded-2xl shadow-xl border-border/60 bg-popover mr-6 mt-2">
