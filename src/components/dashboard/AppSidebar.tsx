@@ -4,7 +4,14 @@ import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { BookOpenText, Library, Heart, Upload, Settings } from 'lucide-react';
+import {
+  BookOpenText,
+  Library,
+  Heart,
+  Upload,
+  Settings,
+  Telescope,
+} from 'lucide-react';
 
 import {
   Sidebar,
@@ -39,6 +46,11 @@ const navItems = [
     title: 'Favorites',
     href: '/read/favorites',
     icon: Heart,
+  },
+  {
+    title: 'Explore',
+    href: '/read/explore',
+    icon: Telescope,
   },
 ];
 
