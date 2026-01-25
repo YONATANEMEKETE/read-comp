@@ -2,12 +2,13 @@
 
 import { BookCard } from './BookCard';
 import { BookCardSkeletons } from './BookCardSkeleton';
+import { EmptyList } from './EmptyList';
 import { FailedToLoadBook } from './FailedToLoadBook';
 import { cn } from '@/lib/utils';
 import { useViewStore } from '@/store/useViewStore';
 import { useFilterStore } from '@/store/useFilterStore';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Upload } from 'lucide-react';
 import { motion } from 'motion/react';
 import { getUserBooks } from '@/actions/books';
 import { useQuery } from '@tanstack/react-query';
@@ -73,9 +74,14 @@ export function YourList() {
 
   if (filteredBooks.length === 0 && !isLoading) {
     return (
-      <div className="text-sm text-stone-500 py-4">
-        No books found in your library.
-      </div>
+      <EmptyList
+        title="Your library is empty"
+        description="Upload your first PDF to start your reading journey and build your personal collection."
+        showButton={true}
+        buttonText="Upload PDF"
+        buttonIcon={<Upload className="h-4 w-4" />}
+        onButtonClick={() => {}}
+      />
     );
   }
 

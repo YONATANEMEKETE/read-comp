@@ -2,6 +2,7 @@
 
 import { BookCard } from './BookCard';
 import { BookCardSkeletons } from './BookCardSkeleton';
+import { EmptyList } from './EmptyList';
 import { FailedToLoadBook } from './FailedToLoadBook';
 import { ArrowRight } from 'lucide-react';
 import { useViewStore } from '@/store/useViewStore';
@@ -81,6 +82,35 @@ export function SuggestedList() {
       },
     },
   };
+
+  // Show empty state when no books are found after filtering
+  if (filteredBooks.length === 0 && !isLoading) {
+    return (
+      <section className="mb-12">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <div className="size-1 w-1 bg-primary rounded-full"></div>
+            <h3 className="text-xs font-bold text-stone-400 dark:text-stone-500 uppercase tracking-[0.2em] font-sans">
+              Suggested For You
+            </h3>
+          </div>
+          <Link
+            href="/read/explore"
+            className="group flex items-center gap-2 text-[10px] font-bold text-primary hover:text-stone-900 dark:hover:text-stone-200 transition-colors uppercase tracking-widest"
+          >
+            Explore More
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </div>
+
+        <EmptyList
+          title="No suggestions found"
+          description="Try adjusting your filters or explore more books to find recommendations tailored for you."
+          showButton={false}
+        />
+      </section>
+    );
+  }
 
   return (
     <section className="mb-12">
