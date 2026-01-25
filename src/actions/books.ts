@@ -330,3 +330,54 @@ export async function updateBookDeleteAction(
     };
   }
 }
+
+export async function getFavoriteBooks(): Promise<BookWithProgress[]> {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session || !session.user) {
+    return [];
+  }
+
+  try {
+    const userBooks = await prisma.userBook.findMany({
+      where: {
+        userId: session.user.id,
+        isFavorite: true, // Only include books marked as favorite
+        book: {
+          isSuggested: false,
+        },
+        deletedAt: null, // Only include books that haven't been soft-deleted
+      },
+      include: {
+        book: true,
+      },
+      orderBy: {
+        updatedAt: 'desc',
+      },
+    });
+
+    return userBooks.map((ub) => ({
+      ...ub.book,
+      createdAt: ub.book.createdAt.toISOString(),
+      updatedAt: ub.book.updatedAt.toISOString(),
+      deletedAt: ub.book.deletedAt ? ub.book.deletedAt.toISOString() : null,
+      userProgress: {
+        ...ub,
+        createdAt: ub.createdAt.toISOString(),
+        updatedAt: ub.updatedAt.toISOString(),
+        deletedAt: ub.deletedAt ? ub.deletedAt.toISOString() : null,
+        book: {
+          ...ub.book,
+          createdAt: ub.book.createdAt.toISOString(),
+          updatedAt: ub.book.updatedAt.toISOString(),
+          deletedAt: ub.book.deletedAt ? ub.book.deletedAt.toISOString() : null,
+        },
+      },
+    }));
+  } catch (error) {
+    console.error('Error fetching favorite books:', error);
+    return [];
+  }
+}
