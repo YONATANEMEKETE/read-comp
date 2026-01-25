@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cozy Reading &amp; Insights Workspace</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Noto+Serif:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#9a8470",
+                        "warm-bg": "#faf9f6",
+                        "paper-texture": "#fdfbf7",
+                        "sepia-divider": "#e5ddd3",
+                        "dusty-rose": "#cda2a2",
+                        "sage-green": "#9fb1a2",
+                        "muted-blue": "#a5b2bd",
+                        "background-dark": "#1d1a15",
+                        "sidebar-dark": "#111318",
+                        "highlight-yellow": "#fef3c7"
+                    },
+                    fontFamily: {
+                        display: ["Playfair Display", "serif"],
+                        serif: ["Noto Serif", "serif"],
+                        sans: ["Inter", "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", "'Segoe UI'", "Roboto", "'Helvetica Neue'", "Arial", "sans-serif"]
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                        lg: "0.75rem",
+                        xl: "1rem",
+                        '2xl': '1.5rem',
+                        '3xl': '2rem',
+                        full: "9999px"
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.03)',
+                        'floating': '0 10px 40px -10px rgba(0, 0, 0, 0.1)',
+                        'paper': '0 2px 10px rgba(0, 0, 0, 0.03)'
+                    }
+                }
+            }
+        };
+    </script>
+<style type="text/tailwindcss">
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #e5ddd3;
+            border-radius: 10px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background-color: #334155;
+        }
+        body {
+            background-color: theme('colors.warm-bg');
+        }
+        .paper-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        }::selection {
+            background-color: #fce7f3;color: #831843;
+        }[contenteditable]:empty:before {
+            content: attr(placeholder);
+            color: #a8a29e;
+            cursor: text;
+        }
+    </style>
+</head>
+<body class="bg-warm-bg dark:bg-background-dark font-sans text-stone-800 dark:text-stone-200 h-screen overflow-hidden flex flex-col">
+<header class="h-16 border-b border-sepia-divider dark:border-stone-800 flex items-center justify-between px-6 bg-white/60 dark:bg-sidebar-dark/80 backdrop-blur-sm z-30 shrink-0">
+<div class="flex items-center gap-4 w-1/3">
+<button class="flex items-center gap-2 text-stone-500 hover:text-stone-800 transition-colors group">
+<span class="material-symbols-outlined text-[20px] transition-transform group-hover:-translate-x-1">arrow_back</span>
+<span class="text-sm font-medium">Back to Library</span>
+</button>
+</div>
+<div class="flex flex-col items-center w-1/3">
+<h1 class="font-display font-semibold text-stone-900 dark:text-white text-lg tracking-tight">Thinking, Fast and Slow</h1>
+<div class="text-[10px] uppercase tracking-widest text-stone-400 font-bold mt-0.5">Daniel Kahneman</div>
+</div>
+<div class="flex items-center justify-end gap-4 w-1/3">
+<div class="flex items-center gap-3 bg-stone-100 dark:bg-stone-800 px-3 py-1.5 rounded-full">
+<span class="text-xs font-medium text-stone-600 dark:text-stone-300 w-12 text-right">34%</span>
+<div class="w-24 h-1.5 bg-stone-200 dark:bg-stone-700 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[34%] rounded-full"></div>
+</div>
+</div>
+<button class="p-2 text-stone-400 hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined text-[24px]">favorite</span>
+</button>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<main class="flex-1 bg-stone-100/50 dark:bg-stone-900/50 flex justify-center overflow-y-auto relative p-8">
+<div class="absolute top-[320px] left-1/2 -translate-x-20 z-50 flex flex-col items-center animate-bounce-subtle" style="animation: float 3s ease-in-out infinite;">
+<div class="bg-stone-900 text-white rounded-lg shadow-floating py-1.5 px-1.5 flex items-center gap-1 transform -translate-y-full mb-2">
+<button class="hover:bg-stone-700 px-3 py-1.5 rounded text-xs font-medium flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-[16px]">format_quote</span>
+                    Save Quote
+                </button>
+<div class="w-px h-4 bg-stone-700 mx-0.5"></div>
+<button class="hover:bg-stone-700 px-3 py-1.5 rounded text-xs font-medium flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-[16px]">edit_note</span>
+                    Add Note
+                </button>
+<div class="w-px h-4 bg-stone-700 mx-0.5"></div>
+<button class="hover:bg-stone-700 p-1.5 rounded transition-colors text-yellow-300">
+<span class="material-symbols-outlined text-[16px] fill-1">format_ink_highlighter</span>
+</button>
+<button class="hover:bg-stone-700 p-1.5 rounded transition-colors">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+<div class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-stone-900 -mt-2"></div>
+</div>
+<div class="w-full max-w-3xl bg-paper-texture dark:bg-[#1a1816] shadow-book min-h-[1200px] h-fit p-16 relative">
+<div class="font-serif text-lg leading-relaxed text-stone-800 dark:text-stone-300">
+<div class="text-xs text-stone-400 font-sans uppercase tracking-widest text-center mb-12">Chapter 3: The Lazy Controller</div>
+<h2 class="font-display text-3xl font-bold mb-8 text-stone-900 dark:text-stone-100">System 1 and System 2</h2>
+<p class="mb-6">
+                    System 1 runs automatically and System 2 is normally in a comfortable low-effort mode, in which only a fraction of its capacity is engaged. System 1 continuously generates suggestions for System 2: impressions, intuitions, intentions, and feelings. If endorsed by System 2, impressions and intuitions turn into beliefs, and impulses turn into voluntary actions.
+                </p>
+<p class="mb-6">
+                    When all goes smoothly, which is most of the time, System 2 adopts the suggestions of System 1 with little or no modification. You generally believe your impressions and act on your desires, and that is fine—usually.
+                </p>
+<p class="mb-6 bg-highlight-yellow/40 dark:bg-yellow-900/30 -mx-2 px-2 py-1 rounded">
+                    When System 1 runs into difficulty, it calls on System 2 to support more detailed and specific processing that may solve the problem of the moment. System 2 is mobilized when a question arises for which System 1 does not offer an answer, as happened to you when you encountered the multiplication problem 17 × 24.
+                </p>
+<p class="mb-6">
+                    You can also feel a surge of conscious attention whenever you are surprised. System 2 is activated when an event is detected that violates the model of the world that System 1 maintains. In this world, lamps do not jump, cats do not bark, and gorillas do not cross basketball courts.
+                </p>
+<p class="mb-6">
+                    The gorilla experiment demonstrates that some attention is needed for the surprising stimulus to be detected. Surprise then activates and orients your attention: you will stare, and you will search your memory for a story that makes sense of the surprising event.
+                </p>
+<p class="mb-6">
+                    Furthermore, System 2 is credited with the continuous monitoring of your own behavior—the control that keeps you polite when you are angry, and alert when you are driving at night.
+                </p>
+<div class="my-10 flex justify-center">
+<span class="text-stone-300 tracking-[1em] text-xl">***</span>
+</div>
+<p class="mb-6">
+                    The division of labor between System 1 and System 2 is highly efficient: it minimizes effort and optimizes performance. The arrangement works well most of the time because System 1 is generally very good at what it does: its models of familiar situations are accurate, its short-term predictions are usually correct, and its initial reactions to challenges are swift and generally appropriate.
+                </p>
+</div>
+<div class="absolute bottom-8 left-0 right-0 text-center">
+<span class="text-sm font-serif text-stone-400">42</span>
+</div>
+</div>
+</main>
+<aside class="w-[380px] bg-white dark:bg-sidebar-dark border-l border-sepia-divider dark:border-stone-800 flex flex-col shadow-soft z-20 relative">
+<div class="flex items-center px-6 pt-6 pb-2 border-b border-sepia-divider/50 dark:border-stone-800/50">
+<button class="pb-3 px-4 text-sm font-semibold text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 transition-colors">Notes</button>
+<button class="pb-3 px-4 text-sm font-semibold text-primary border-b-2 border-primary transition-colors">Quotes</button>
+<button class="pb-3 px-4 text-sm font-semibold text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 transition-colors">Stories</button>
+</div>
+<div class="px-6 py-4 bg-white dark:bg-sidebar-dark border-b border-sepia-divider/30 dark:border-stone-800/50">
+<div class="relative">
+<span class="absolute inset-y-0 left-0 flex items-center pl-3 text-stone-400">
+<span class="material-symbols-outlined text-[18px]">search</span>
+</span>
+<input class="w-full bg-transparent border border-stone-200 dark:border-stone-700 rounded-lg py-2 pl-9 pr-3 text-sm text-stone-700 dark:text-stone-300 placeholder-stone-400 focus:outline-none focus:border-primary/50 focus:ring-0 transition-colors" placeholder="Search saved quotes..." type="text"/>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto bg-warm-bg dark:bg-sidebar-dark relative p-6 space-y-4 pb-24">
+<div class="absolute inset-0 bg-warm-bg/70 dark:bg-sidebar-dark/80 backdrop-blur-[2px] z-20 transition-all duration-500"></div>
+<div class="bg-white dark:bg-[#1a1816] p-5 rounded-xl border border-stone-100 dark:border-stone-800 shadow-paper relative group hover:shadow-soft transition-all duration-300">
+<div class="absolute top-4 left-4 text-stone-300 dark:text-stone-600">
+<span class="material-symbols-outlined text-[20px] fill-1">format_quote</span>
+</div>
+<p class="font-serif text-stone-800 dark:text-stone-300 leading-relaxed mb-4 pl-6 relative z-10 italic">
+                    "When System 1 runs into difficulty, it calls on System 2 to support more detailed and specific processing that may solve the problem of the moment."
+                </p>
+<div class="flex items-center justify-between mt-2 pt-3 border-t border-stone-100 dark:border-stone-800/50">
+<div class="flex items-center gap-2">
+<button class="text-stone-300 hover:text-stone-500 transition-colors">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+<span class="text-[10px] font-medium text-primary bg-stone-50 dark:bg-stone-800/50 px-2 py-1 rounded-md">Quoted by Ronald Richards</span>
+</div>
+</div>
+<div class="bg-white dark:bg-[#1a1816] p-5 rounded-xl border border-stone-100 dark:border-stone-800 shadow-paper relative group hover:shadow-soft transition-all duration-300">
+<div class="absolute top-4 left-4 text-stone-300 dark:text-stone-600">
+<span class="material-symbols-outlined text-[20px] fill-1">format_quote</span>
+</div>
+<p class="font-serif text-stone-800 dark:text-stone-300 leading-relaxed mb-4 pl-6 relative z-10 italic">
+                    "System 2 is mobilized when a question arises for which System 1 does not offer an answer, as happened to you when you encountered the multiplication problem 17 × 24."
+                </p>
+<div class="flex items-center justify-between mt-2 pt-3 border-t border-stone-100 dark:border-stone-800/50">
+<div class="flex items-center gap-2">
+<button class="text-stone-300 hover:text-stone-500 transition-colors">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+<span class="text-[10px] font-medium text-primary bg-stone-50 dark:bg-stone-800/50 px-2 py-1 rounded-md">Quoted by Devon Lane</span>
+</div>
+</div>
+<div class="bg-white dark:bg-[#1a1816] p-5 rounded-xl border border-stone-100 dark:border-stone-800 shadow-paper relative group hover:shadow-soft transition-all duration-300">
+<div class="absolute top-4 left-4 text-stone-300 dark:text-stone-600">
+<span class="material-symbols-outlined text-[20px] fill-1">format_quote</span>
+</div>
+<p class="font-serif text-stone-800 dark:text-stone-300 leading-relaxed mb-4 pl-6 relative z-10 italic">
+                    "System 2 is activated when an event is detected that violates the model of the world that System 1 maintains."
+                </p>
+<div class="flex items-center justify-between mt-2 pt-3 border-t border-stone-100 dark:border-stone-800/50">
+<div class="flex items-center gap-2">
+<button class="text-stone-300 hover:text-stone-500 transition-colors">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+<span class="text-[10px] font-medium text-primary bg-stone-50 dark:bg-stone-800/50 px-2 py-1 rounded-md">Quoted by Cody Fisher</span>
+</div>
+</div>
+<div class="bg-white dark:bg-[#1a1816] p-5 rounded-xl border border-stone-100 dark:border-stone-800 shadow-paper relative group hover:shadow-soft transition-all duration-300">
+<div class="absolute top-4 left-4 text-stone-300 dark:text-stone-600">
+<span class="material-symbols-outlined text-[20px] fill-1">format_quote</span>
+</div>
+<p class="font-serif text-stone-800 dark:text-stone-300 leading-relaxed mb-4 pl-6 relative z-10 italic">
+                    "In this world, lamps do not jump, cats do not bark, and gorillas do not cross basketball courts."
+                </p>
+<div class="flex items-center justify-between mt-2 pt-3 border-t border-stone-100 dark:border-stone-800/50">
+<div class="flex items-center gap-2">
+<button class="text-stone-300 hover:text-stone-500 transition-colors">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+<span class="text-[10px] font-medium text-primary bg-stone-50 dark:bg-stone-800/50 px-2 py-1 rounded-md">Quoted by Esther Howard</span>
+</div>
+</div>
+</div>
+<div class="absolute bottom-[84px] left-6 right-6 z-40 transform transition-all duration-300 ease-out origin-bottom scale-100 opacity-100">
+<div class="bg-paper-texture dark:bg-[#1c1a17] rounded-xl shadow-floating border border-sepia-divider dark:border-stone-700 p-5">
+<div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-paper-texture dark:bg-[#1c1a17] border-b border-r border-sepia-divider dark:border-stone-700 transform rotate-45"></div>
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-xs font-bold uppercase tracking-widest text-primary">New Quote Entry</h3>
+<button class="text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 transition-colors">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<textarea class="w-full bg-white dark:bg-[#25221e] border border-sepia-divider/80 dark:border-stone-700 rounded-lg p-3 text-stone-800 dark:text-stone-200 placeholder-stone-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 font-serif text-sm leading-relaxed resize-none h-28 mb-3 shadow-inner-soft transition-all" placeholder="Enter the quote text here..."></textarea>
+<div class="flex items-center gap-2 mb-4 bg-white dark:bg-[#25221e] border border-sepia-divider/80 dark:border-stone-700 rounded-lg px-3 py-2 transition-colors focus-within:border-primary/50">
+<span class="text-stone-400 material-symbols-outlined text-[18px]">format_quote</span>
+<input class="flex-1 bg-transparent border-none p-0 text-sm text-stone-800 dark:text-stone-200 placeholder-stone-400 focus:ring-0 font-serif" placeholder="Cited by..." type="text"/>
+</div>
+<button class="w-full bg-primary hover:bg-[#8b7662] text-white font-medium text-sm py-2.5 rounded-lg shadow-sm hover:shadow-md transition-all">
+                Save
+            </button>
+</div>
+</div>
+<div class="absolute bottom-6 left-0 right-0 px-6 flex justify-center pointer-events-none z-40">
+<button class="bg-primary text-white font-medium text-sm py-3 px-6 rounded-full shadow-lg hover:shadow-xl hover:bg-[#8b7662] transition-all transform hover:-translate-y-0.5 flex items-center gap-2 pointer-events-auto ring-4 ring-white dark:ring-sidebar-dark">
+<span class="material-symbols-outlined text-[20px]">add</span>
+    Add Quote
+</button>
+</div>
+</aside>
+</div>
+</body></html>
