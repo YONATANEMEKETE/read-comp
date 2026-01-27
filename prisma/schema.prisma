@@ -78,6 +78,7 @@ model Book {
   author       String
   thumbnailUrl String
   pdfUrl       String
+  totalPages   Int        @default(0)
   isSuggested  Boolean    @default(false)
   uploaderId   String?
   createdAt    DateTime   @default(now())

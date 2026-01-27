@@ -43,6 +43,7 @@ export function UploadBookDialog({
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
   const [title, setTitle] = React.useState('');
   const [author, setAuthor] = React.useState('');
+  const [totalPages, setTotalPages] = React.useState(0);
 
   // Upload State
   const [uploadProgress, setUploadProgress] = React.useState(0);
@@ -110,6 +111,7 @@ export function UploadBookDialog({
       setSelectedFile(null);
       setTitle('');
       setAuthor('');
+      setTotalPages(0);
       setUploadedUrl(null);
       setThumbnailUrl(null);
     }, 3000);
@@ -123,13 +125,15 @@ export function UploadBookDialog({
       setThumbnailProgress(0);
       setUploadedUrl(null);
       setThumbnailUrl(null);
+      setTotalPages(0);
 
       // 1. Start PDF Upload (The specific "public" part the user sees)
       const pdfUploadPromise = startPdfUpload([file]);
 
       // 2. Extract and Upload Thumbnail (Background process)
       extractFirstPageAsImage(file)
-        .then(async (thumbnailFile) => {
+        .then(async ({ file: thumbnailFile, numPages }) => {
+          setTotalPages(numPages);
           if (thumbnailFile) {
             await startImageUpload([thumbnailFile]);
           } else {
@@ -218,6 +222,7 @@ export function UploadBookDialog({
       author,
       pdfUrl: uploadedUrl,
       thumbnailUrl: thumbnailUrl,
+      totalPages,
     };
 
     // Close dialog immediately
@@ -251,6 +256,7 @@ export function UploadBookDialog({
     setSelectedFile(null);
     setTitle('');
     setAuthor('');
+    setTotalPages(0);
     setStatus('idle');
     setUploadProgress(0);
     setThumbnailProgress(0);
@@ -268,6 +274,7 @@ export function UploadBookDialog({
           setSelectedFile(null);
           setTitle('');
           setAuthor('');
+          setTotalPages(0);
           setStatus('idle');
           setUploadProgress(0);
           setThumbnailProgress(0);
@@ -287,6 +294,7 @@ export function UploadBookDialog({
     !!author &&
     !!uploadedUrl &&
     !!thumbnailUrl &&
+    totalPages > 0 &&
     !isSaving;
 
   return (

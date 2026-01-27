@@ -1,6 +1,6 @@
 export async function extractFirstPageAsImage(
   pdfFile: File,
-): Promise<File | null> {
+): Promise<{ file: File | null; numPages: number }> {
   try {
     // Dynamically import pdfjs-dist to avoid server-side issues
     const pdfjsLib = await import('pdfjs-dist');
@@ -14,6 +14,7 @@ export async function extractFirstPageAsImage(
     // 2. Load the PDF document
     const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
     const pdf = await loadingTask.promise;
+    const numPages = pdf.numPages;
 
     // 3. Get the first page
     const page = await pdf.getPage(1);
@@ -43,14 +44,14 @@ export async function extractFirstPageAsImage(
       canvas.toBlob(
         (blob) => {
           if (!blob) {
-            resolve(null);
+            resolve({ file: null, numPages });
             return;
           }
           const imageName = pdfFile.name.replace(/\.pdf$/i, '') + '.png';
           const imageFile = new File([blob], imageName, {
             type: 'image/png',
           });
-          resolve(imageFile);
+          resolve({ file: imageFile, numPages });
         },
         'image/png',
         0.8, // Quality
@@ -58,6 +59,6 @@ export async function extractFirstPageAsImage(
     });
   } catch (error) {
     console.error('Error extracting PDF thumbnail:', error);
-    return null;
+    return { file: null, numPages: 0 };
   }
 }

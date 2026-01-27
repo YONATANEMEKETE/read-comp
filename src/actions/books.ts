@@ -31,7 +31,7 @@ export async function createBookAction(
     };
   }
 
-  const { title, author, pdfUrl, thumbnailUrl } = validatedFields.data;
+  const { title, author, pdfUrl, thumbnailUrl, totalPages } = validatedFields.data;
 
   try {
     // 2. Get User Session
@@ -57,7 +57,7 @@ export async function createBookAction(
     // 3. Create Book directly
     console.log('--- Creating Book ---');
     console.log('User ID:', userId);
-    console.log('Data:', { title, author, pdfUrl, thumbnailUrl });
+    console.log('Data:', { title, author, pdfUrl, thumbnailUrl, totalPages });
 
     const book = await prisma.book.create({
       data: {
@@ -65,6 +65,7 @@ export async function createBookAction(
         author,
         pdfUrl,
         thumbnailUrl,
+        totalPages,
         isSuggested: false,
         uploaderId: userId,
       },

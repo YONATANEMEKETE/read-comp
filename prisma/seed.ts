@@ -64,6 +64,7 @@ async function main() {
       thumbnailUrl:
         'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&q=80',
       pdfUrl: '/books/great-gatsby.pdf',
+      totalPages: 180,
       isSuggested: false,
       status: ReadingStatus.READING,
       isFavorite: true,
@@ -75,6 +76,7 @@ async function main() {
       thumbnailUrl:
         'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80',
       pdfUrl: '/books/mockingbird.pdf',
+      totalPages: 281,
       isSuggested: false,
       status: ReadingStatus.FINISHED,
       isFavorite: true,
@@ -86,6 +88,7 @@ async function main() {
       thumbnailUrl:
         'https://images.unsplash.com/photo-1621351123023-73f0f3bc30e3?w=400&q=80',
       pdfUrl: '/books/hobbit.pdf',
+      totalPages: 310,
       isSuggested: false,
       status: ReadingStatus.FINISHED,
       isFavorite: false,
@@ -97,6 +100,7 @@ async function main() {
       thumbnailUrl:
         'https://images.unsplash.com/photo-1541963463532-d68292c34b19?w=400&q=80',
       pdfUrl: '/books/brave-new-world.pdf',
+      totalPages: 268,
       isSuggested: false,
       status: ReadingStatus.NEW,
       isFavorite: false,
@@ -108,6 +112,7 @@ async function main() {
       thumbnailUrl:
         'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&q=80',
       pdfUrl: '/books/pride-prejudice.pdf',
+      totalPages: 432,
       isSuggested: false,
       status: ReadingStatus.READING,
       isFavorite: false,
@@ -119,6 +124,7 @@ async function main() {
       thumbnailUrl:
         'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400&q=80',
       pdfUrl: '/books/catcher-rye.pdf',
+      totalPages: 234,
       isSuggested: false,
       status: ReadingStatus.NEW,
       isFavorite: false,
@@ -132,6 +138,7 @@ async function main() {
       thumbnailUrl:
         'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80',
       pdfUrl: '/books/1984.pdf',
+      totalPages: 328,
       isSuggested: true,
     },
     {
@@ -140,6 +147,7 @@ async function main() {
       thumbnailUrl:
         'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=400&q=80',
       pdfUrl: '/books/atomic-habits.pdf',
+      totalPages: 320,
       isSuggested: true,
     },
     {
@@ -148,6 +156,7 @@ async function main() {
       thumbnailUrl:
         'https://images.unsplash.com/photo-1512428559083-a4979b2b51ff?w=400&q=80',
       pdfUrl: '/books/deep-work.pdf',
+      totalPages: 304,
       isSuggested: true,
     },
     {
@@ -156,6 +165,7 @@ async function main() {
       thumbnailUrl:
         'https://images.unsplash.com/photo-1589998059171-988d887df646?w=400&q=80',
       pdfUrl: '/books/sapiens.pdf',
+      totalPages: 443,
       isSuggested: true,
     },
     {
@@ -164,6 +174,7 @@ async function main() {
       thumbnailUrl:
         'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80',
       pdfUrl: '/books/alchemist.pdf',
+      totalPages: 208,
       isSuggested: true,
     },
     {
@@ -172,6 +183,7 @@ async function main() {
       thumbnailUrl:
         'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=400&q=80',
       pdfUrl: '/books/thinking-fast-slow.pdf',
+      totalPages: 499,
       isSuggested: true,
     },
     {
@@ -180,6 +192,7 @@ async function main() {
       thumbnailUrl:
         'https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?w=400&q=80',
       pdfUrl: '/books/power-of-now.pdf',
+      totalPages: 236,
       isSuggested: true,
     },
     {
@@ -188,6 +201,7 @@ async function main() {
       thumbnailUrl:
         'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400&q=80',
       pdfUrl: '/books/educated.pdf',
+      totalPages: 352,
       isSuggested: true,
     },
   ];

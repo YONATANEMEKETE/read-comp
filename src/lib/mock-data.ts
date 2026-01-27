@@ -8,6 +8,7 @@ export const MOCK_BOOKS: BookWithProgress[] = [
     thumbnailUrl:
       'https://images.unsplash.com/photo-1543005187-9ebebbe21910?w=800&q=80',
     pdfUrl: '#',
+    totalPages: 180,
     isSuggested: false,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -30,6 +31,7 @@ export const MOCK_BOOKS: BookWithProgress[] = [
     thumbnailUrl:
       'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&q=80',
     pdfUrl: '#',
+    totalPages: 328,
     isSuggested: true,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -41,6 +43,7 @@ export const MOCK_BOOKS: BookWithProgress[] = [
     thumbnailUrl:
       'https://images.unsplash.com/photo-1621351123023-73f0f3bc30e3?w=800&q=80',
     pdfUrl: '#',
+    totalPages: 310,
     isSuggested: false,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -63,6 +66,7 @@ export const MOCK_BOOKS: BookWithProgress[] = [
     thumbnailUrl:
       'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=800&q=80',
     pdfUrl: '#',
+    totalPages: 320,
     isSuggested: true,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -74,6 +78,7 @@ export const MOCK_BOOKS: BookWithProgress[] = [
     thumbnailUrl:
       'https://images.unsplash.com/photo-1541963463532-d68292c34b19?w=800&q=80',
     pdfUrl: '#',
+    totalPages: 268,
     isSuggested: false,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -96,6 +101,7 @@ export const MOCK_BOOKS: BookWithProgress[] = [
     thumbnailUrl:
       'https://images.unsplash.com/photo-1512428559083-a4979b2b51ff?w=800&q=80',
     pdfUrl: '#',
+    totalPages: 304,
     isSuggested: true,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),

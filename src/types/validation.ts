@@ -53,6 +53,7 @@ export const uploadBookSchema = z.object({
   author: z.string().min(1, 'Author is required').max(255),
   thumbnailUrl: z.string().url('Invalid thumbnail URL'),
   pdfUrl: z.string().url('Invalid PDF URL'),
+  totalPages: z.number().int().positive('Total pages must be a positive number'),
 });
 
 export type UploadBookInput = z.infer<typeof uploadBookSchema>;

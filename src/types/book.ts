@@ -6,6 +6,7 @@ export interface Book {
   author: string;
   thumbnailUrl: string;
   pdfUrl: string;
+  totalPages: number;
   isSuggested: boolean;
   uploaderId?: string | null;
   createdAt: string;
