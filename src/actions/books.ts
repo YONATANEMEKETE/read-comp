@@ -128,6 +128,7 @@ export async function getUserBooks(): Promise<BookWithProgress[]> {
 
     return userBooks.map((ub) => ({
       ...ub.book,
+      totalPages: ub.book.totalPages,
       createdAt: ub.book.createdAt.toISOString(),
       updatedAt: ub.book.updatedAt.toISOString(),
       deletedAt: ub.book.deletedAt ? ub.book.deletedAt.toISOString() : null,
@@ -138,6 +139,7 @@ export async function getUserBooks(): Promise<BookWithProgress[]> {
         deletedAt: ub.deletedAt ? ub.deletedAt.toISOString() : null,
         book: {
           ...ub.book,
+          totalPages: ub.book.totalPages,
           createdAt: ub.book.createdAt.toISOString(),
           updatedAt: ub.book.updatedAt.toISOString(),
           deletedAt: ub.book.deletedAt ? ub.book.deletedAt.toISOString() : null,
@@ -198,6 +200,7 @@ export async function getSuggestedBooks(): Promise<BookWithProgress[]> {
             : null,
           book: {
             ...book,
+            totalPages: book.totalPages,
             createdAt: book.createdAt.toISOString(),
             updatedAt: book.updatedAt.toISOString(),
             deletedAt: book.deletedAt ? book.deletedAt.toISOString() : null,
@@ -207,6 +210,7 @@ export async function getSuggestedBooks(): Promise<BookWithProgress[]> {
 
       return {
         ...book,
+        totalPages: book.totalPages,
         createdAt: book.createdAt.toISOString(),
         updatedAt: book.updatedAt.toISOString(),
         deletedAt: book.deletedAt ? book.deletedAt.toISOString() : null,
@@ -361,6 +365,7 @@ export async function getFavoriteBooks(): Promise<BookWithProgress[]> {
 
     return userBooks.map((ub) => ({
       ...ub.book,
+      totalPages: ub.book.totalPages,
       createdAt: ub.book.createdAt.toISOString(),
       updatedAt: ub.book.updatedAt.toISOString(),
       deletedAt: ub.book.deletedAt ? ub.book.deletedAt.toISOString() : null,
@@ -371,6 +376,7 @@ export async function getFavoriteBooks(): Promise<BookWithProgress[]> {
         deletedAt: ub.deletedAt ? ub.deletedAt.toISOString() : null,
         book: {
           ...ub.book,
+          totalPages: ub.book.totalPages,
           createdAt: ub.book.createdAt.toISOString(),
           updatedAt: ub.book.updatedAt.toISOString(),
           deletedAt: ub.book.deletedAt ? ub.book.deletedAt.toISOString() : null,
