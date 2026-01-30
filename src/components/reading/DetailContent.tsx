@@ -4,6 +4,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import { cn } from '@/lib/utils';
 import Loader from '../common/Loader';
+import DetailSidebar from './DetailSidebar';
 
 const PdfReader = dynamic(() => import('@/components/reading/PdfReader'), {
   ssr: false,
@@ -19,8 +20,8 @@ interface DetailContentProps {
 const DetailContent = ({ pdfUrl, isLoading, initialPage = 0, onPageChange }: DetailContentProps) => {
   return (
     <div className="flex h-full w-full overflow-hidden">
-      {/* Reader Main Area */}
-      <main className="flex-1 bg-stone-100/50 dark:bg-stone-900/50 flex justify-center items-center overflow-y-auto relative">
+      {/* Reader Main Area - 70% width */}
+      <main className="w-[70%] bg-stone-100/50 dark:bg-stone-900/50 flex justify-center items-center overflow-y-auto relative">
         {isLoading || !pdfUrl ? (
           <Loader size="lg" />
         ) : (
@@ -32,8 +33,10 @@ const DetailContent = ({ pdfUrl, isLoading, initialPage = 0, onPageChange }: Det
         )}
       </main>
 
-      {/* Side Panel for Notes/Quotes/Stories */}
-      <aside className="w-[450px] bg-white dark:bg-sidebar-dark border-l border-sepia-divider dark:border-stone-800 flex flex-col shadow-soft z-20"></aside>
+      {/* Side Panel for Notes/Quotes/Stories - 30% width */}
+      <div className="w-[30%]">
+        <DetailSidebar />
+      </div>
     </div>
   );
 };
