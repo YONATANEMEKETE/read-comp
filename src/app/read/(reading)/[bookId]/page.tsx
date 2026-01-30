@@ -4,6 +4,7 @@ import { getBookWithProgressAction, updateReadingProgressAction } from '@/action
 import DetailContent from '@/components/reading/DetailContent';
 import { DetailHeader } from '@/components/reading/DetailHeader';
 import { BookWithProgress } from '@/types/book';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 
 interface ReadingPageProps {
@@ -17,6 +18,8 @@ export default function ReadingPage({ params }: ReadingPageProps) {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [status, setStatus] = useState<'NEW' | 'READING' | 'FINISHED'>('NEW');
+  const router = useRouter();
   
   // Refs for managing sync
   const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -37,6 +40,7 @@ export default function ReadingPage({ params }: ReadingPageProps) {
           const initialPage = result.data.userProgress?.progressPage || 1;
           setCurrentPage(initialPage);
           lastSyncedPageRef.current = initialPage;
+          setStatus(result.data.userProgress?.status || 'NEW');
         } else {
           setError(result.message);
         }
@@ -113,6 +117,32 @@ export default function ReadingPage({ params }: ReadingPageProps) {
     scheduleSync(pageNumber);
   }, [scheduleSync]);
 
+  // Handle mark as finished
+  const handleMarkAsFinished = useCallback(async () => {
+    if (!bookIdRef.current) return;
+    
+    setIsSaving(true);
+    try {
+      const result = await updateReadingProgressAction(
+        bookIdRef.current,
+        totalPagesRef.current,
+        'FINISHED'
+      );
+      
+      if (result.success) {
+        setStatus('FINISHED');
+        setCurrentPage(totalPagesRef.current);
+        lastSyncedPageRef.current = totalPagesRef.current;
+        // Redirect to library page
+        router.push('/read');
+      }
+    } catch (error) {
+      console.error('Failed to mark as finished:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  }, [router]);
+
   // Immediate sync function for beforeunload
   const immediateSync = useCallback(async () => {
     if (currentPage !== lastSyncedPageRef.current && bookIdRef.current) {
@@ -184,6 +214,8 @@ export default function ReadingPage({ params }: ReadingPageProps) {
         isFavorite={book.userProgress?.isFavorite || false}
         isSaving={isSaving}
         onToggleFavorite={() => {}}
+        onMarkAsFinished={handleMarkAsFinished}
+        status={status}
       />
       <div className="flex-1 overflow-hidden">
         <DetailContent 

@@ -19,6 +19,8 @@ interface DetailHeaderProps {
   onToggleFavorite?: () => void;
   isLoading?: boolean;
   isSaving?: boolean;
+  onMarkAsFinished?: () => void;
+  status?: 'NEW' | 'READING' | 'FINISHED';
 }
 
 export function DetailHeader({
@@ -28,6 +30,8 @@ export function DetailHeader({
   totalPages = 0,
   isLoading = false,
   isSaving = false,
+  onMarkAsFinished,
+  status,
 }: DetailHeaderProps) {
   const progressPercentage =
     totalPages > 0 ? Math.round((currentPage / totalPages) * 100) : 0;
@@ -101,8 +105,12 @@ export function DetailHeader({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="min-w-52">
-            <DropdownMenuItem className="cursor-pointer">
-              Mark as Finished
+            <DropdownMenuItem 
+              className="cursor-pointer" 
+              onClick={onMarkAsFinished}
+              disabled={status === 'FINISHED'}
+            >
+              {status === 'FINISHED' ? 'Already Finished' : 'Mark as Finished'}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
