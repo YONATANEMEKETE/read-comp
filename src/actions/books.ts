@@ -73,6 +73,25 @@ export async function getBookWithProgressAction(
       revalidatePath('/read');
     }
 
+    // 3. If userProgress exists but status is NEW, update to READING
+    if (book.userProgress.length > 0 && book.userProgress[0].status === 'NEW') {
+      const updatedUserBook = await prisma.userBook.update({
+        where: {
+          userId_bookId: {
+            userId,
+            bookId,
+          },
+        },
+        data: {
+          status: 'READING',
+          updatedAt: new Date(),
+        },
+      });
+      
+      // Update the local book object
+      (book as any).userProgress[0] = updatedUserBook;
+    }
+
     return {
       success: true,
       message: 'Book retrieved successfully.',
