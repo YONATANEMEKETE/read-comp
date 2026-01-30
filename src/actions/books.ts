@@ -431,7 +431,8 @@ export type UpdateReadingProgressActionState = {
 
 export async function updateReadingProgressAction(
   bookId: string,
-  progressPage: number
+  progressPage: number,
+  status?: 'NEW' | 'READING' | 'FINISHED'
 ): Promise<UpdateReadingProgressActionState> {
   try {
     const session = await auth.api.getSession({
@@ -447,6 +448,17 @@ export async function updateReadingProgressAction(
 
     const userId = session.user.id;
 
+    // Build update data
+    const updateData: any = {
+      progressPage,
+      updatedAt: new Date(),
+    };
+    
+    // If status is provided, update it
+    if (status) {
+      updateData.status = status;
+    }
+
     // Update the user book progress
     const updatedUserBook = await prisma.userBook.update({
       where: {
@@ -455,10 +467,7 @@ export async function updateReadingProgressAction(
           bookId,
         },
       },
-      data: {
-        progressPage,
-        updatedAt: new Date(),
-      },
+      data: updateData,
     });
 
     return {

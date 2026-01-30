@@ -22,6 +22,7 @@ export default function ReadingPage({ params }: ReadingPageProps) {
   const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastSyncedPageRef = useRef<number>(1);
   const bookIdRef = useRef<string>('');
+  const totalPagesRef = useRef<number>(0);
 
   useEffect(() => {
     async function loadBook() {
@@ -32,6 +33,7 @@ export default function ReadingPage({ params }: ReadingPageProps) {
         
         if (result.success && result.data) {
           setBook(result.data);
+          totalPagesRef.current = result.data.totalPages || 0;
           const initialPage = result.data.userProgress?.progressPage || 1;
           setCurrentPage(initialPage);
           lastSyncedPageRef.current = initialPage;
@@ -72,7 +74,13 @@ export default function ReadingPage({ params }: ReadingPageProps) {
         setIsSaving(true);
         const startTime = Date.now();
         try {
-          const result = await updateReadingProgressAction(bookIdRef.current, page);
+          // Check if on final page
+          const isFinalPage = page >= totalPagesRef.current && totalPagesRef.current > 0;
+          const result = await updateReadingProgressAction(
+            bookIdRef.current, 
+            page,
+            isFinalPage ? 'FINISHED' : undefined
+          );
           console.log('Sync result:', result);
           if (result.success) {
             lastSyncedPageRef.current = page;
@@ -109,7 +117,13 @@ export default function ReadingPage({ params }: ReadingPageProps) {
   const immediateSync = useCallback(async () => {
     if (currentPage !== lastSyncedPageRef.current && bookIdRef.current) {
       try {
-        await updateReadingProgressAction(bookIdRef.current, currentPage);
+        // Check if on final page
+        const isFinalPage = currentPage >= totalPagesRef.current && totalPagesRef.current > 0;
+        await updateReadingProgressAction(
+          bookIdRef.current, 
+          currentPage,
+          isFinalPage ? 'FINISHED' : undefined
+        );
         lastSyncedPageRef.current = currentPage;
       } catch (error) {
         console.error('Failed to sync on exit:', error);
