@@ -483,3 +483,55 @@ export async function updateReadingProgressAction(
     };
   }
 }
+
+export type RestartBookActionState = {
+  success: boolean;
+  message: string;
+  data?: any;
+};
+
+export async function restartBookAction(
+  bookId: string
+): Promise<RestartBookActionState> {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session || !session.user) {
+      return {
+        success: false,
+        message: 'You must be logged in to restart a book.',
+      };
+    }
+
+    const userId = session.user.id;
+
+    // Update the user book to reset progress and status
+    const updatedUserBook = await prisma.userBook.update({
+      where: {
+        userId_bookId: {
+          userId,
+          bookId,
+        },
+      },
+      data: {
+        status: 'READING',
+        progressPage: 1,
+        updatedAt: new Date(),
+      },
+    });
+
+    return {
+      success: true,
+      message: 'Book restarted successfully.',
+      data: updatedUserBook,
+    };
+  } catch (error) {
+    console.error('Error restarting book:', error);
+    return {
+      success: false,
+      message: 'Failed to restart book.',
+    };
+  }
+}

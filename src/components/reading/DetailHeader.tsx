@@ -20,6 +20,7 @@ interface DetailHeaderProps {
   isLoading?: boolean;
   isSaving?: boolean;
   onMarkAsFinished?: () => void;
+  onRestartBook?: () => void;
   status?: 'NEW' | 'READING' | 'FINISHED';
 }
 
@@ -31,6 +32,7 @@ export function DetailHeader({
   isLoading = false,
   isSaving = false,
   onMarkAsFinished,
+  onRestartBook,
   status,
 }: DetailHeaderProps) {
   const progressPercentage =
@@ -112,6 +114,14 @@ export function DetailHeader({
             >
               {status === 'FINISHED' ? 'Already Finished' : 'Mark as Finished'}
             </DropdownMenuItem>
+            {status === 'FINISHED' && (
+              <DropdownMenuItem 
+                className="cursor-pointer text-amber-600" 
+                onClick={onRestartBook}
+              >
+                Restart Book
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

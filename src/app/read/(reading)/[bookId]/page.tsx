@@ -1,11 +1,12 @@
 'use client';
 
-import { getBookWithProgressAction, updateReadingProgressAction } from '@/actions/books';
+import { getBookWithProgressAction, updateReadingProgressAction, restartBookAction } from '@/actions/books';
 import DetailContent from '@/components/reading/DetailContent';
 import { DetailHeader } from '@/components/reading/DetailHeader';
 import { BookWithProgress } from '@/types/book';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface ReadingPageProps {
   params: Promise<{
@@ -20,6 +21,7 @@ export default function ReadingPage({ params }: ReadingPageProps) {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [status, setStatus] = useState<'NEW' | 'READING' | 'FINISHED'>('NEW');
   const router = useRouter();
+  const queryClient = useQueryClient();
   
   // Refs for managing sync
   const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -135,6 +137,9 @@ export default function ReadingPage({ params }: ReadingPageProps) {
         lastSyncedPageRef.current = totalPagesRef.current;
         // Redirect to library page
         router.push('/read');
+        // Invalidate queries to refresh book lists
+        await queryClient.invalidateQueries({ queryKey: ['user-books'] });
+        await queryClient.invalidateQueries({ queryKey: ['favorite-books'] });
       }
     } catch (error) {
       console.error('Failed to mark as finished:', error);
@@ -142,6 +147,30 @@ export default function ReadingPage({ params }: ReadingPageProps) {
       setIsSaving(false);
     }
   }, [router]);
+
+  // Handle restart book
+  const handleRestartBook = useCallback(async () => {
+    if (!bookIdRef.current) return;
+    
+    setIsSaving(true);
+    try {
+      const result = await restartBookAction(bookIdRef.current);
+      
+      if (result.success) {
+        setStatus('READING');
+        setCurrentPage(1);
+        lastSyncedPageRef.current = 1;
+        // Optionally reload the PDF to page 1
+        // Invalidate queries to refresh book lists
+        await queryClient.invalidateQueries({ queryKey: ['user-books'] });
+        await queryClient.invalidateQueries({ queryKey: ['favorite-books'] });
+      }
+    } catch (error) {
+      console.error('Failed to restart book:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  }, []);
 
   // Immediate sync function for beforeunload
   const immediateSync = useCallback(async () => {
@@ -215,6 +244,7 @@ export default function ReadingPage({ params }: ReadingPageProps) {
         isSaving={isSaving}
         onToggleFavorite={() => {}}
         onMarkAsFinished={handleMarkAsFinished}
+        onRestartBook={handleRestartBook}
         status={status}
       />
       <div className="flex-1 overflow-hidden">
