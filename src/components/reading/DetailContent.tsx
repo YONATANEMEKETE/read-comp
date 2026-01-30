@@ -12,9 +12,11 @@ const PdfReader = dynamic(() => import('@/components/reading/PdfReader'), {
 interface DetailContentProps {
   pdfUrl?: string;
   isLoading?: boolean;
+  initialPage?: number;
+  onPageChange?: (page: number) => void;
 }
 
-const DetailContent = ({ pdfUrl, isLoading }: DetailContentProps) => {
+const DetailContent = ({ pdfUrl, isLoading, initialPage = 0, onPageChange }: DetailContentProps) => {
   return (
     <div className="flex h-full w-full overflow-hidden">
       {/* Reader Main Area */}
@@ -22,7 +24,11 @@ const DetailContent = ({ pdfUrl, isLoading }: DetailContentProps) => {
         {isLoading || !pdfUrl ? (
           <Loader size="lg" />
         ) : (
-          <PdfReader fileUrl={pdfUrl} />
+          <PdfReader 
+            fileUrl={pdfUrl} 
+            initialPage={initialPage}
+            onPageChange={onPageChange}
+          />
         )}
       </main>
 

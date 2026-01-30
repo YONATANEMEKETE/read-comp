@@ -18,6 +18,7 @@ interface DetailHeaderProps {
   isFavorite?: boolean;
   onToggleFavorite?: () => void;
   isLoading?: boolean;
+  isSaving?: boolean;
 }
 
 export function DetailHeader({
@@ -26,6 +27,7 @@ export function DetailHeader({
   currentPage = 0,
   totalPages = 0,
   isLoading = false,
+  isSaving = false,
 }: DetailHeaderProps) {
   const progressPercentage =
     totalPages > 0 ? Math.round((currentPage / totalPages) * 100) : 0;
@@ -74,6 +76,11 @@ export function DetailHeader({
             <span className="text-xs font-medium text-stone-600 dark:text-stone-300 text-right px-1">
               {progressPercentage}%
             </span>
+            {isSaving && (
+              <span className="text-[10px] text-amber-600 animate-pulse">
+                Syncing...
+              </span>
+            )}
             <div className="w-24 h-1.5 bg-stone-200 dark:bg-stone-700 rounded-full overflow-hidden">
               <div
                 className="h-full bg-primary rounded-full transition-all duration-300"

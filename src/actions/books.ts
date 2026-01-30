@@ -403,3 +403,55 @@ export async function getFavoriteBooks(): Promise<BookWithProgress[]> {
     return [];
   }
 }
+
+export type UpdateReadingProgressActionState = {
+  success: boolean;
+  message: string;
+  data?: any;
+};
+
+export async function updateReadingProgressAction(
+  bookId: string,
+  progressPage: number
+): Promise<UpdateReadingProgressActionState> {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session || !session.user) {
+      return {
+        success: false,
+        message: 'You must be logged in to update reading progress.',
+      };
+    }
+
+    const userId = session.user.id;
+
+    // Update the user book progress
+    const updatedUserBook = await prisma.userBook.update({
+      where: {
+        userId_bookId: {
+          userId,
+          bookId,
+        },
+      },
+      data: {
+        progressPage,
+        updatedAt: new Date(),
+      },
+    });
+
+    return {
+      success: true,
+      message: 'Reading progress updated successfully.',
+      data: updatedUserBook,
+    };
+  } catch (error) {
+    console.error('Error updating reading progress:', error);
+    return {
+      success: false,
+      message: 'Failed to update reading progress.',
+    };
+  }
+}
