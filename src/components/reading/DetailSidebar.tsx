@@ -1,19 +1,41 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import React, { useState } from "react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import NoteContent from "./NoteContent";
 
-type TabType = 'notes' | 'quotes' | 'stories';
+type TabType = "notes" | "quotes" | "stories";
 
 const DetailSidebar = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('notes');
+  const [activeTab, setActiveTab] = useState<TabType>("notes");
 
   const tabs = [
-    { id: 'notes' as TabType, label: 'Notes' },
-    { id: 'quotes' as TabType, label: 'Quotes' },
-    { id: 'stories' as TabType, label: 'Stories' },
+    { id: "notes" as TabType, label: "Notes" },
+    { id: "quotes" as TabType, label: "Quotes" },
+    { id: "stories" as TabType, label: "Stories" },
   ];
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case "notes":
+        return <NoteContent />;
+      case "quotes":
+        return (
+          <div className="flex items-center justify-center h-full text-muted-foreground">
+            Quotes content coming soon...
+          </div>
+        );
+      case "stories":
+        return (
+          <div className="flex items-center justify-center h-full text-muted-foreground">
+            Stories content coming soon...
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <aside className="w-full h-full bg-card dark:bg-sidebar-dark border-l border-sepia-divider dark:border-border flex flex-col shadow-soft z-20">
@@ -26,10 +48,10 @@ const DetailSidebar = () => {
             size="sm"
             onClick={() => setActiveTab(tab.id)}
             className={cn(
-              'relative pb-3 pt-2 px-4 text-sm font-semibold transition-all duration-200 rounded-none h-auto bg-transparent hover:bg-transparent cursor-pointer',
+              "relative pb-3 pt-2 px-4 text-sm font-semibold transition-all duration-200 rounded-none h-auto bg-transparent hover:bg-transparent cursor-pointer",
               activeTab === tab.id
-                ? 'text-primary hover:text-primary'
-                : 'text-muted-foreground hover:text-foreground dark:hover:text-foreground',
+                ? "text-primary hover:text-primary"
+                : "text-muted-foreground hover:text-foreground dark:hover:text-foreground"
             )}
           >
             {tab.label}
@@ -40,9 +62,9 @@ const DetailSidebar = () => {
         ))}
       </div>
 
-      {/* Tab Content Area - Placeholder for future content */}
+      {/* Tab Content Area */}
       <div className="flex-1 overflow-hidden">
-        {/* Content will be added later */}
+        {renderContent()}
       </div>
     </aside>
   );
