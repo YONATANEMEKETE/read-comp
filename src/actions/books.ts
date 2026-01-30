@@ -61,7 +61,7 @@ export async function getBookWithProgressAction(
         data: {
           userId,
           bookId,
-          status: 'NEW',
+          status: 'READING',
           progressPage: 1,
         },
       });
