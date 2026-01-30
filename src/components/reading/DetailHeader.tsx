@@ -11,19 +11,21 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 interface DetailHeaderProps {
-  title: string;
-  author: string;
-  currentPage: number;
-  totalPages: number;
-  isFavorite: boolean;
-  onToggleFavorite: () => void;
+  title?: string;
+  author?: string;
+  currentPage?: number;
+  totalPages?: number;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
+  isLoading?: boolean;
 }
 
 export function DetailHeader({
   title,
   author,
-  currentPage,
-  totalPages,
+  currentPage = 0,
+  totalPages = 0,
+  isLoading = false,
 }: DetailHeaderProps) {
   const progressPercentage =
     totalPages > 0 ? Math.round((currentPage / totalPages) * 100) : 0;
@@ -44,26 +46,42 @@ export function DetailHeader({
       </div>
 
       <div className="flex flex-col items-center w-1/3">
-        <h1 className="font-display font-semibold text-stone-900 dark:text-white text-lg tracking-tight truncate max-w-full">
-          {title}
-        </h1>
-        <div className="text-[10px] uppercase tracking-widest text-stone-400 font-bold mt-0.5">
-          {author}
-        </div>
+        {isLoading ? (
+          <>
+            <div className="h-5 w-32 bg-stone-200 dark:bg-stone-800 animate-pulse rounded-md" />
+            <div className="h-3 w-20 bg-stone-100 dark:bg-stone-800/60 animate-pulse rounded-md mt-1.5" />
+          </>
+        ) : (
+          <>
+            <h1 className="font-display font-semibold text-stone-900 dark:text-white text-lg tracking-tight truncate max-w-full">
+              {title}
+            </h1>
+            <div className="text-[10px] uppercase tracking-widest text-stone-400 font-bold mt-0.5">
+              {author}
+            </div>
+          </>
+        )}
       </div>
 
       <div className="flex items-center justify-end gap-4 w-1/3">
-        <div className="flex items-center gap-3 bg-stone-100 dark:bg-stone-800 px-3 py-1.5 rounded-full">
-          <span className="text-xs font-medium text-stone-600 dark:text-stone-300 text-right px-1">
-            {progressPercentage}%
-          </span>
-          <div className="w-24 h-1.5 bg-stone-200 dark:bg-stone-700 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-primary rounded-full transition-all duration-300"
-              style={{ width: `${progressPercentage}%` }}
-            ></div>
+        {isLoading ? (
+          <div className="flex items-center gap-3 bg-stone-50 dark:bg-stone-800/50 px-3 py-1.5 rounded-full">
+            <div className="h-3 w-8 bg-stone-200 dark:bg-stone-700 animate-pulse rounded" />
+            <div className="w-24 h-1.5 bg-stone-200 dark:bg-stone-700 rounded-full overflow-hidden" />
           </div>
-        </div>
+        ) : (
+          <div className="flex items-center gap-3 bg-stone-100 dark:bg-stone-800 px-3 py-1.5 rounded-full">
+            <span className="text-xs font-medium text-stone-600 dark:text-stone-300 text-right px-1">
+              {progressPercentage}%
+            </span>
+            <div className="w-24 h-1.5 bg-stone-200 dark:bg-stone-700 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-primary rounded-full transition-all duration-300"
+                style={{ width: `${progressPercentage}%` }}
+              ></div>
+            </div>
+          </div>
+        )}
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

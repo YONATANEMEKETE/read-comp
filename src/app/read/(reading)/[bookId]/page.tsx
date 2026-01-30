@@ -45,7 +45,14 @@ export default function ReadingPage({ params }: ReadingPageProps) {
   }
 
   if (!book) {
-    return null; // Return null as requested (no skeleton UI yet)
+    return (
+      <div className="h-full w-full flex flex-col overflow-hidden">
+        <DetailHeader isLoading={true} />
+        <div className="flex-1 overflow-hidden">
+          <DetailContent isLoading={true} />
+        </div>
+      </div>
+    );
   }
 
   return (
