@@ -6,6 +6,7 @@ import { uploadBookSchema, UploadBookInput } from '@/types/validation';
 import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import { BookWithProgress } from '@/types/book';
+import { mapBookToProgress } from '@/lib/book-utils';
 
 export type BookActionState = {
   success: boolean;
@@ -14,9 +15,82 @@ export type BookActionState = {
   errors?: Record<string, string[]>;
 };
 
+export type GetBookActionState = {
+  success: boolean;
+  message: string;
+  data?: BookWithProgress;
+};
+
+export async function getBookWithProgressAction(
+  bookId: string
+): Promise<GetBookActionState> {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session || !session.user) {
+      return {
+        success: false,
+        message: 'You must be logged in to view a book.',
+      };
+    }
+
+    const userId = session.user.id;
+
+    // 1. Find the book
+    const book = await prisma.book.findUnique({
+      where: { id: bookId },
+      include: {
+        userProgress: {
+          where: { userId },
+        },
+      },
+    });
+
+    if (!book) {
+      return {
+        success: false,
+        message: 'Book not found.',
+      };
+    }
+
+    // 2. If no userProgress exists (e.g. it's a suggested book the user just opened), create it
+    if (book.userProgress.length === 0) {
+      const newUserBook = await prisma.userBook.create({
+        data: {
+          userId,
+          bookId,
+          status: 'NEW',
+          progressPage: 1,
+        },
+      });
+      
+      // Update the local book object to include the new progress for mapping
+      (book as any).userProgress = [newUserBook];
+      
+      // Revalidate since a new library entry was effectively created
+      revalidatePath('/read');
+    }
+
+    return {
+      success: true,
+      message: 'Book retrieved successfully.',
+      data: mapBookToProgress(book),
+    };
+  } catch (error) {
+    console.error('Error fetching book progress:', error);
+    return {
+      success: false,
+      message: 'An error occurred while fetching the book.',
+    };
+  }
+}
+
 export async function createBookAction(
   data: UploadBookInput,
 ): Promise<BookActionState> {
+  // ... (rest of the file content remains the same, but using mapBookToProgress for consistency where applicable)
   // 1. Validate Input
   const validatedFields = uploadBookSchema.safeParse(data);
 
@@ -116,7 +190,7 @@ export async function getUserBooks(): Promise<BookWithProgress[]> {
         book: {
           isSuggested: false,
         },
-        deletedAt: null, // Only include books that haven't been soft-deleted
+        deletedAt: null,
       },
       include: {
         book: true,
@@ -126,26 +200,12 @@ export async function getUserBooks(): Promise<BookWithProgress[]> {
       },
     });
 
-    return userBooks.map((ub) => ({
-      ...ub.book,
-      totalPages: ub.book.totalPages,
-      createdAt: ub.book.createdAt.toISOString(),
-      updatedAt: ub.book.updatedAt.toISOString(),
-      deletedAt: ub.book.deletedAt ? ub.book.deletedAt.toISOString() : null,
-      userProgress: {
-        ...ub,
-        createdAt: ub.createdAt.toISOString(),
-        updatedAt: ub.updatedAt.toISOString(),
-        deletedAt: ub.deletedAt ? ub.deletedAt.toISOString() : null,
-        book: {
-          ...ub.book,
-          totalPages: ub.book.totalPages,
-          createdAt: ub.book.createdAt.toISOString(),
-          updatedAt: ub.book.updatedAt.toISOString(),
-          deletedAt: ub.book.deletedAt ? ub.book.deletedAt.toISOString() : null,
-        },
-      },
-    }));
+    return userBooks.map((ub) => 
+      mapBookToProgress({
+        ...ub.book,
+        userProgress: ub,
+      })
+    );
   } catch (error) {
     console.error('Error fetching user books:', error);
     return [];
@@ -185,38 +245,7 @@ export async function getSuggestedBooks(): Promise<BookWithProgress[]> {
       },
     });
 
-    return suggestedBooks.map((book) => {
-      const userProgressRaw = book.userProgress?.[0];
-
-      let userProgress = undefined;
-
-      if (userProgressRaw) {
-        userProgress = {
-          ...userProgressRaw,
-          createdAt: userProgressRaw.createdAt.toISOString(),
-          updatedAt: userProgressRaw.updatedAt.toISOString(),
-          deletedAt: userProgressRaw.deletedAt
-            ? userProgressRaw.deletedAt.toISOString()
-            : null,
-          book: {
-            ...book,
-            totalPages: book.totalPages,
-            createdAt: book.createdAt.toISOString(),
-            updatedAt: book.updatedAt.toISOString(),
-            deletedAt: book.deletedAt ? book.deletedAt.toISOString() : null,
-          },
-        };
-      }
-
-      return {
-        ...book,
-        totalPages: book.totalPages,
-        createdAt: book.createdAt.toISOString(),
-        updatedAt: book.updatedAt.toISOString(),
-        deletedAt: book.deletedAt ? book.deletedAt.toISOString() : null,
-        userProgress,
-      };
-    });
+    return suggestedBooks.map((book) => mapBookToProgress(book));
   } catch (error) {
     console.error('Error fetching suggested books:', error);
     return [];
@@ -363,26 +392,12 @@ export async function getFavoriteBooks(): Promise<BookWithProgress[]> {
       },
     });
 
-    return userBooks.map((ub) => ({
-      ...ub.book,
-      totalPages: ub.book.totalPages,
-      createdAt: ub.book.createdAt.toISOString(),
-      updatedAt: ub.book.updatedAt.toISOString(),
-      deletedAt: ub.book.deletedAt ? ub.book.deletedAt.toISOString() : null,
-      userProgress: {
-        ...ub,
-        createdAt: ub.createdAt.toISOString(),
-        updatedAt: ub.updatedAt.toISOString(),
-        deletedAt: ub.deletedAt ? ub.deletedAt.toISOString() : null,
-        book: {
-          ...ub.book,
-          totalPages: ub.book.totalPages,
-          createdAt: ub.book.createdAt.toISOString(),
-          updatedAt: ub.book.updatedAt.toISOString(),
-          deletedAt: ub.book.deletedAt ? ub.book.deletedAt.toISOString() : null,
-        },
-      },
-    }));
+    return userBooks.map((ub) => 
+      mapBookToProgress({
+        ...ub.book,
+        userProgress: ub,
+      })
+    );
   } catch (error) {
     console.error('Error fetching favorite books:', error);
     return [];

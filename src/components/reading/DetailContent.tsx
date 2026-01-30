@@ -8,12 +8,16 @@ const PdfReader = dynamic(() => import('@/components/reading/PdfReader'), {
   ssr: false,
 });
 
-const DetailContent = () => {
+interface DetailContentProps {
+  pdfUrl: string;
+}
+
+const DetailContent = ({ pdfUrl }: DetailContentProps) => {
   return (
     <div className="flex h-full w-full overflow-hidden">
       {/* Reader Main Area */}
       <main className="flex-1 bg-stone-100/50 dark:bg-stone-900/50 flex justify-center overflow-y-auto relative">
-        <PdfReader fileUrl="https://4aemqjor6g.ufs.sh/f/Fpryp4YlG47cpyiT76bTAIoyc1REqQj0SJaG6KFiDVkgdXZ3" />
+        <PdfReader fileUrl={pdfUrl} />
       </main>
 
       {/* Side Panel for Notes/Quotes/Stories */}
