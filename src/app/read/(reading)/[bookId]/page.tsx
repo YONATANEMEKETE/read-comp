@@ -1,6 +1,7 @@
 'use client';
 
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
+import DetailContent from '@/components/reading/DetailContent';
 import { DetailHeader } from '@/components/reading/DetailHeader';
 import React from 'react';
 
@@ -12,7 +13,7 @@ interface ReadingPageProps {
 
 export default function ReadingPage({ params }: ReadingPageProps) {
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full flex flex-col overflow-hidden">
       <DetailHeader
         title="the art of laziness"
         author="Library mindset"
@@ -21,6 +22,9 @@ export default function ReadingPage({ params }: ReadingPageProps) {
         isFavorite={true}
         onToggleFavorite={() => {}}
       />
+      <div className="flex-1 overflow-hidden">
+        <DetailContent />
+      </div>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from '@/components/ui/sonner';
 import { QueryProvider } from '@/components/providers/QueryProvider';
+import PdfProvider from '@/components/reading/PdfProvider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -42,7 +43,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <main>{children}</main>
+            <PdfProvider>
+              <main>{children}</main>
+            </PdfProvider>
             <Toaster />
           </ThemeProvider>
         </QueryProvider>
