@@ -91,7 +91,7 @@ const QuoteContent = ({ bookId }: QuoteContentProps) => {
       {/* List */}
       <div className="flex-1 overflow-y-auto bg-warm-bg dark:bg-sidebar-dark relative p-6 space-y-4 pb-24">
         {isModalOpen && (
-          <div className="absolute inset-0 bg-warm-bg/70 dark:bg-sidebar-dark/80 backdrop-blur-[2px] z-20 transition-all duration-500"></div>
+          <div className="absolute inset-0 bg-warm-bg/70 dark:bg-sidebar-dark/80 backdrop-blur-[2px] z-20 animate-in fade-in duration-300"></div>
         )}
         
         {isLoading ? (
@@ -115,10 +115,10 @@ const QuoteContent = ({ bookId }: QuoteContentProps) => {
       )}
 
       {/* Add Button */}
-      <div className="absolute bottom-6 left-0 right-0 px-6 flex justify-center pointer-events-none z-30">
+      <div className="absolute bottom-6 left-0 right-0 px-8 flex justify-center pointer-events-none z-30">
         <Button 
           onClick={() => setIsModalOpen(true)}
-          className="bg-primary text-white font-medium text-sm h-12 px-6 rounded-full shadow-lg hover:shadow-xl hover:bg-[#8b7662] transition-all transform hover:-translate-y-0.5 flex items-center gap-2 pointer-events-auto ring-4 ring-white dark:ring-sidebar-dark cursor-pointer"
+          className="bg-primary text-white font-medium text-sm h-12 w-full rounded-full shadow-lg hover:shadow-xl hover:bg-[#8b7662] transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 pointer-events-auto ring-4 ring-white dark:ring-sidebar-dark cursor-pointer"
           disabled={!bookId}
         >
           <Plus className="w-5 h-5" />

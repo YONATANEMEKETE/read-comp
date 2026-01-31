@@ -87,6 +87,9 @@ const StoryContent = ({ bookId }: StoryContentProps) => {
 
       {/* List */}
       <div className="flex-1 overflow-y-auto bg-warm-bg dark:bg-sidebar-dark relative pb-24">
+        {isModalOpen && (
+          <div className="absolute inset-0 bg-warm-bg/70 dark:bg-sidebar-dark/80 backdrop-blur-[2px] z-20 animate-in fade-in duration-300"></div>
+        )}
         {isLoading ? (
           <div className="flex justify-center items-center py-10">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
