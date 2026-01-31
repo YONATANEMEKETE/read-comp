@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Search, PlusCircle } from 'lucide-react';
 import StoryCard from './stories/StoryCard';
 import AddStoryModal from './stories/AddStoryModal';
@@ -9,60 +9,75 @@ import { Button } from '@/components/ui/button';
 import { getStoriesAction, saveStoryAction } from '@/actions/stories';
 import { toast } from 'sonner';
 import { Story } from '@prisma/client';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface StoryContentProps {
   bookId?: string;
 }
 
 const StoryContent = ({ bookId }: StoryContentProps) => {
-  const [stories, setStories] = useState<Story[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const fetchStories = async () => {
-      if (!bookId) return;
-
-      setIsLoading(true);
+  const { data: stories = [], isLoading } = useQuery({
+    queryKey: ["stories", bookId],
+    queryFn: async () => {
+      if (!bookId) return [];
       const result = await getStoriesAction(bookId);
       if (result.success && result.data) {
-        setStories(result.data as Story[]);
-      } else {
-        toast.error(result.message);
+        return result.data as Story[];
       }
-      setIsLoading(false);
-    };
+      return [];
+    },
+    enabled: !!bookId,
+    staleTime: Infinity,
+  });
 
-    fetchStories();
-  }, [bookId]);
+  const saveMutation = useMutation({
+    mutationFn: async (content: string) => {
+      if (!bookId) throw new Error("No book ID");
+      const result = await saveStoryAction(bookId, content);
+      if (!result.success) throw new Error(result.message);
+      return result.data as Story;
+    },
+    onMutate: async (content) => {
+      await queryClient.cancelQueries({ queryKey: ["stories", bookId] });
+      const previousStories = queryClient.getQueryData<Story[]>(["stories", bookId]);
+
+      const tempId = `temp-${Date.now()}`;
+      const optimisticStory: Story = {
+        id: tempId,
+        content,
+        userId: 'temp-user',
+        bookId: bookId!,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+      };
+
+      queryClient.setQueryData<Story[]>(["stories", bookId], (old) => [optimisticStory, ...(old || [])]);
+
+      return { previousStories, tempId };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousStories) {
+        queryClient.setQueryData(["stories", bookId], context.previousStories);
+      }
+      toast.error(err.message);
+    },
+    onSuccess: (data, variables, context) => {
+      queryClient.setQueryData<Story[]>(["stories", bookId], (old) => 
+        old?.map((s) => s.id === context.tempId ? data : s)
+      );
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["stories", bookId] });
+    },
+  });
 
   const handleSaveStory = async (content: string) => {
-    if (!content.trim() || !bookId) return;
-
-    const tempId = `temp-${Date.now()}`;
-    const optimisticStory: Story = {
-      id: tempId,
-      content,
-      userId: 'temp-user',
-      bookId: bookId,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      deletedAt: null,
-    };
-
-    // Optimistic update
-    setStories((prev) => [optimisticStory, ...prev]);
-
-    const result = await saveStoryAction(bookId, content);
-
-    if (result.success && result.data) {
-      const realStory = result.data as Story;
-      setStories((prev) => prev.map((s) => (s.id === tempId ? realStory : s)));
-    } else {
-      setStories((prev) => prev.filter((s) => s.id !== tempId));
-      toast.error(result.message);
-    }
+    saveMutation.mutate(content);
   };
 
   const filteredStories = stories.filter((story) =>
@@ -76,7 +91,7 @@ const StoryContent = ({ bookId }: StoryContentProps) => {
         <div className="relative group">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 w-[18px] h-[18px] group-focus-within:text-primary transition-colors" />
           <Input
-            className="w-full bg-white dark:bg-[#16181d] border-stone-200 dark:border-stone-800 rounded-lg py-2 pl-9 pr-4 text-sm placeholder-stone-400 text-stone-700 dark:text-stone-300 focus-visible:ring-primary shadow-sm transition-all outline-none h-10"
+            className="w-full bg-white dark:bg-[#16181d] border-stone-200 dark:border-stone-800 rounded-lg py-2 pl-9 pr-4 text-sm placeholder-stone-400 text-stone-700 dark:text-stone-300 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-sm transition-all outline-none h-10"
             placeholder="Search stories..."
             type="text"
             value={searchQuery}
@@ -87,10 +102,7 @@ const StoryContent = ({ bookId }: StoryContentProps) => {
 
       {/* List */}
       <div className="flex-1 overflow-y-auto bg-warm-bg dark:bg-sidebar-dark relative pb-24">
-        {isModalOpen && (
-          <div className="absolute inset-0 bg-warm-bg/70 dark:bg-sidebar-dark/80 backdrop-blur-[2px] z-20 animate-in fade-in duration-300"></div>
-        )}
-        {isLoading ? (
+        {isLoading && stories.length === 0 ? (
           <div className="flex justify-center items-center py-10">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
           </div>

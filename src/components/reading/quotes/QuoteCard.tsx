@@ -23,7 +23,7 @@ const QuoteCard = ({ text, author, className }: QuoteCardProps) => {
   return (
     <div
       className={cn(
-        'bg-white dark:bg-[#1a1816] p-5 rounded-xl border border-stone-100 dark:border-stone-800 shadow-paper relative group hover:shadow-soft transition-all duration-300',
+        'bg-white dark:bg-[#1a1816] p-5 rounded-xl border border-stone-100 dark:border-stone-800 shadow-paper relative group hover:shadow-soft transition-all duration-300 animate-in fade-in slide-in-from-bottom-2',
         className,
       )}
     >

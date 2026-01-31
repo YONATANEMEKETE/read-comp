@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+'use client';
+
+import React, { useState } from "react";
 import { Search, Plus } from "lucide-react";
 import QuoteCard from "./quotes/QuoteCard";
 import AddQuoteModal from "./quotes/AddQuoteModal";
@@ -7,62 +9,83 @@ import { Button } from "@/components/ui/button";
 import { getQuotesAction, saveQuoteAction } from "@/actions/quotes";
 import { toast } from "sonner";
 import { Quote } from "@prisma/client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface QuoteContentProps {
   bookId?: string;
 }
 
 const QuoteContent = ({ bookId }: QuoteContentProps) => {
-  const [quotes, setQuotes] = useState<Quote[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const fetchQuotes = async () => {
-      if (!bookId) return;
-      
-      setIsLoading(true);
+  const { data: quotes = [], isLoading } = useQuery({
+    queryKey: ["quotes", bookId],
+    queryFn: async () => {
+      if (!bookId) return [];
       const result = await getQuotesAction(bookId);
       if (result.success && result.data) {
-        setQuotes(result.data as Quote[]);
-      } else {
-        toast.error(result.message);
+        return result.data as Quote[];
       }
-      setIsLoading(false);
-    };
+      return [];
+    },
+    enabled: !!bookId,
+    staleTime: Infinity, // Keep data fresh until manually invalidated
+  });
 
-    fetchQuotes();
-  }, [bookId]);
+  const saveMutation = useMutation({
+    mutationFn: async ({ text, author }: { text: string; author: string }) => {
+      if (!bookId) throw new Error("No book ID");
+      const result = await saveQuoteAction(bookId, text, author);
+      if (!result.success) throw new Error(result.message);
+      return result.data as Quote;
+    },
+    onMutate: async ({ text, author }) => {
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries({ queryKey: ["quotes", bookId] });
+
+      // Snapshot the previous value
+      const previousQuotes = queryClient.getQueryData<Quote[]>(["quotes", bookId]);
+
+      // Optimistically update to the new value
+      const tempId = `temp-${Date.now()}`;
+      const optimisticQuote: Quote = {
+        id: tempId,
+        text,
+        citedPerson: author || null,
+        userId: "temp-user",
+        bookId: bookId!,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null
+      };
+
+      queryClient.setQueryData<Quote[]>(["quotes", bookId], (old) => [optimisticQuote, ...(old || [])]);
+
+      return { previousQuotes, tempId };
+    },
+    onError: (err, variables, context) => {
+      // Revert to the previous value on error
+      if (context?.previousQuotes) {
+        queryClient.setQueryData(["quotes", bookId], context.previousQuotes);
+      }
+      toast.error(err.message);
+    },
+    onSuccess: (data, variables, context) => {
+      // Replace optimistic quote with the real one
+      queryClient.setQueryData<Quote[]>(["quotes", bookId], (old) => 
+        old?.map((q) => q.id === context.tempId ? data : q)
+      );
+    },
+    onSettled: () => {
+      // Always refetch in the background to ensure we're in sync
+      queryClient.invalidateQueries({ queryKey: ["quotes", bookId] });
+    },
+  });
 
   const handleSaveQuote = async (text: string, author: string) => {
-    if (!text.trim() || !bookId) return;
-    
-    const tempId = `temp-${Date.now()}`;
-    const optimisticQuote: Quote = {
-      id: tempId,
-      text,
-      citedPerson: author || null,
-      userId: "temp-user",
-      bookId: bookId,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      deletedAt: null
-    };
-
-    // Add optimistic quote to state
-    setQuotes((prev) => [optimisticQuote, ...prev]);
-
-    const result = await saveQuoteAction(bookId, text, author);
-    
-    if (result.success && result.data) {
-      // Replace optimistic quote with the real one from server
-      const realQuote = result.data as Quote;
-      setQuotes((prev) => prev.map((q) => q.id === tempId ? realQuote : q));
-    } else {
-      // Remove optimistic quote on failure
-      setQuotes((prev) => prev.filter((q) => q.id !== tempId));
-    }
+    saveMutation.mutate({ text, author });
   };
 
   const filteredQuotes = quotes.filter((quote) =>
@@ -79,7 +102,7 @@ const QuoteContent = ({ bookId }: QuoteContentProps) => {
             <Search className="w-[18px] h-[18px]" />
           </span>
           <Input
-            className="w-full bg-transparent border border-stone-200 dark:border-stone-700 rounded-lg py-2 pl-9 pr-3 text-sm text-stone-700 dark:text-stone-300 placeholder-stone-400 focus-visible:ring-primary/50 transition-colors h-10 shadow-none"
+            className="w-full bg-transparent border border-stone-200 dark:border-stone-700 rounded-lg py-2 pl-9 pr-3 text-sm text-stone-700 dark:text-stone-300 placeholder-stone-400 focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors h-10 shadow-none"
             placeholder="Search saved quotes..."
             type="text"
             value={searchQuery}
@@ -94,7 +117,7 @@ const QuoteContent = ({ bookId }: QuoteContentProps) => {
           <div className="absolute inset-0 bg-warm-bg/70 dark:bg-sidebar-dark/80 backdrop-blur-[2px] z-20 animate-in fade-in duration-300"></div>
         )}
         
-        {isLoading ? (
+        {isLoading && quotes.length === 0 ? (
            <div className="flex justify-center items-center py-10">
              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
            </div>

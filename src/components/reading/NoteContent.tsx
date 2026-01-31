@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useEditor, EditorContent, useEditorState } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -23,12 +23,12 @@ import {
   Heading2,
   Undo,
   Redo,
-  Save,
   Check,
   Loader2
 } from 'lucide-react';
 import { getNoteAction, saveNoteAction } from '@/actions/notes';
 import { toast } from 'sonner';
+import { useQuery } from '@tanstack/react-query';
 
 interface ToolbarButtonProps {
   onClick: () => void;
@@ -78,11 +78,25 @@ interface NoteContentProps {
 const NoteContent = ({ bookId }: NoteContentProps) => {
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   
   // Ref to track the timeout for debouncing
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastContentRef = useRef<string>('');
+  const isInitialLoadDone = useRef<boolean>(false);
+
+  const { data: note, isLoading } = useQuery({
+    queryKey: ['note', bookId],
+    queryFn: async () => {
+      if (!bookId) return null;
+      const result = await getNoteAction(bookId);
+      if (result.success && result.data) {
+        return result.data;
+      }
+      return null;
+    },
+    enabled: !!bookId,
+    staleTime: Infinity,
+  });
 
   const editor = useEditor({
     extensions: [
@@ -122,12 +136,12 @@ const NoteContent = ({ bookId }: NoteContentProps) => {
         clearTimeout(saveTimeoutRef.current);
       }
 
-      // Don't save if content hasn't really changed (optional optimization)
+      // Don't save if content hasn't really changed
       if (content === lastContentRef.current) return;
 
       setIsSaving(true);
       
-      // Set new timeout for 5 seconds
+      // Set new timeout for auto-save
       saveTimeoutRef.current = setTimeout(async () => {
         try {
           const result = await saveNoteAction(bookId, content);
@@ -141,35 +155,19 @@ const NoteContent = ({ bookId }: NoteContentProps) => {
         } finally {
           setIsSaving(false);
         }
-      }, 5000);
+      }, 3000);
     },
   });
 
-  // Load initial note data
+  // Load initial note data into editor
   useEffect(() => {
-    async function loadNote() {
-      if (!bookId || !editor) return;
-
-      setIsLoading(true);
-      try {
-        const result = await getNoteAction(bookId);
-        if (result.success && result.data) {
-          // Only set content if the editor is empty or we want to overwrite
-          // For now, we assume initial load overwrites empty state
-          editor.commands.setContent(result.data.content);
-          lastContentRef.current = result.data.content;
-          setLastSaved(new Date(result.data.updatedAt));
-        }
-      } catch (error) {
-        console.error('Failed to load note:', error);
-        toast.error('Failed to load your notes');
-      } finally {
-        setIsLoading(false);
-      }
+    if (editor && note && !isInitialLoadDone.current) {
+      editor.commands.setContent(note.content);
+      lastContentRef.current = note.content;
+      setLastSaved(new Date(note.updatedAt));
+      isInitialLoadDone.current = true;
     }
-
-    loadNote();
-  }, [bookId, editor]);
+  }, [editor, note]);
 
   // Clean up timeout on unmount
   useEffect(() => {
@@ -228,7 +226,7 @@ const NoteContent = ({ bookId }: NoteContentProps) => {
     return null;
   }
 
-  if (isLoading) {
+  if (isLoading && !isInitialLoadDone.current) {
     return (
       <div className="flex h-full items-center justify-center bg-white dark:bg-sidebar-dark">
         <Loader2 className="h-6 w-6 animate-spin text-primary" />
