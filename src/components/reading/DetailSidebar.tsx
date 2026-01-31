@@ -26,7 +26,7 @@ const DetailSidebar = ({ bookId }: DetailSidebarProps) => {
       case "notes":
         return <NoteContent bookId={bookId} />;
       case "quotes":
-        return <QuoteContent />;
+        return <QuoteContent bookId={bookId} />;
       case "stories":
         return (
           <div className="flex items-center justify-center h-full text-muted-foreground">

@@ -1,7 +1,10 @@
+'use client';
+
 import React from 'react';
 import { Quote, Copy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 interface QuoteCardProps {
   text: string;
@@ -10,6 +13,13 @@ interface QuoteCardProps {
 }
 
 const QuoteCard = ({ text, author, className }: QuoteCardProps) => {
+  const handleCopy = () => {
+    navigator.clipboard.writeText(text);
+    toast.success('Quote copied to clipboard', {
+      duration: 2000,
+    });
+  };
+
   return (
     <div
       className={cn(
@@ -28,6 +38,7 @@ const QuoteCard = ({ text, author, className }: QuoteCardProps) => {
           <Button
             variant="ghost"
             size="icon"
+            onClick={handleCopy}
             className="h-8 w-8 text-stone-300 hover:text-stone-500 transition-colors cursor-pointer"
           >
             <Copy className="w-4 h-4" />

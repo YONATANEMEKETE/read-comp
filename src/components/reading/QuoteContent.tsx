@@ -1,53 +1,73 @@
-import React, { useState } from 'react';
-import { Search, Plus } from 'lucide-react';
-import QuoteCard from './quotes/QuoteCard';
-import AddQuoteModal from './quotes/AddQuoteModal';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import React, { useState, useEffect } from "react";
+import { Search, Plus } from "lucide-react";
+import QuoteCard from "./quotes/QuoteCard";
+import AddQuoteModal from "./quotes/AddQuoteModal";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { getQuotesAction, saveQuoteAction } from "@/actions/quotes";
+import { toast } from "sonner";
+import { Quote } from "@prisma/client";
 
-const INITIAL_QUOTES = [
-  {
-    id: 1,
-    text: 'When System 1 runs into difficulty, it calls on System 2 to support more detailed and specific processing that may solve the problem of the moment.',
-    author: 'Ronald Richards',
-  },
-  {
-    id: 2,
-    text: 'System 2 is mobilized when a question arises for which System 1 does not offer an answer, as happened to you when you encountered the multiplication problem 17 × 24.',
-    author: 'Devon Lane',
-  },
-  {
-    id: 3,
-    text: 'System 2 is activated when an event is detected that violates the model of the world that System 1 maintains.',
-    author: 'Cody Fisher',
-  },
-  {
-    id: 4,
-    text: 'In this world, lamps do not jump, cats do not bark, and gorillas do not cross basketball courts.',
-    author: 'Esther Howard',
-  },
-];
+interface QuoteContentProps {
+  bookId?: string;
+}
 
-const QuoteContent = () => {
-  const [quotes, setQuotes] = useState(INITIAL_QUOTES);
+const QuoteContent = ({ bookId }: QuoteContentProps) => {
+  const [quotes, setQuotes] = useState<Quote[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSaveQuote = (text: string, author: string) => {
-    if (!text.trim()) return;
-
-    const newQuote = {
-      id: Date.now(),
-      text,
-      author: author || 'Unknown',
+  useEffect(() => {
+    const fetchQuotes = async () => {
+      if (!bookId) return;
+      
+      setIsLoading(true);
+      const result = await getQuotesAction(bookId);
+      if (result.success && result.data) {
+        setQuotes(result.data as Quote[]);
+      } else {
+        toast.error(result.message);
+      }
+      setIsLoading(false);
     };
-    setQuotes([newQuote, ...quotes]);
+
+    fetchQuotes();
+  }, [bookId]);
+
+  const handleSaveQuote = async (text: string, author: string) => {
+    if (!text.trim() || !bookId) return;
+    
+    const tempId = `temp-${Date.now()}`;
+    const optimisticQuote: Quote = {
+      id: tempId,
+      text,
+      citedPerson: author || null,
+      userId: "temp-user",
+      bookId: bookId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      deletedAt: null
+    };
+
+    // Add optimistic quote to state
+    setQuotes((prev) => [optimisticQuote, ...prev]);
+
+    const result = await saveQuoteAction(bookId, text, author);
+    
+    if (result.success && result.data) {
+      // Replace optimistic quote with the real one from server
+      const realQuote = result.data as Quote;
+      setQuotes((prev) => prev.map((q) => q.id === tempId ? realQuote : q));
+    } else {
+      // Remove optimistic quote on failure
+      setQuotes((prev) => prev.filter((q) => q.id !== tempId));
+    }
   };
 
-  const filteredQuotes = quotes.filter(
-    (quote) =>
-      quote.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      quote.author.toLowerCase().includes(searchQuery.toLowerCase()),
+  const filteredQuotes = quotes.filter((quote) =>
+    quote.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (quote.citedPerson && quote.citedPerson.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (
@@ -73,25 +93,33 @@ const QuoteContent = () => {
         {isModalOpen && (
           <div className="absolute inset-0 bg-warm-bg/70 dark:bg-sidebar-dark/80 backdrop-blur-[2px] z-20 transition-all duration-500"></div>
         )}
-
-        {filteredQuotes.map((quote) => (
-          <QuoteCard key={quote.id} text={quote.text} author={quote.author} />
-        ))}
+        
+        {isLoading ? (
+           <div className="flex justify-center items-center py-10">
+             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+           </div>
+        ) : filteredQuotes.length === 0 ? (
+          <div className="text-center text-stone-400 mt-10">
+            {searchQuery ? "No quotes found matching your search." : "No quotes yet. Add one to get started!"}
+          </div>
+        ) : (
+          filteredQuotes.map((quote) => (
+            <QuoteCard key={quote.id} text={quote.text} author={quote.citedPerson || "Unknown"} />
+          ))
+        )}
       </div>
 
       {/* Modal */}
       {isModalOpen && (
-        <AddQuoteModal
-          onClose={() => setIsModalOpen(false)}
-          onSave={handleSaveQuote}
-        />
+        <AddQuoteModal onClose={() => setIsModalOpen(false)} onSave={handleSaveQuote} />
       )}
 
       {/* Add Button */}
       <div className="absolute bottom-6 left-0 right-0 px-6 flex justify-center pointer-events-none z-30">
-        <Button
+        <Button 
           onClick={() => setIsModalOpen(true)}
-          className="bg-primary text-white font-medium text-sm px-10 rounded-xl shadow-lg hover:shadow-xl hover:bg-[#8b7662] transition-all transform hover:-translate-y-0.5 flex items-center gap-2 pointer-events-auto ring-4 ring-white dark:ring-sidebar-dark cursor-pointer"
+          className="bg-primary text-white font-medium text-sm h-12 px-6 rounded-full shadow-lg hover:shadow-xl hover:bg-[#8b7662] transition-all transform hover:-translate-y-0.5 flex items-center gap-2 pointer-events-auto ring-4 ring-white dark:ring-sidebar-dark cursor-pointer"
+          disabled={!bookId}
         >
           <Plus className="w-5 h-5" />
           Add Quote
