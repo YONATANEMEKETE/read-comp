@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import NoteContent from "./NoteContent";
 import QuoteContent from "./QuoteContent";
+import StoryContent from "./StoryContent";
 
 type TabType = "notes" | "quotes" | "stories";
 
@@ -28,11 +29,7 @@ const DetailSidebar = ({ bookId }: DetailSidebarProps) => {
       case "quotes":
         return <QuoteContent bookId={bookId} />;
       case "stories":
-        return (
-          <div className="flex items-center justify-center h-full text-muted-foreground">
-            Stories content coming soon...
-          </div>
-        );
+        return <StoryContent bookId={bookId} />;
       default:
         return null;
     }
