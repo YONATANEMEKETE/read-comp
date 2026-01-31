@@ -96,13 +96,11 @@ const QuoteContent = ({ bookId }: QuoteContentProps) => {
   return (
     <div className="flex flex-col h-full relative">
       {/* Search Header */}
-      <div className="px-6 py-4 bg-white dark:bg-sidebar-dark border-b border-sepia-divider/30 dark:border-stone-800/50 shrink-0">
-        <div className="relative">
-          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-stone-400 z-10">
-            <Search className="w-[18px] h-[18px]" />
-          </span>
+      <div className="px-6 py-4 border-b border-sepia-divider/30 dark:border-stone-800/50 bg-stone-50/30 dark:bg-stone-900/20 shrink-0">
+        <div className="relative group">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 w-[18px] h-[18px] group-focus-within:text-primary transition-colors z-10" />
           <Input
-            className="w-full bg-transparent border border-stone-200 dark:border-stone-700 rounded-lg py-2 pl-9 pr-3 text-sm text-stone-700 dark:text-stone-300 placeholder-stone-400 focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors h-10 shadow-none"
+            className="w-full bg-white dark:bg-[#16181d] border-stone-200 dark:border-stone-800 rounded-lg py-2 pl-9 pr-4 text-sm placeholder-stone-400 text-stone-700 dark:text-stone-300 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-sm transition-all outline-none h-10"
             placeholder="Search saved quotes..."
             type="text"
             value={searchQuery}
@@ -141,7 +139,7 @@ const QuoteContent = ({ bookId }: QuoteContentProps) => {
       <div className="absolute bottom-6 left-0 right-0 px-8 flex justify-center pointer-events-none z-30">
         <Button 
           onClick={() => setIsModalOpen(true)}
-          className="bg-primary text-white font-medium text-sm h-12 w-full rounded-full shadow-lg hover:shadow-xl hover:bg-[#8b7662] transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 pointer-events-auto ring-4 ring-white dark:ring-sidebar-dark cursor-pointer"
+          className="bg-primary text-white font-medium text-sm h-12 w-full rounded-full shadow-lg hover:shadow-xl hover:bg-[#8b7662] transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 pointer-events-auto cursor-pointer"
           disabled={!bookId}
         >
           <Plus className="w-5 h-5" />

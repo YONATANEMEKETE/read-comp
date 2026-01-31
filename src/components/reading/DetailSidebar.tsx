@@ -17,24 +17,24 @@ const DetailSidebar = ({ bookId }: DetailSidebarProps) => {
       <Tabs defaultValue="notes" className="flex flex-col flex-1 h-full">
         {/* Tab Navigation */}
         <div className="px-6 pt-6 border-b border-sepia-divider/50 dark:border-sidebar-border/50 shrink-0">
-          <TabsList className="bg-transparent p-0 h-auto gap-0 w-full justify-start rounded-none">
+          <TabsList variant="line" className="bg-transparent p-0 h-auto gap-0 w-full justify-start rounded-none border-none">
             <TabsTrigger
               value="notes"
-              className="relative pb-3 pt-2 px-4 text-sm font-semibold transition-all duration-200 rounded-none h-auto bg-transparent data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-muted-foreground hover:text-foreground dark:hover:text-foreground cursor-pointer group"
+              className="relative pb-3 pt-2 px-4 text-sm font-semibold transition-all duration-200 rounded-none h-auto !bg-transparent data-[state=active]:!bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none border-none data-[state=active]:border-none text-muted-foreground hover:text-foreground dark:hover:text-foreground cursor-pointer group shadow-none after:hidden"
             >
               Notes
               <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary scale-x-0 group-data-[state=active]:scale-x-100 transition-transform duration-200" />
             </TabsTrigger>
             <TabsTrigger
               value="quotes"
-              className="relative pb-3 pt-2 px-4 text-sm font-semibold transition-all duration-200 rounded-none h-auto bg-transparent data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-muted-foreground hover:text-foreground dark:hover:text-foreground cursor-pointer group"
+              className="relative pb-3 pt-2 px-4 text-sm font-semibold transition-all duration-200 rounded-none h-auto !bg-transparent data-[state=active]:!bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none border-none data-[state=active]:border-none text-muted-foreground hover:text-foreground dark:hover:text-foreground cursor-pointer group shadow-none after:hidden"
             >
               Quotes
               <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary scale-x-0 group-data-[state=active]:scale-x-100 transition-transform duration-200" />
             </TabsTrigger>
             <TabsTrigger
               value="stories"
-              className="relative pb-3 pt-2 px-4 text-sm font-semibold transition-all duration-200 rounded-none h-auto bg-transparent data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none text-muted-foreground hover:text-foreground dark:hover:text-foreground cursor-pointer group"
+              className="relative pb-3 pt-2 px-4 text-sm font-semibold transition-all duration-200 rounded-none h-auto !bg-transparent data-[state=active]:!bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none border-none data-[state=active]:border-none text-muted-foreground hover:text-foreground dark:hover:text-foreground cursor-pointer group shadow-none after:hidden"
             >
               Stories
               <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary scale-x-0 group-data-[state=active]:scale-x-100 transition-transform duration-200" />

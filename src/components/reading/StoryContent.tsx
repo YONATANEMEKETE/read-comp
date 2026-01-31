@@ -137,7 +137,7 @@ const StoryContent = ({ bookId }: StoryContentProps) => {
       <div className="absolute bottom-6 left-0 right-0 px-8 pointer-events-none flex justify-center z-20">
         <Button
           onClick={() => setIsModalOpen(true)}
-          className="pointer-events-auto shadow-floating bg-primary hover:bg-[#8b735f] text-white px-6 py-6 rounded-full flex items-center gap-2.5 transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-95 font-medium text-sm w-full justify-center cursor-pointer ring-4 ring-white dark:ring-sidebar-dark"
+          className="pointer-events-auto shadow-floating bg-primary hover:bg-[#8b735f] text-white px-6 py-6 rounded-full flex items-center gap-2.5 transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-95 font-medium text-sm w-full justify-center cursor-pointer"
           disabled={!bookId}
         >
           <PlusCircle className="w-5 h-5" />
