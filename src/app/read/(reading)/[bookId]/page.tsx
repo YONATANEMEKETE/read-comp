@@ -252,6 +252,7 @@ export default function ReadingPage({ params }: ReadingPageProps) {
           pdfUrl={book.pdfUrl} 
           initialPage={initialPage}
           onPageChange={handlePageChange}
+          bookId={book.id}
         />
       </div>
     </div>

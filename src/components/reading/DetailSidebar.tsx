@@ -7,7 +7,11 @@ import NoteContent from "./NoteContent";
 
 type TabType = "notes" | "quotes" | "stories";
 
-const DetailSidebar = () => {
+interface DetailSidebarProps {
+  bookId?: string;
+}
+
+const DetailSidebar = ({ bookId }: DetailSidebarProps) => {
   const [activeTab, setActiveTab] = useState<TabType>("notes");
 
   const tabs = [
@@ -19,7 +23,7 @@ const DetailSidebar = () => {
   const renderContent = () => {
     switch (activeTab) {
       case "notes":
-        return <NoteContent />;
+        return <NoteContent bookId={bookId} />;
       case "quotes":
         return (
           <div className="flex items-center justify-center h-full text-muted-foreground">

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useEditor, EditorContent, useEditorState } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -23,7 +23,12 @@ import {
   Heading2,
   Undo,
   Redo,
+  Save,
+  Check,
+  Loader2
 } from 'lucide-react';
+import { getNoteAction, saveNoteAction } from '@/actions/notes';
+import { toast } from 'sonner';
 
 interface ToolbarButtonProps {
   onClick: () => void;
@@ -66,7 +71,19 @@ const ToolbarButton = ({
   </TooltipProvider>
 );
 
-const NoteContent = () => {
+interface NoteContentProps {
+  bookId?: string;
+}
+
+const NoteContent = ({ bookId }: NoteContentProps) => {
+  const [isSaving, setIsSaving] = useState(false);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Ref to track the timeout for debouncing
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastContentRef = useRef<string>('');
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -95,7 +112,73 @@ const NoteContent = () => {
           'prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[300px] px-6 py-4 font-serif text-stone-800 dark:text-stone-300 leading-relaxed',
       },
     },
+    onUpdate: ({ editor }) => {
+      if (!bookId) return;
+      
+      const content = editor.getHTML();
+      
+      // Clear existing timeout
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+
+      // Don't save if content hasn't really changed (optional optimization)
+      if (content === lastContentRef.current) return;
+
+      setIsSaving(true);
+      
+      // Set new timeout for 2 seconds
+      saveTimeoutRef.current = setTimeout(async () => {
+        try {
+          const result = await saveNoteAction(bookId, content);
+          if (result.success) {
+            setLastSaved(new Date());
+            lastContentRef.current = content;
+          }
+        } catch (error) {
+          console.error('Failed to auto-save note:', error);
+          toast.error('Failed to save note');
+        } finally {
+          setIsSaving(false);
+        }
+      }, 2000);
+    },
   });
+
+  // Load initial note data
+  useEffect(() => {
+    async function loadNote() {
+      if (!bookId || !editor) return;
+
+      setIsLoading(true);
+      try {
+        const result = await getNoteAction(bookId);
+        if (result.success && result.data) {
+          // Only set content if the editor is empty or we want to overwrite
+          // For now, we assume initial load overwrites empty state
+          editor.commands.setContent(result.data.content);
+          lastContentRef.current = result.data.content;
+          setLastSaved(new Date(result.data.updatedAt));
+        }
+      } catch (error) {
+        console.error('Failed to load note:', error);
+        toast.error('Failed to load your notes');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadNote();
+  }, [bookId, editor]);
+
+  // Clean up timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const editorState = useEditorState({
     editor,
@@ -145,8 +228,31 @@ const NoteContent = () => {
     return null;
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex h-full items-center justify-center bg-white dark:bg-sidebar-dark">
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-sidebar-dark">
+    <div className="flex flex-col h-full bg-white dark:bg-sidebar-dark relative">
+      {/* Saving Indicator Overlay */}
+      <div className="absolute top-2 right-4 z-10 pointer-events-none">
+        {isSaving ? (
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-white/80 dark:bg-stone-900/80 px-2 py-1 rounded-full backdrop-blur-sm border border-border/50 shadow-sm">
+            <Loader2 className="h-3 w-3 animate-spin" />
+            <span>Saving...</span>
+          </div>
+        ) : lastSaved ? (
+          <div className="flex items-center gap-1.5 text-xs text-green-600/80 dark:text-green-400/80 bg-white/80 dark:bg-stone-900/80 px-2 py-1 rounded-full backdrop-blur-sm border border-border/50 shadow-sm transition-opacity duration-1000 opacity-0 hover:opacity-100 group-hover:opacity-100">
+            <Check className="h-3 w-3" />
+            <span>Saved</span>
+          </div>
+        ) : null}
+      </div>
+
       {/* Toolbar */}
       <div className="flex items-center gap-1 px-4 py-2 border-b border-sepia-divider/30 dark:border-sidebar-border/50 bg-stone-50/50 dark:bg-stone-900/30 shrink-0 flex-wrap">
         <ToolbarButton

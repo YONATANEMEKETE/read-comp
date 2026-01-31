@@ -15,9 +15,10 @@ interface DetailContentProps {
   isLoading?: boolean;
   initialPage?: number;
   onPageChange?: (page: number) => void;
+  bookId?: string;
 }
 
-const DetailContent = ({ pdfUrl, isLoading, initialPage = 0, onPageChange }: DetailContentProps) => {
+const DetailContent = ({ pdfUrl, isLoading, initialPage = 0, onPageChange, bookId }: DetailContentProps) => {
   return (
     <div className="flex h-full w-full overflow-hidden">
       {/* Reader Main Area - 70% width */}
@@ -35,7 +36,7 @@ const DetailContent = ({ pdfUrl, isLoading, initialPage = 0, onPageChange }: Det
 
       {/* Side Panel for Notes/Quotes/Stories - 30% width */}
       <div className="w-[30%]">
-        <DetailSidebar />
+        <DetailSidebar bookId={bookId} />
       </div>
     </div>
   );
