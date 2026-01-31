@@ -127,7 +127,7 @@ const NoteContent = ({ bookId }: NoteContentProps) => {
 
       setIsSaving(true);
       
-      // Set new timeout for 2 seconds
+      // Set new timeout for 5 seconds
       saveTimeoutRef.current = setTimeout(async () => {
         try {
           const result = await saveNoteAction(bookId, content);
@@ -141,7 +141,7 @@ const NoteContent = ({ bookId }: NoteContentProps) => {
         } finally {
           setIsSaving(false);
         }
-      }, 2000);
+      }, 5000);
     },
   });
 
