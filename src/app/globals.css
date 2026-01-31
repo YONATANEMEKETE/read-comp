@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -181,6 +182,38 @@
   }
 
   /* Tiptap Editor Styles */
+  .ProseMirror h1 {
+    @apply text-3xl font-bold mt-6 mb-3 first:mt-0 font-serif text-foreground tracking-tight;
+  }
+
+  .ProseMirror h2 {
+    @apply text-2xl font-semibold mt-5 mb-2 first:mt-0 font-serif text-foreground/90 tracking-tight;
+  }
+
+  .ProseMirror p {
+    @apply my-2 leading-relaxed text-foreground/90;
+  }
+
+  .ProseMirror ul {
+    @apply list-disc pl-6 my-3 marker:text-primary;
+  }
+
+  .ProseMirror ol {
+    @apply list-decimal pl-6 my-3 marker:text-primary;
+  }
+
+  .ProseMirror li {
+    @apply my-1 leading-relaxed pl-1;
+  }
+
+  .ProseMirror blockquote {
+    @apply border-l-4 border-primary/60 bg-secondary/20 pl-4 py-2 pr-2 italic my-4 rounded-r-md font-serif text-foreground/80;
+  }
+
+  .ProseMirror hr {
+    @apply my-6 border-sepia-divider;
+  }
+
   .is-editor-empty:first-child::before {
     content: attr(data-placeholder);
     float: left;
