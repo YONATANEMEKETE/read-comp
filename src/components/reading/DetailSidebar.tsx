@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import NoteContent from "./NoteContent";
+import QuoteContent from "./QuoteContent";
 
 type TabType = "notes" | "quotes" | "stories";
 
@@ -25,11 +26,7 @@ const DetailSidebar = ({ bookId }: DetailSidebarProps) => {
       case "notes":
         return <NoteContent bookId={bookId} />;
       case "quotes":
-        return (
-          <div className="flex items-center justify-center h-full text-muted-foreground">
-            Quotes content coming soon...
-          </div>
-        );
+        return <QuoteContent />;
       case "stories":
         return (
           <div className="flex items-center justify-center h-full text-muted-foreground">
