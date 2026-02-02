@@ -398,9 +398,6 @@ export async function getFavoriteBooks(): Promise<BookWithProgress[]> {
       where: {
         userId: session.user.id,
         isFavorite: true, // Only include books marked as favorite
-        book: {
-          isSuggested: false,
-        },
         deletedAt: null, // Only include books that haven't been soft-deleted
       },
       include: {
