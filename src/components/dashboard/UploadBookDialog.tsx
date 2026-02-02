@@ -306,7 +306,7 @@ export function UploadBookDialog({
     >
       <DialogContent
         showCloseButton={false}
-        className="sm:max-w-[480px] bg-background border-border rounded-3xl p-8"
+        className="w-[95%] sm:max-w-[480px] bg-background border-border rounded-3xl p-5 sm:p-8 mx-auto"
         onInteractOutside={(e) => {
           if (status === 'uploading' || isSaving) {
             e.preventDefault();
@@ -316,29 +316,29 @@ export function UploadBookDialog({
         {!status || (status !== 'uploading' && !isSaving) ? (
           <button
             onClick={() => handleClose()}
-            className="absolute top-6 right-6 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
           >
-            <X size={20} />
+            <X size={18} className="sm:size-5" />
           </button>
         ) : null}
 
         <DialogHeader className="mb-4">
-          <DialogTitle className="text-2xl font-bold text-foreground font-sans">
+          <DialogTitle className="text-xl sm:text-2xl font-bold text-foreground font-sans">
             Upload a Book
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground text-sm">
+          <DialogDescription className="text-muted-foreground text-xs sm:text-sm">
             Add a new PDF to your personal library.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* File Upload Area */}
           <div
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             className={cn(
-              'relative w-full aspect-[2/1] border-2 border-dashed rounded-2xl flex flex-col items-center justify-center gap-3 transition-all duration-300',
+              'relative w-full aspect-[4/3] sm:aspect-[2/1] border-2 border-dashed rounded-2xl flex flex-col items-center justify-center gap-2 sm:gap-3 transition-all duration-300',
               isDragging
                 ? 'border-primary bg-primary/10 scale-[1.02]'
                 : 'border-border bg-card/40',
@@ -360,9 +360,9 @@ export function UploadBookDialog({
             )}
 
             {status === 'uploading' ? (
-              <div className="w-full max-w-[80%] flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300">
+              <div className="w-full max-w-[80%] flex flex-col items-center gap-3 sm:gap-4 animate-in fade-in zoom-in duration-300">
                 {/* Circular Progress */}
-                <div className="relative size-24 flex items-center justify-center">
+                <div className="relative size-16 sm:size-24 flex items-center justify-center">
                   <svg className="size-full -rotate-90" viewBox="0 0 100 100">
                     {/* Background Circle */}
                     <circle
@@ -389,64 +389,64 @@ export function UploadBookDialog({
                     />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-sm font-bold text-primary">
+                    <span className="text-xs sm:text-sm font-bold text-primary">
                       {Math.round(uploadProgress)}%
                     </span>
                   </div>
                 </div>
 
                 <div className="w-full space-y-1 text-center">
-                  <p className="text-sm font-medium text-foreground">
+                  <p className="text-xs sm:text-sm font-medium text-foreground">
                     Uploading PDF...
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-[10px] sm:text-xs text-muted-foreground">
                     Please wait while we process your file
                   </p>
                 </div>
               </div>
             ) : status === 'success' ? (
-              <div className="flex flex-col items-center gap-3 animate-in fade-in zoom-in duration-300">
-                <div className="size-14 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400">
-                  <Check size={28} strokeWidth={3} />
+              <div className="flex flex-col items-center gap-2 sm:gap-3 animate-in fade-in zoom-in duration-300">
+                <div className="size-10 sm:size-14 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400">
+                  <Check size={20} className="sm:size-7" strokeWidth={3} />
                 </div>
                 <div className="text-center">
-                  <p className="text-sm font-bold text-foreground">
+                  <p className="text-xs sm:text-sm font-bold text-foreground">
                     PDF Uploaded!
                   </p>
                   <a
                     href={uploadedUrl || '#'}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-xs text-primary hover:underline mt-1 block"
+                    className="text-[10px] sm:text-xs text-primary hover:underline mt-1 block"
                   >
                     View File
                   </a>
                 </div>
               </div>
             ) : status === 'error' ? (
-              <div className="flex flex-col items-center gap-3 animate-in fade-in zoom-in duration-300">
-                <div className="size-14 rounded-full bg-destructive/10 flex items-center justify-center text-destructive">
-                  <AlertCircle size={28} strokeWidth={2} />
+              <div className="flex flex-col items-center gap-2 sm:gap-3 animate-in fade-in zoom-in duration-300">
+                <div className="size-10 sm:size-14 rounded-full bg-destructive/10 flex items-center justify-center text-destructive">
+                  <AlertCircle size={20} className="sm:size-7" strokeWidth={2} />
                 </div>
                 <div className="text-center px-4">
-                  <p className="text-sm font-semibold text-foreground">
+                  <p className="text-xs sm:text-sm font-semibold text-foreground">
                     Upload Failed
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">
                     Please try again.
                   </p>
                 </div>
               </div>
             ) : selectedFile ? (
-              <div className="flex flex-col items-center gap-3 animate-in fade-in zoom-in duration-300">
-                <div className="size-14 rounded-full bg-primary/10 flex items-center justify-center text-primary shadow-sm ring-4 ring-background">
-                  <FileText size={24} />
+              <div className="flex flex-col items-center gap-2 sm:gap-3 animate-in fade-in zoom-in duration-300">
+                <div className="size-10 sm:size-14 rounded-full bg-primary/10 flex items-center justify-center text-primary shadow-sm ring-4 ring-background">
+                  <FileText size={18} className="sm:size-6" />
                 </div>
-                <div className="text-center">
-                  <p className="text-sm font-semibold text-foreground max-w-[200px] truncate">
+                <div className="text-center px-4">
+                  <p className="text-xs sm:text-sm font-semibold text-foreground max-w-[150px] sm:max-w-[200px] truncate">
                     {selectedFile.name}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">
                     {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                   </p>
                   <Button
@@ -456,7 +456,7 @@ export function UploadBookDialog({
                       e.stopPropagation(); // Prevent triggering file input
                       setSelectedFile(null);
                     }}
-                    className="h-7 text-xs text-destructive hover:text-destructive hover:bg-destructive/10 mt-2"
+                    className="h-6 sm:h-7 text-[10px] sm:text-xs text-destructive hover:text-destructive hover:bg-destructive/10 mt-1 sm:mt-2"
                   >
                     Remove
                   </Button>
@@ -464,15 +464,15 @@ export function UploadBookDialog({
               </div>
             ) : (
               <>
-                <div className="size-12 rounded-full bg-background shadow-sm flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300 pointer-events-none border border-muted/50">
-                  <Upload size={24} />
+                <div className="size-10 sm:size-12 rounded-full bg-background shadow-sm flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300 pointer-events-none border border-muted/50">
+                  <Upload size={18} className="sm:size-6" />
                 </div>
 
-                <div className="text-center pointer-events-none space-y-1">
-                  <p className="text-sm font-semibold text-foreground">
+                <div className="text-center pointer-events-none space-y-1 px-4">
+                  <p className="text-xs sm:text-sm font-semibold text-foreground">
                     Click to upload or drag and drop
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-[10px] sm:text-xs text-muted-foreground">
                     PDF only (max 32MB)
                   </p>
                 </div>
@@ -481,11 +481,11 @@ export function UploadBookDialog({
           </div>
 
           {/* Book Details Form */}
-          <div className="space-y-5 transition-opacity duration-300">
+          <div className="space-y-4 sm:space-y-5 transition-opacity duration-300">
             <div>
               <Label
                 htmlFor="book-title"
-                className="block text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2 ml-1"
+                className="block text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1.5 sm:mb-2 ml-1"
               >
                 Book Title
               </Label>
@@ -496,14 +496,14 @@ export function UploadBookDialog({
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 disabled={isSaving}
-                className="w-full px-4 py-2.5 bg-card border-border rounded-md text-foreground placeholder-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary shadow-inner-soft text-sm"
+                className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-card border-border rounded-md text-foreground placeholder-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary shadow-inner-soft text-sm"
               />
             </div>
 
             <div>
               <Label
                 htmlFor="book-author"
-                className="block text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2 ml-1"
+                className="block text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1.5 sm:mb-2 ml-1"
               >
                 Author
               </Label>
@@ -514,18 +514,18 @@ export function UploadBookDialog({
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
                 disabled={isSaving}
-                className="w-full px-4 py-2.5 bg-card border-border rounded-md text-foreground placeholder-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary shadow-inner-soft text-sm"
+                className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-card border-border rounded-md text-foreground placeholder-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary shadow-inner-soft text-sm"
               />
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="grid grid-cols-2 gap-3 pt-2">
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 pt-2">
             <Button
               variant="outline"
               onClick={() => handleClose()}
               disabled={status === 'uploading' || isSaving}
-              className="px-4 py-3 rounded-xl border-border text-muted-foreground font-medium hover:bg-muted hover:text-foreground transition-colors text-sm cursor-pointer"
+              className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl border-border text-muted-foreground font-medium hover:bg-muted hover:text-foreground transition-colors text-xs sm:text-sm cursor-pointer h-11 sm:h-auto"
             >
               Cancel
             </Button>
@@ -533,22 +533,22 @@ export function UploadBookDialog({
             <Button
               onClick={handleSave}
               disabled={!isReadyToAdd || status === 'uploading'}
-              className="px-4 py-3 rounded-xl bg-primary text-primary-foreground font-medium shadow-sm hover:bg-primary/90 transition-all active:scale-[0.98] text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-primary text-primary-foreground font-medium shadow-sm hover:bg-primary/90 transition-all active:scale-[0.98] text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer h-11 sm:h-auto"
             >
               {isCoverGenerating ? (
                 <>
-                  <Loader2 size={18} className="animate-spin" />
-                  <span>Generating Cover...</span>
+                  <Loader2 size={16} className="animate-spin sm:size-4.5" />
+                  <span className="truncate">Cover...</span>
                 </>
               ) : isSaving ? (
                 <>
-                  <Loader2 size={18} className="animate-spin" />
+                  <Loader2 size={16} className="animate-spin sm:size-4.5" />
                   <span>Saving...</span>
                 </>
               ) : (
                 <>
                   <span>Add Book</span>
-                  <ArrowRight size={18} />
+                  <ArrowRight size={16} className="sm:size-4.5" />
                 </>
               )}
             </Button>

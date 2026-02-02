@@ -5,7 +5,7 @@ import { Suspense } from 'react';
 function LibraryContent() {
   return (
     <div className="flex-1 overflow-y-auto scroll-smooth">
-      <div className="container max-w-7xl mx-auto py-8 px-6 md:px-10 space-y-12">
+      <div className="container max-w-7xl mx-auto py-6 md:py-10 px-4 sm:px-6 md:px-10 space-y-8 md:space-y-12">
         <YourList />
         <SuggestedList />
       </div>

@@ -241,8 +241,8 @@ export function YourList() {
 
   return (
     <>
-      <section className="mb-14">
-        <div className="flex items-center justify-between mb-8">
+      <section className="mb-10 md:mb-14">
+        <div className="flex items-center justify-between mb-6 md:mb-8">
           <div className="flex flex-col gap-1">
             <h3 className="text-[10px] font-bold text-stone-400 dark:text-stone-500 uppercase tracking-[0.2em] font-sans">
               Your Library
@@ -265,8 +265,8 @@ export function YourList() {
           animate="visible"
           className={cn(
             view === 'grid'
-              ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8'
-              : 'flex flex-col gap-4',
+              ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6 md:gap-8'
+              : 'flex flex-col gap-3 sm:gap-4',
           )}
         >
           {isLoading ? (
@@ -286,11 +286,11 @@ export function YourList() {
                   className="flex flex-col opacity-60"
                   onClick={() => setIsUploadDialogOpen(true)}
                 >
-                  <div className="aspect-3/4 w-full rounded-2xl border-2 border-dashed border-sepia-divider mb-4 flex flex-col items-center justify-center group cursor-pointer hover:border-primary/50 transition-colors">
-                    <span className="text-stone-300 text-4xl mb-2 font-light">
+                  <div className="aspect-[3/4] w-full rounded-xl sm:rounded-2xl border-2 border-dashed border-sepia-divider mb-3 sm:mb-4 flex flex-col items-center justify-center group cursor-pointer hover:border-primary/50 transition-colors">
+                    <span className="text-stone-300 text-3xl sm:text-4xl mb-1 sm:mb-2 font-light">
                       +
                     </span>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400">
+                    <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-stone-400">
                       Add Book
                     </span>
                   </div>

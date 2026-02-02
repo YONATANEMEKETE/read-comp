@@ -169,11 +169,11 @@ export function SuggestedList() {
   // Show empty state when no books are found after filtering
   if (filteredBooks.length === 0 && !isLoading) {
     return (
-      <section className="mb-12">
-        <div className="flex items-center justify-between mb-8">
+      <section className="mb-10 md:mb-12">
+        <div className="flex items-center justify-between mb-6 md:mb-8">
           <div className="flex items-center gap-3">
             <div className="size-1 w-1 bg-primary rounded-full"></div>
-            <h3 className="text-xs font-bold text-stone-400 dark:text-stone-500 uppercase tracking-[0.2em] font-sans">
+            <h3 className="text-[10px] md:text-xs font-bold text-stone-400 dark:text-stone-500 uppercase tracking-[0.2em] font-sans">
               Suggested For You
             </h3>
           </div>
@@ -190,17 +190,18 @@ export function SuggestedList() {
           title="No suggestions found"
           description="Try adjusting your filters or explore more books to find recommendations tailored for you."
           showButton={false}
+          className="min-h-[300px] md:min-h-[400px]"
         />
       </section>
     );
   }
 
   return (
-    <section className="mb-12">
-      <div className="flex items-center justify-between mb-8">
+    <section className="mb-10 md:mb-12">
+      <div className="flex items-center justify-between mb-6 md:mb-8">
         <div className="flex items-center gap-3">
           <div className="size-1 w-1 bg-primary rounded-full"></div>
-          <h3 className="text-xs font-bold text-stone-400 dark:text-stone-500 uppercase tracking-[0.2em] font-sans">
+          <h3 className="text-[10px] md:text-xs font-bold text-stone-400 dark:text-stone-500 uppercase tracking-[0.2em] font-sans">
             Suggested For You
           </h3>
         </div>
@@ -220,8 +221,8 @@ export function SuggestedList() {
         animate="visible"
         className={cn(
           view === 'grid'
-            ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8'
-            : 'flex flex-col gap-4',
+            ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6 md:gap-8'
+            : 'flex flex-col gap-3 sm:gap-4',
         )}
       >
         {isLoading ? (

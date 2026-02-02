@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { RotateCcw } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface FailedToLoadBookProps {
   title?: string;
@@ -18,15 +19,18 @@ export function FailedToLoadBook({
 }: FailedToLoadBookProps) {
   return (
     <div
-      className={`flex-1 flex flex-col items-center justify-center text-center p-12 rounded-3xl border-2 border-dashed border-sepia-divider bg-white/50 dark:bg-stone-800/30 ${className}`}
+      className={cn(
+        "flex-1 flex flex-col items-center justify-center text-center p-6 sm:p-12 md:p-16 rounded-[2rem] sm:rounded-3xl border-2 border-dashed border-sepia-divider bg-white/50 dark:bg-stone-800/30",
+        className
+      )}
     >
-      <div className="size-24 rounded-full bg-dusty-rose/10 flex items-center justify-center mb-6">
-        <div className="text-[48px] text-dusty-rose transform rotate-12">
+      <div className="size-16 sm:size-24 rounded-full bg-dusty-rose/10 flex items-center justify-center mb-6">
+        <div className="text-[32px] sm:text-[48px] text-dusty-rose transform rotate-12">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
-            className="w-12 h-12"
+            className="w-8 h-8 sm:w-12 sm:h-12"
           >
             <path
               fillRule="evenodd"
@@ -36,18 +40,18 @@ export function FailedToLoadBook({
           </svg>
         </div>
       </div>
-      <h3 className="font-display text-xl font-semibold text-stone-900 dark:text-white mb-3">
+      <h3 className="font-display text-lg sm:text-xl font-semibold text-stone-900 dark:text-white mb-2 sm:mb-3 px-4">
         {title}
       </h3>
-      <p className="text-stone-500 dark:text-stone-400 max-w-sm mb-8 text-sm leading-relaxed">
+      <p className="text-stone-500 dark:text-stone-400 max-w-sm mb-6 sm:mb-8 text-xs sm:text-sm leading-relaxed px-4">
         {description}
       </p>
       {onRetry && (
         <Button
           onClick={onRetry}
-          className="flex items-center gap-2 px-8 py-3 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-full shadow-soft transition-all active:scale-[0.98] focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 cursor-pointer"
+          className="flex items-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 bg-primary hover:bg-primary/90 text-white text-xs sm:text-sm font-semibold rounded-full shadow-soft transition-all active:scale-[0.98] focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 cursor-pointer"
         >
-          <RotateCcw className="h-5 w-5" />
+          <RotateCcw className="h-4 w-4 sm:h-5 sm:w-5" />
           Retry
         </Button>
       )}
