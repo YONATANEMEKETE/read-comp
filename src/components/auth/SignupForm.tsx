@@ -85,7 +85,7 @@ export function SignupForm() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6 w-full max-w-md mx-auto px-4 sm:px-0">
       {state.message && (
         <Alert
           variant={state.success ? 'default' : 'destructive'}
@@ -100,29 +100,29 @@ export function SignupForm() {
           ) : (
             <AlertCircle className="h-4 w-4" />
           )}
-          <AlertTitle>{state.success ? 'Success' : 'Error'}</AlertTitle>
-          <AlertDescription>{state.message}</AlertDescription>
+          <AlertTitle className="text-sm sm:text-base">{state.success ? 'Success' : 'Error'}</AlertTitle>
+          <AlertDescription className="text-xs sm:text-sm">{state.message}</AlertDescription>
         </Alert>
       )}
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5">
           <FormField
             control={form.control}
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-500 mb-2 ml-1 block">
+                <FormLabel className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-stone-500 mb-1.5 sm:mb-2 ml-1 block">
                   Username
                 </FormLabel>
                 <FormControl>
                   <div className="relative group">
-                    <User className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 size-5 transition-colors group-focus-within:text-primary" />
+                    <User className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-stone-400 size-4 sm:size-5 transition-colors group-focus-within:text-primary" />
                     <Input
                       placeholder="Choose a username"
                       {...field}
                       disabled={isPending}
-                      className="pl-11 h-12 rounded-xl bg-white dark:bg-stone-800 border-sepia-divider dark:border-stone-700 focus:ring-2 focus:ring-primary/10 focus:border-primary/50 transition-all"
+                      className="pl-10 sm:pl-11 h-11 sm:h-12 text-sm sm:text-base rounded-xl bg-white dark:bg-stone-800 border-sepia-divider dark:border-stone-700 focus:ring-2 focus:ring-primary/10 focus:border-primary/50 transition-all"
                     />
                   </div>
                 </FormControl>
@@ -135,17 +135,17 @@ export function SignupForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-500 mb-2 ml-1 block">
+                <FormLabel className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-stone-500 mb-1.5 sm:mb-2 ml-1 block">
                   Email Address
                 </FormLabel>
                 <FormControl>
                   <div className="relative group">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 size-5 transition-colors group-focus-within:text-primary" />
+                    <Mail className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-stone-400 size-4 sm:size-5 transition-colors group-focus-within:text-primary" />
                     <Input
                       placeholder="your@email.com"
                       {...field}
                       disabled={isPending}
-                      className="pl-11 h-12 rounded-xl bg-white dark:bg-stone-800 border-sepia-divider dark:border-stone-700 focus:ring-2 focus:ring-primary/10 focus:border-primary/50 transition-all"
+                      className="pl-10 sm:pl-11 h-11 sm:h-12 text-sm sm:text-base rounded-xl bg-white dark:bg-stone-800 border-sepia-divider dark:border-stone-700 focus:ring-2 focus:ring-primary/10 focus:border-primary/50 transition-all"
                     />
                   </div>
                 </FormControl>
@@ -158,18 +158,18 @@ export function SignupForm() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-500 mb-2 ml-1 block">
+                <FormLabel className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-stone-500 mb-1.5 sm:mb-2 ml-1 block">
                   Password
                 </FormLabel>
                 <FormControl>
                   <div className="relative group">
-                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 size-5 transition-colors group-focus-within:text-primary" />
+                    <Lock className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-stone-400 size-4 sm:size-5 transition-colors group-focus-within:text-primary" />
                     <Input
                       type="password"
                       placeholder="Create a password"
                       {...field}
                       disabled={isPending}
-                      className="pl-11 h-12 rounded-xl bg-white dark:bg-stone-800 border-sepia-divider dark:border-stone-700 focus:ring-2 focus:ring-primary/10 focus:border-primary/50 transition-all"
+                      className="pl-10 sm:pl-11 h-11 sm:h-12 text-sm sm:text-base rounded-xl bg-white dark:bg-stone-800 border-sepia-divider dark:border-stone-700 focus:ring-2 focus:ring-primary/10 focus:border-primary/50 transition-all"
                     />
                   </div>
                 </FormControl>
@@ -181,7 +181,7 @@ export function SignupForm() {
           <Button
             type="submit"
             disabled={isPending}
-            className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold shadow-soft hover:shadow-lg active:scale-[0.98] transition-all group cursor-pointer"
+            className="w-full h-11 sm:h-12 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold shadow-soft hover:shadow-lg active:scale-[0.98] transition-all group cursor-pointer text-sm sm:text-base"
           >
             {isPending ? (
               <Loader className="mr-2 h-4 w-4 animate-spin" />

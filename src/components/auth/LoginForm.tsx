@@ -159,7 +159,7 @@ export function LoginForm() {
             )}
           />
 
-          <div className="flex items-center justify-between text-sm">
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-sm">
             <FormField
               control={form.control}
               name="rememberMe"
@@ -179,12 +179,12 @@ export function LoginForm() {
                 </FormItem>
               )}
             />
-            {/* <Link
+            <Link
               href="/forgot-password"
               className="text-primary hover:text-primary/80 font-semibold transition-colors underline-offset-4 hover:underline"
             >
               Forgot Password?
-            </Link> */}
+            </Link>
           </div>
 
           <Button
@@ -193,7 +193,7 @@ export function LoginForm() {
             className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold shadow-soft hover:shadow-lg active:scale-[0.98] transition-all group cursor-pointer"
           >
             {isPending ? (
-              <Loader className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
               <>
                 <span>Sign In</span>
