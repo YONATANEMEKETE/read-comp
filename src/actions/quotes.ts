@@ -96,3 +96,60 @@ export async function saveQuoteAction(
     };
   }
 }
+
+export async function deleteQuoteAction(quoteId: string): Promise<QuoteActionState> {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session || !session.user) {
+      return {
+        success: false,
+        message: 'You must be logged in to delete quotes.',
+      };
+    }
+
+    const userId = session.user.id;
+
+    // Verify ownership and get bookId for revalidation
+    const quote = await prisma.quote.findUnique({
+      where: {
+        id: quoteId,
+        userId,
+      },
+      select: {
+        bookId: true,
+      },
+    });
+
+    if (!quote) {
+      return {
+        success: false,
+        message: 'Quote not found or you do not have permission to delete it.',
+      };
+    }
+
+    await prisma.quote.update({
+      where: {
+        id: quoteId,
+      },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
+
+    revalidatePath(`/read/${quote.bookId}`);
+
+    return {
+      success: true,
+      message: 'Quote deleted successfully.',
+    };
+  } catch (error) {
+    console.error('Error deleting quote:', error);
+    return {
+      success: false,
+      message: 'Failed to delete quote.',
+    };
+  }
+}

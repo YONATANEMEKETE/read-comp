@@ -6,7 +6,7 @@ import QuoteCard from './quotes/QuoteCard';
 import AddQuoteModal from './quotes/AddQuoteModal';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { getQuotesAction, saveQuoteAction } from '@/actions/quotes';
+import { getQuotesAction, saveQuoteAction, deleteQuoteAction } from '@/actions/quotes';
 import { toast } from 'sonner';
 import { Quote } from '@prisma/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -90,8 +90,42 @@ const QuoteContent = ({ bookId }: QuoteContentProps) => {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async (quoteId: string) => {
+      const result = await deleteQuoteAction(quoteId);
+      if (!result.success) throw new Error(result.message);
+      return quoteId;
+    },
+    onMutate: async (quoteId) => {
+      await queryClient.cancelQueries({ queryKey: ['quotes', bookId] });
+      const previousQuotes = queryClient.getQueryData<Quote[]>([
+        'quotes',
+        bookId,
+      ]);
+
+      queryClient.setQueryData<Quote[]>(['quotes', bookId], (old) =>
+        old ? old.filter((q) => q.id !== quoteId) : [],
+      );
+
+      return { previousQuotes };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousQuotes) {
+        queryClient.setQueryData(['quotes', bookId], context.previousQuotes);
+      }
+      toast.error('Failed to delete quote');
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['quotes', bookId] });
+    },
+  });
+
   const handleSaveQuote = async (text: string, author: string) => {
     saveMutation.mutate({ text, author });
+  };
+
+  const handleDeleteQuote = (id: string) => {
+    deleteMutation.mutate(id);
   };
 
   const filteredQuotes = quotes.filter(
@@ -137,8 +171,10 @@ const QuoteContent = ({ bookId }: QuoteContentProps) => {
           filteredQuotes.map((quote) => (
             <QuoteCard
               key={quote.id}
+              id={quote.id}
               text={quote.text}
               author={quote.citedPerson || 'Unknown'}
+              onDelete={handleDeleteQuote}
             />
           ))
         )}

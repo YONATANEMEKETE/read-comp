@@ -6,7 +6,7 @@ import StoryCard from './stories/StoryCard';
 import AddStoryModal from './stories/AddStoryModal';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { getStoriesAction, saveStoryAction } from '@/actions/stories';
+import { getStoriesAction, saveStoryAction, deleteStoryAction } from '@/actions/stories';
 import { toast } from 'sonner';
 import { Story } from '@prisma/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -82,8 +82,42 @@ const StoryContent = ({ bookId }: StoryContentProps) => {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async (storyId: string) => {
+      const result = await deleteStoryAction(storyId);
+      if (!result.success) throw new Error(result.message);
+      return storyId;
+    },
+    onMutate: async (storyId) => {
+      await queryClient.cancelQueries({ queryKey: ['stories', bookId] });
+      const previousStories = queryClient.getQueryData<Story[]>([
+        'stories',
+        bookId,
+      ]);
+
+      queryClient.setQueryData<Story[]>(['stories', bookId], (old) =>
+        old ? old.filter((s) => s.id !== storyId) : [],
+      );
+
+      return { previousStories };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousStories) {
+        queryClient.setQueryData(['stories', bookId], context.previousStories);
+      }
+      toast.error('Failed to delete story');
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['stories', bookId] });
+    },
+  });
+
   const handleSaveStory = async (content: string) => {
     saveMutation.mutate(content);
+  };
+
+  const handleDeleteStory = (id: string) => {
+    deleteMutation.mutate(id);
   };
 
   const filteredStories = stories.filter((story) =>
@@ -126,8 +160,10 @@ const StoryContent = ({ bookId }: StoryContentProps) => {
             {filteredStories.map((story) => (
               <StoryCard
                 key={story.id}
+                id={story.id}
                 content={story.content}
                 createdAt={story.createdAt}
+                onDelete={handleDeleteStory}
               />
             ))}
           </div>

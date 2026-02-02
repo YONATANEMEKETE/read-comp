@@ -93,3 +93,60 @@ export async function saveStoryAction(
     };
   }
 }
+
+export async function deleteStoryAction(storyId: string): Promise<StoryActionState> {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session || !session.user) {
+      return {
+        success: false,
+        message: 'You must be logged in to delete stories.',
+      };
+    }
+
+    const userId = session.user.id;
+
+    // Verify ownership and get bookId for revalidation
+    const story = await prisma.story.findUnique({
+      where: {
+        id: storyId,
+        userId,
+      },
+      select: {
+        bookId: true,
+      },
+    });
+
+    if (!story) {
+      return {
+        success: false,
+        message: 'Story not found or you do not have permission to delete it.',
+      };
+    }
+
+    await prisma.story.update({
+      where: {
+        id: storyId,
+      },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
+
+    revalidatePath(`/read/${story.bookId}`);
+
+    return {
+      success: true,
+      message: 'Story deleted successfully.',
+    };
+  } catch (error) {
+    console.error('Error deleting story:', error);
+    return {
+      success: false,
+      message: 'Failed to delete story.',
+    };
+  }
+}
