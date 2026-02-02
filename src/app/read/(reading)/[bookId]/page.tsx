@@ -234,7 +234,7 @@ export default function ReadingPage({ params }: ReadingPageProps) {
   const initialPage = (book.userProgress?.progressPage || 1) - 1;
 
   return (
-    <div className="h-full w-full flex flex-col overflow-hidden">
+    <div className="h-[100dvh] w-full flex flex-col overflow-hidden bg-background">
       <DetailHeader
         title={book.title}
         author={book.author}
@@ -247,7 +247,7 @@ export default function ReadingPage({ params }: ReadingPageProps) {
         onRestartBook={handleRestartBook}
         status={status}
       />
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden relative">
         <DetailContent 
           pdfUrl={book.pdfUrl} 
           initialPage={initialPage}

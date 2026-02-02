@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useRef } from 'react';
-import { Viewer, PageChangeEvent } from '@react-pdf-viewer/core';
+import { Viewer, PageChangeEvent, SpecialZoomLevel } from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 
 // require CSS
@@ -45,13 +45,14 @@ const PdfReader: React.FC<Props> = ({
   );
 
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full overflow-hidden">
       <Viewer
         fileUrl={fileUrl}
         plugins={[]}
         theme={theme}
         initialPage={initialPage}
         onPageChange={handlePageChange}
+        defaultScale={SpecialZoomLevel.PageWidth}
       />
     </div>
   );
