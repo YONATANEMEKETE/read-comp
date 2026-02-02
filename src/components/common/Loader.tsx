@@ -16,11 +16,16 @@ const Loader = ({ className, size = 'md' }: LoaderProps) => {
   };
 
   return (
-    <div className={cn('flex items-center justify-center', className)}>
+    <div
+      className={cn(
+        'flex items-center justify-center w-full h-full',
+        className,
+      )}
+    >
       <div
         className={cn(
           'animate-spin rounded-full border-primary border-t-transparent',
-          sizeClasses[size]
+          sizeClasses[size],
         )}
       />
     </div>
