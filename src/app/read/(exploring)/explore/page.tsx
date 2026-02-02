@@ -176,10 +176,10 @@ export default function ExplorePage() {
 
   return (
     <div className="flex-1 overflow-y-auto scroll-smooth">
-      <div className="max-w-7xl mx-auto py-8 px-6 md:px-10">
-        <div className="mb-10">
-          <h1 className="text-2xl font-bold text-stone-900 dark:text-white mb-2">Explore Books</h1>
-          <p className="text-stone-600 dark:text-stone-400">
+      <div className="max-w-7xl mx-auto py-6 md:py-8 px-4 sm:px-6 lg:px-8">
+        <div className="mb-6 md:mb-10">
+          <h1 className="text-xl sm:text-2xl font-bold text-stone-900 dark:text-white mb-1 md:mb-2">Explore Books</h1>
+          <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400">
             {filteredBooks.length} book{filteredBooks.length !== 1 ? 's' : ''} available
           </p>
         </div>
@@ -191,8 +191,8 @@ export default function ExplorePage() {
           animate="visible"
           className={cn(
             view === 'grid'
-              ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8'
-              : 'flex flex-col gap-4',
+              ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6 md:gap-8'
+              : 'flex flex-col gap-3 sm:gap-4',
           )}
         >
           {isLoading ? (

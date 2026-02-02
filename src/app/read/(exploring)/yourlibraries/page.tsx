@@ -238,13 +238,13 @@ export default function YourLibraryPage() {
   };
 
   return (
-    <div className="py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-10">
-          <h1 className="text-2xl font-bold text-stone-900 dark:text-white mb-2">
+    <div className="flex-1 overflow-y-auto scroll-smooth">
+      <div className="max-w-7xl mx-auto py-6 md:py-8 px-4 sm:px-6 lg:px-8">
+        <div className="mb-6 md:mb-10">
+          <h1 className="text-xl sm:text-2xl font-bold text-stone-900 dark:text-white mb-1 md:mb-2">
             Your Library
           </h1>
-          <p className="text-stone-600 dark:text-stone-400">
+          <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400">
             {filteredBooks.length} book{filteredBooks.length !== 1 ? 's' : ''}{' '}
             in your collection
           </p>
@@ -257,8 +257,8 @@ export default function YourLibraryPage() {
           animate="visible"
           className={cn(
             view === 'grid'
-              ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8'
-              : 'flex flex-col gap-4',
+              ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6 md:gap-8'
+              : 'flex flex-col gap-3 sm:gap-4',
           )}
         >
           {isLoading ? (
@@ -285,11 +285,11 @@ export default function YourLibraryPage() {
                   className="flex flex-col opacity-60"
                   onClick={() => setIsUploadDialogOpen(true)}
                 >
-                  <div className="aspect-[3/4] w-full rounded-2xl border-2 border-dashed border-sepia-divider mb-4 flex flex-col items-center justify-center group cursor-pointer hover:border-primary/50 transition-colors">
-                    <span className="text-stone-300 text-4xl mb-2 font-light">
+                  <div className="aspect-[3/4] w-full rounded-xl sm:rounded-2xl border-2 border-dashed border-sepia-divider mb-3 sm:mb-4 flex flex-col items-center justify-center group cursor-pointer hover:border-primary/50 transition-colors">
+                    <span className="text-stone-300 text-3xl sm:text-4xl mb-1 sm:mb-2 font-light">
                       +
                     </span>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400">
+                    <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-stone-400">
                       Add Book
                     </span>
                   </div>
