@@ -31,10 +31,10 @@ const FeaturesCta = () => {
             </p>
           </div>
 
-          <div className="relative z-10">
+          <div className="relative z-10 w-full md:w-auto">
             <Button
               asChild
-              className="bg-[#D97706] text-white px-10 py-8 text-sm font-black uppercase tracking-widest hover:bg-[#fafaf9] hover:text-[#1c1917] dark:hover:bg-[#1c1917] dark:hover:text-[#fafaf9] transition-all shadow-2xl rounded-none h-auto cursor-pointer"
+              className="bg-[#D97706] text-white px-8 md:px-10 py-6 md:py-8 text-xs md:text-sm font-black uppercase tracking-widest hover:bg-[#fafaf9] hover:text-[#1c1917] dark:hover:bg-[#1c1917] dark:hover:text-[#fafaf9] transition-all shadow-2xl rounded-none h-auto cursor-pointer w-full md:w-auto"
             >
               <Link href="/signup">Start Your Journey</Link>
             </Button>

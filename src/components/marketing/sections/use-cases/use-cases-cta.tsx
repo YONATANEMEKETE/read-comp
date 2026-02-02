@@ -16,7 +16,7 @@ const UseCasesCta = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={transition}
-          className="relative overflow-hidden bg-stone-900 dark:bg-[#fafaf9] text-[#fafaf9] dark:text-[#1c1917] rounded-[48px] p-10 md:p-32 text-center"
+          className="relative overflow-hidden bg-stone-900 dark:bg-[#fafaf9] text-[#fafaf9] dark:text-[#1c1917] rounded-[48px] p-8 sm:p-12 md:p-32 text-center"
         >
           {/* Ambient Background Element */}
           <div className="absolute top-0 right-0 w-125 h-125 bg-[#D97706] rounded-full blur-[150px] opacity-10 transform translate-x-1/3 -translate-y-1/3 pointer-events-none" />
@@ -27,7 +27,7 @@ const UseCasesCta = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ ...transition, delay: 0.2 }}
-              className="text-4xl md:text-7xl font-black uppercase tracking-tighter mb-10 leading-[0.9] text-center"
+              className="text-4xl md:text-7xl font-black uppercase tracking-tighter mb-8 md:mb-10 leading-[0.9] text-center"
             >
               Whatever you read,
               <br />
@@ -39,7 +39,7 @@ const UseCasesCta = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ ...transition, delay: 0.3 }}
-              className="text-xl md:text-3xl font-light text-stone-400 dark:text-stone-500 mb-16 max-w-2xl mx-auto font-serif"
+              className="text-lg md:text-3xl font-light text-stone-400 dark:text-stone-500 mb-12 md:mb-16 max-w-2xl mx-auto font-serif"
             >
               Join thousands of thinkers who have changed the way they read,
               connecting every highlight to a broader world of knowledge.
@@ -50,10 +50,11 @@ const UseCasesCta = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ ...transition, delay: 0.4 }}
+              className="flex justify-center"
             >
               <Button
                 asChild
-                className="bg-[#D97706] text-white px-10 md:px-20 py-8 md:py-10 text-lg md:text-xl font-black uppercase tracking-widest hover:bg-white hover:text-stone-900 dark:hover:bg-stone-900 dark:hover:text-white transition-all shadow-2xl rounded-none h-auto cursor-pointer"
+                className="bg-[#D97706] text-white px-8 md:px-20 py-6 md:py-10 text-base md:text-xl font-black uppercase tracking-widest hover:bg-white hover:text-stone-900 dark:hover:bg-stone-900 dark:hover:text-white transition-all shadow-2xl rounded-none h-auto cursor-pointer w-full sm:w-auto"
               >
                 <Link href="/login">Get Started Free</Link>
               </Button>
