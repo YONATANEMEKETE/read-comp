@@ -1,10 +1,16 @@
 'use client';
 
-import React from 'react';
-import { Sparkles, Copy } from 'lucide-react';
+import React, { useState } from 'react';
+import { Sparkles, Copy, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface StoryCardProps {
   content: string;
@@ -13,11 +19,15 @@ interface StoryCardProps {
 }
 
 const StoryCard = ({ content, createdAt, className }: StoryCardProps) => {
+  const [copied, setCopied] = useState(false);
+
   const handleCopy = () => {
     navigator.clipboard.writeText(content);
+    setCopied(true);
     toast.success('Story copied to clipboard', {
       duration: 2000,
     });
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const formattedDate = new Intl.DateTimeFormat('en-US', {
@@ -44,15 +54,27 @@ const StoryCard = ({ content, createdAt, className }: StoryCardProps) => {
       </div>
 
       <div className="flex items-center justify-between mt-2 pt-3 border-t border-stone-100 dark:border-stone-800/50">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={handleCopy}
-          className="h-8 w-8 text-stone-300 hover:text-stone-500 transition-colors cursor-pointer"
-          title="Copy story"
-        >
-          <Copy className="w-4 h-4" />
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleCopy}
+                className="h-8 w-8 text-stone-300 hover:text-stone-500 transition-colors cursor-pointer"
+              >
+                {copied ? (
+                  <Check className="w-4 h-4 text-green-500" />
+                ) : (
+                  <Copy className="w-4 h-4" />
+                )}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <p>Copy story</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <span className="text-[10px] font-medium text-primary bg-stone-50 dark:bg-stone-800/50 px-2 py-1 rounded-md">
           Added on {formattedDate}
         </span>
