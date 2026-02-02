@@ -57,3 +57,22 @@ export const uploadBookSchema = z.object({
 });
 
 export type UploadBookInput = z.infer<typeof uploadBookSchema>;
+
+export const storySchema = z.object({
+  content: z
+    .string()
+    .min(1, 'Story content is required')
+    .max(5000, 'Story content cannot exceed 5000 characters'),
+});
+
+export type StoryInput = z.infer<typeof storySchema>;
+
+export const quoteSchema = z.object({
+  text: z
+    .string()
+    .min(1, 'Quote text is required')
+    .max(1000, 'Quote text cannot exceed 1000 characters'),
+  author: z.string().max(100, 'Author name cannot exceed 100 characters').optional(),
+});
+
+export type QuoteInput = z.infer<typeof quoteSchema>;
