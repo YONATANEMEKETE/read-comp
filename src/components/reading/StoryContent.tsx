@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Search, PlusCircle } from 'lucide-react';
+import { Search, Plus } from 'lucide-react';
 import StoryCard from './stories/StoryCard';
 import AddStoryModal from './stories/AddStoryModal';
 import { Input } from '@/components/ui/input';
@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { getStoriesAction, saveStoryAction } from '@/actions/stories';
 import { toast } from 'sonner';
 import { Story } from '@prisma/client';
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface StoryContentProps {
   bookId?: string;
@@ -21,7 +21,7 @@ const StoryContent = ({ bookId }: StoryContentProps) => {
   const queryClient = useQueryClient();
 
   const { data: stories = [], isLoading } = useQuery({
-    queryKey: ["stories", bookId],
+    queryKey: ['stories', bookId],
     queryFn: async () => {
       if (!bookId) return [];
       const result = await getStoriesAction(bookId);
@@ -36,14 +36,17 @@ const StoryContent = ({ bookId }: StoryContentProps) => {
 
   const saveMutation = useMutation({
     mutationFn: async (content: string) => {
-      if (!bookId) throw new Error("No book ID");
+      if (!bookId) throw new Error('No book ID');
       const result = await saveStoryAction(bookId, content);
       if (!result.success) throw new Error(result.message);
       return result.data as Story;
     },
     onMutate: async (content) => {
-      await queryClient.cancelQueries({ queryKey: ["stories", bookId] });
-      const previousStories = queryClient.getQueryData<Story[]>(["stories", bookId]);
+      await queryClient.cancelQueries({ queryKey: ['stories', bookId] });
+      const previousStories = queryClient.getQueryData<Story[]>([
+        'stories',
+        bookId,
+      ]);
 
       const tempId = `temp-${Date.now()}`;
       const optimisticStory: Story = {
@@ -56,23 +59,26 @@ const StoryContent = ({ bookId }: StoryContentProps) => {
         deletedAt: null,
       };
 
-      queryClient.setQueryData<Story[]>(["stories", bookId], (old) => [optimisticStory, ...(old || [])]);
+      queryClient.setQueryData<Story[]>(['stories', bookId], (old) => [
+        optimisticStory,
+        ...(old || []),
+      ]);
 
       return { previousStories, tempId };
     },
     onError: (err, variables, context) => {
       if (context?.previousStories) {
-        queryClient.setQueryData(["stories", bookId], context.previousStories);
+        queryClient.setQueryData(['stories', bookId], context.previousStories);
       }
       toast.error(err.message);
     },
     onSuccess: (data, variables, context) => {
-      queryClient.setQueryData<Story[]>(["stories", bookId], (old) => 
-        old?.map((s) => s.id === context.tempId ? data : s)
+      queryClient.setQueryData<Story[]>(['stories', bookId], (old) =>
+        old?.map((s) => (s.id === context.tempId ? data : s)),
       );
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["stories", bookId] });
+      queryClient.invalidateQueries({ queryKey: ['stories', bookId] });
     },
   });
 
@@ -81,7 +87,7 @@ const StoryContent = ({ bookId }: StoryContentProps) => {
   };
 
   const filteredStories = stories.filter((story) =>
-    story.content.toLowerCase().includes(searchQuery.toLowerCase())
+    story.content.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
@@ -101,7 +107,10 @@ const StoryContent = ({ bookId }: StoryContentProps) => {
       </div>
 
       {/* List */}
-      <div className="flex-1 overflow-y-auto bg-warm-bg dark:bg-sidebar-dark relative pb-24">
+      <div className="flex-1 overflow-y-auto bg-warm-bg dark:bg-sidebar-dark relative p-6 space-y-4 pb-24">
+        {isModalOpen && (
+          <div className="absolute inset-0 bg-warm-bg/70 dark:bg-sidebar-dark/80 backdrop-blur-[2px] z-20 animate-in fade-in duration-300"></div>
+        )}
         {isLoading && stories.length === 0 ? (
           <div className="flex justify-center items-center py-10">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -113,7 +122,7 @@ const StoryContent = ({ bookId }: StoryContentProps) => {
               : 'No stories yet. Share your takeaway!'}
           </div>
         ) : (
-          <div className="p-6 space-y-4">
+          <div className=" space-y-4">
             {filteredStories.map((story) => (
               <StoryCard
                 key={story.id}
@@ -133,14 +142,14 @@ const StoryContent = ({ bookId }: StoryContentProps) => {
         />
       )}
 
-      {/* Add Button Area */}
-      <div className="absolute bottom-6 left-0 right-0 px-8 pointer-events-none flex justify-center z-20">
+      {/* Add Button */}
+      <div className="absolute bottom-6 left-0 right-0 px-8 flex justify-center pointer-events-none z-30">
         <Button
           onClick={() => setIsModalOpen(true)}
-          className="pointer-events-auto shadow-floating bg-primary hover:bg-[#8b735f] text-white px-6 py-6 rounded-full flex items-center gap-2.5 transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-95 font-medium text-sm w-full justify-center cursor-pointer"
+          className="bg-primary text-white font-medium text-sm h-12 w-full rounded-full shadow-lg hover:shadow-xl hover:bg-[#8b7662] transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 pointer-events-auto cursor-pointer active:scale-95"
           disabled={!bookId}
         >
-          <PlusCircle className="w-5 h-5" />
+          <Plus className="w-5 h-5" />
           Add Story
         </Button>
       </div>

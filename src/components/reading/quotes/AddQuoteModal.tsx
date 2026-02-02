@@ -22,8 +22,8 @@ const AddQuoteModal = ({ onClose, onSave }: AddQuoteModalProps) => {
 
   return (
     <div className="absolute bottom-[84px] left-6 right-6 z-40 animate-in fade-in slide-in-from-bottom-4 duration-300">
-      <div className="bg-paper-texture dark:bg-[#1c1a17] rounded-xl shadow-floating border border-sepia-divider dark:border-stone-700 p-5">
-        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-paper-texture dark:bg-[#1c1a17] border-b border-r border-sepia-divider dark:border-stone-700 transform rotate-45"></div>
+      <div className="bg-[#f5f1e8] dark:bg-[#1c1a17] rounded-xl shadow-floating border border-sepia-divider dark:border-stone-700 p-5">
+        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#f5f1e8] dark:bg-[#1c1a17] border-b border-r border-sepia-divider dark:border-stone-700 transform rotate-45"></div>
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xs font-bold uppercase tracking-widest text-primary">New Quote Entry</h3>
           <Button 

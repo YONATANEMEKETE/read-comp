@@ -31,11 +31,9 @@ const AddStoryModal = ({ onClose, onSave }: AddStoryModalProps) => {
 
   return (
     <div className="absolute bottom-[84px] left-6 right-6 z-40 animate-in fade-in slide-in-from-bottom-4 duration-300">
-      <div className="bg-white dark:bg-[#25221e] rounded-xl shadow-floating border border-sepia-divider/50 dark:border-stone-700/50 p-4 relative">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-display font-semibold text-stone-800 dark:text-stone-200">
-            New Story
-          </h3>
+      <div className="bg-[#f5f1e8] dark:bg-[#1c1a17] rounded-xl shadow-floating border border-sepia-divider dark:border-stone-700 p-5">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-primary">New Story Entry</h3>
           <Button
             variant="ghost"
             size="icon"
@@ -50,7 +48,7 @@ const AddStoryModal = ({ onClose, onSave }: AddStoryModalProps) => {
           <Input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full bg-stone-50 dark:bg-stone-900 border-none rounded-lg px-3 py-2 text-sm font-medium text-stone-800 dark:text-stone-200 placeholder-stone-400 focus-visible:ring-1 focus-visible:ring-primary/50 shadow-none"
+            className="w-full bg-white dark:bg-[#25221e] border-sepia-divider/80 dark:border-stone-700 rounded-lg px-3 py-2 text-sm font-medium text-stone-800 dark:text-stone-200 placeholder-stone-400 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-inner-soft transition-all"
             placeholder="Story Title (Optional)"
           />
         </div>
@@ -59,21 +57,19 @@ const AddStoryModal = ({ onClose, onSave }: AddStoryModalProps) => {
           <Textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="w-full h-32 bg-stone-50 dark:bg-stone-900 border-none rounded-lg px-3 py-2 text-sm font-serif text-stone-800 dark:text-stone-200 placeholder-stone-400 resize-none focus-visible:ring-1 focus-visible:ring-primary/50 shadow-none"
+            className="w-full h-28 bg-white dark:bg-[#25222e] border-sepia-divider/80 dark:border-stone-700 rounded-lg p-3 text-stone-800 dark:text-stone-200 placeholder-stone-400 focus-visible:ring-primary/20 font-serif text-sm leading-relaxed resize-none shadow-inner-soft transition-all"
             placeholder="Write your takeaway..."
           />
         </div>
 
-        <div className="flex items-center justify-between mt-3">
-          <Button
-            onClick={handleSave}
-            className="bg-primary hover:bg-[#8b7562] text-white px-4 py-1.5 h-8 rounded-lg text-xs font-semibold shadow-sm transition-colors cursor-pointer"
-          >
-            Save Story
-          </Button>
-        </div>
+        <Button
+          onClick={handleSave}
+          className="w-full bg-primary hover:bg-[#8b7662] text-white font-medium text-sm h-10 rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer mt-3"
+        >
+          Save Story
+        </Button>
 
-        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-[#25221e] border-b border-r border-sepia-divider/50 dark:border-stone-700/50 transform rotate-45"></div>
+        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#f5f1e8] dark:bg-[#1c1a17] border-b border-r border-sepia-divider dark:border-stone-700 transform rotate-45"></div>
       </div>
     </div>
   );
