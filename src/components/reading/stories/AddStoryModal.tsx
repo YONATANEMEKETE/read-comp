@@ -12,19 +12,13 @@ interface AddStoryModalProps {
 }
 
 const AddStoryModal = ({ onClose, onSave }: AddStoryModalProps) => {
-  const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
   const handleSave = () => {
     if (!content.trim()) return;
 
-    // If title exists, combine them or just use content
-    const finalContent = title.trim()
-      ? `${title.trim()}\n\n${content.trim()}`
-      : content.trim();
-
     if (onSave) {
-      onSave(finalContent);
+      onSave(content.trim());
     }
     onClose();
   };
@@ -44,20 +38,11 @@ const AddStoryModal = ({ onClose, onSave }: AddStoryModalProps) => {
           </Button>
         </div>
 
-        <div className="mb-3">
-          <Input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full bg-white dark:bg-[#25221e] border-sepia-divider/80 dark:border-stone-700 rounded-lg px-3 py-2 text-sm font-medium text-stone-800 dark:text-stone-200 placeholder-stone-400 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-inner-soft transition-all"
-            placeholder="Story Title (Optional)"
-          />
-        </div>
-
         <div className="relative">
           <Textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="w-full h-28 bg-white dark:bg-[#25222e] border-sepia-divider/80 dark:border-stone-700 rounded-lg p-3 text-stone-800 dark:text-stone-200 placeholder-stone-400 focus-visible:ring-primary/20 font-serif text-sm leading-relaxed resize-none shadow-inner-soft transition-all"
+            className="w-full h-32 bg-white dark:bg-[#25222e] border-sepia-divider/80 dark:border-stone-700 rounded-lg p-3 text-stone-800 dark:text-stone-200 placeholder-stone-400 focus-visible:ring-primary/20 font-serif text-sm leading-relaxed resize-none shadow-inner-soft transition-all"
             placeholder="Write your takeaway..."
           />
         </div>
