@@ -66,13 +66,13 @@ const Navbar = () => {
               variant="ghost"
               className="text-xs font-bold uppercase tracking-wider text-[#1c1917] dark:text-[#fafaf9] hover:text-[#D97706] dark:hover:text-[#D97706] hover:bg-transparent transition-colors h-auto p-0 cursor-pointer"
             >
-              <Link href="/login">Log in</Link>
+              <Link href="/auth">Log in</Link>
             </Button>
             <Button
               asChild
               className="bg-[#1c1917] dark:bg-[#fafaf9] text-white dark:text-[#1c1917] px-5 py-2 h-auto rounded-none text-xs font-black uppercase tracking-widest hover:bg-[#D97706] dark:hover:bg-[#D97706] dark:hover:text-white transition-all cursor-pointer"
             >
-              <Link href="/signup">Join</Link>
+              <Link href="/auth">Join</Link>
             </Button>
           </div>
 
@@ -116,13 +116,13 @@ const Navbar = () => {
               variant="ghost"
               className="text-sm font-bold uppercase tracking-wider text-[#1c1917] dark:text-[#fafaf9] hover:text-[#D97706] dark:hover:text-[#D97706] hover:bg-transparent transition-colors py-2 text-left justify-start h-auto px-0 cursor-pointer"
             >
-              <Link href="/login">Log in</Link>
+              <Link href="/auth">Log in</Link>
             </Button>
             <Button
               asChild
               className="w-full bg-[#1c1917] dark:bg-[#fafaf9] text-white dark:text-[#1c1917] px-5 py-4 rounded-none text-sm font-black uppercase tracking-widest hover:bg-[#D97706] dark:hover:bg-[#D97706] dark:hover:text-white transition-all text-center h-auto cursor-pointer"
             >
-              <Link href="/signup">Join Noted</Link>
+              <Link href="/auth">Join Noted</Link>
             </Button>
           </div>
         </div>

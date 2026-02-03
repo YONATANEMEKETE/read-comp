@@ -50,7 +50,7 @@ const LandingCta = () => {
             asChild
             className="w-full md:w-auto bg-[#D97706] text-white text-lg md:text-xl font-black py-8 px-16 rounded-none uppercase tracking-widest hover:bg-[#1c1917] dark:hover:bg-[#fafaf9] dark:hover:text-[#1c1917] transition-all shadow-xl cursor-pointer h-auto"
           >
-            <Link href="/login">Start Reading</Link>
+            <Link href="/auth">Start Reading</Link>
           </Button>
 
           <Button

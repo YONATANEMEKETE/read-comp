@@ -1,136 +1,63 @@
 'use server';
 
 import { auth } from '@/lib/auth';
-
-import { signupSchema, loginSchema } from '@/types/validation';
-
-import { APIError } from 'better-auth/api';
 import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
 
 export type ActionState = {
   success: boolean;
   message: string;
+  url?: string;
   errors?: Record<string, string[]>;
 };
 
-export const signupAction = async (
-  prevState: ActionState,
-  formData: FormData,
-): Promise<ActionState> => {
-  const rawData = Object.fromEntries(formData.entries());
-
-  const validatedFields = signupSchema.safeParse(rawData);
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      message: 'Validation failed. Please check the form for errors.',
-      errors: validatedFields.error.flatten().fieldErrors as Record<
-        string,
-        string[]
-      >,
-    };
-  }
-
-  const { email, password, username } = validatedFields.data;
-
+export const googleSignInAction = async (): Promise<ActionState> => {
   try {
-    await auth.api.signUpEmail({
+    const headersList = await headers();
+    
+    const result = await auth.api.signInSocial({
       body: {
-        email,
-        password,
-        name: username,
+        provider: 'google',
+        callbackURL: '/read',
+        errorCallbackURL: '/auth?error=failed',
       },
+      headers: headersList,
     });
 
-    return {
-      success: true,
-      message: 'Account created successfully! You can now sign in.',
-    };
-  } catch (error) {
-    if (error instanceof APIError) {
+    // If the result contains a URL, return it for client-side redirect
+    if (result && typeof result === 'object' && 'url' in result) {
       return {
-        success: false,
-        message: error.message || 'An error occurred during signup.',
+        success: true,
+        message: 'Redirecting to Google...',
+        url: result.url as string,
       };
     }
 
-    console.error('Signup error:', error);
-    return {
-      success: false,
-      message: 'An unexpected error occurred. Please try again later.',
-    };
-  }
-};
-
-export const signinAction = async (
-  prevState: ActionState,
-  formData: FormData,
-): Promise<ActionState> => {
-  const rawData = Object.fromEntries(formData.entries());
-
-  const validatedFields = loginSchema.safeParse({
-    ...rawData,
-    rememberMe: rawData.rememberMe === 'on',
-  });
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      message: 'Validation failed. Please check the form for errors.',
-      errors: validatedFields.error.flatten().fieldErrors as Record<
-        string,
-        string[]
-      >,
-    };
-  }
-
-  const { email, password, rememberMe } = validatedFields.data;
-
-  console.log(email, password, rememberMe);
-
-  try {
-    await auth.api.signInEmail({
-      body: {
-        email,
-        password,
-        rememberMe,
-      },
-    });
-
     return {
       success: true,
-      message: 'Logged in successfully!',
+      message: 'Authentication initiated',
     };
   } catch (error) {
-    if (error instanceof APIError) {
-      return {
-        success: false,
-        message: error.message || 'Invalid email or password.',
-      };
-    }
-
-    console.error('Signin error:', error);
+    console.error('Google signin error:', error);
     return {
       success: false,
-      message: 'An unexpected error occurred. Please try again later.',
+      message: 'An error occurred during Google sign in. Please try again.',
     };
   }
 };
 
 export const signoutAction = async (): Promise<void> => {
   try {
+    const headersList = await headers();
+    
     await auth.api.signOut({
-      headers: {
-        // This ensures cookies are properly cleared
-        'Content-Type': 'application/json',
-      },
+      headers: headersList,
     });
   } catch (error) {
     console.error('Signout error:', error);
     // Even if there's an error, we still redirect to login
   }
 
-  // Redirect to login page after signout
-  redirect('/login');
+  // Redirect to auth page after signout
+  redirect('/auth');
 };

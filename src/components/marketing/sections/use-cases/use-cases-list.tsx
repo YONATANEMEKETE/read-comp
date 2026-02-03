@@ -123,7 +123,7 @@ const UseCasesList = () => {
                   ))}
                 </ul>
                 <Link
-                  href="/login"
+                  href="/auth"
                   className="inline-flex items-center gap-2 text-[#D97706] font-black uppercase tracking-[0.2em] text-[10px] hover:text-[#1c1917] dark:hover:text-white transition-colors group"
                 >
                   {useCase.cta}

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     'Sign in to your Noted account to continue your reading journey and access your scholarly library.',
 };
 
-export default function LoginLayout({
+export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;

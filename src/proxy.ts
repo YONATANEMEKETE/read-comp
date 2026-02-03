@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { auth } from '@/lib/auth';
 
-const authRoutes = ['/login', '/signup'];
+const authRoutes = ['/auth'];
 const protectedRoutes = ['/read'];
 
 export async function proxy(request: NextRequest) {
@@ -11,19 +11,19 @@ export async function proxy(request: NextRequest) {
     headers: await headers(),
   });
 
-  // If authenticated user tries to access login/signup, redirect to /read
+  // If authenticated user tries to access auth page, redirect to /read
   if (session && authRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL('/read', request.url));
   }
 
-  // If unauthenticated user tries to access protected pages, redirect to /login
+  // If unauthenticated user tries to access protected pages, redirect to /auth
   if (!session && protectedRoutes.some((route) => pathname.startsWith(route))) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    return NextResponse.redirect(new URL('/auth', request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/read', '/login', '/signup'], // Specify the routes the middleware applies to
+  matcher: ['/read', '/auth'], // Specify the routes the middleware applies to
 };

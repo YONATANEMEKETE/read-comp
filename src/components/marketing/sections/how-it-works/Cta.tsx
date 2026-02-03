@@ -54,7 +54,7 @@ const Cta = () => {
                 asChild
                 className="bg-[#D97706] text-white px-8 md:px-12 py-6 md:py-8 font-black uppercase tracking-widest hover:bg-[#fafaf9] hover:text-[#1c1917] dark:hover:bg-[#1c1917] dark:hover:text-[#fafaf9] transition-all shadow-xl rounded-none text-xs md:text-sm h-auto cursor-pointer"
               >
-                <Link href="/login">Join Noted Today</Link>
+                <Link href="/auth">Join Noted Today</Link>
               </Button>
             </motion.div>
           </div>

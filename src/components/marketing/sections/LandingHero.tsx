@@ -101,7 +101,7 @@ const LandingHero = () => {
             asChild
             className="w-full bg-[#1c1917] dark:bg-[#fafaf9] text-white dark:text-[#1c1917] text-lg md:text-xl font-black py-8 md:py-10 uppercase tracking-widest hover:bg-[#D97706] dark:hover:bg-[#D97706] dark:hover:text-white transition-all shadow-2xl hover:scale-[1.01] active:scale-[0.99] rounded-none cursor-pointer"
           >
-            <Link href="/login">Start Reading</Link>
+            <Link href="/auth">Start Reading</Link>
           </Button>
           <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.2em] text-[#a8a29e]">
             Calm reading, no context switching

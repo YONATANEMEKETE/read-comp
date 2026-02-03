@@ -56,7 +56,7 @@ const UseCasesCta = () => {
                 asChild
                 className="bg-[#D97706] text-white px-8 md:px-20 py-6 md:py-10 text-base md:text-xl font-black uppercase tracking-widest hover:bg-white hover:text-stone-900 dark:hover:bg-stone-900 dark:hover:text-white transition-all shadow-2xl rounded-none h-auto cursor-pointer w-full sm:w-auto"
               >
-                <Link href="/login">Get Started Free</Link>
+                <Link href="/auth">Get Started Free</Link>
               </Button>
             </motion.div>
           </div>

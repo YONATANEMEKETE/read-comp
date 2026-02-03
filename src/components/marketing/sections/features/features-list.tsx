@@ -12,7 +12,7 @@ const features = [
       "Your journey begins by centralizing your intellectual diet. Noted gathers your textbooks, research papers, and industrial whitepapers into a focused library. It's more than storage; it's a searchable sanctuary for your lifelong learning.",
     icon: <Library className="size-8 text-[#1c1917] dark:text-[#fafaf9]" />,
     cta: 'Curate your space',
-    href: '/login',
+    href: '/auth',
   },
   {
     title: 'Marginal Thinking',
@@ -20,7 +20,7 @@ const features = [
       "Experience the power of 'thinking beside the book.' Our interface preserves the relationship between your highlights and your notes. Capture every thought directly in the margin, ensuring your insights always retain their original context.",
     icon: <Sparkles className="size-8 text-[#1c1917] dark:text-[#fafaf9]" />,
     cta: 'Master the margins',
-    href: '/login',
+    href: '/auth',
   },
   {
     title: 'Crystallized Story Insights',
@@ -28,7 +28,7 @@ const features = [
       "As you read, our system identifies the narrative threads within complex non-fiction. We transform dense chapters into elegant 'Story Insights'—automated summaries that help you synthesize the author's core arguments without losing the nuance.",
     icon: <Zap className="size-8 text-[#1c1917] dark:text-[#fafaf9]" />,
     cta: 'Observe the synthesis',
-    href: '/login',
+    href: '/auth',
   },
   {
     title: 'The Dialogue of Understanding',
@@ -36,7 +36,7 @@ const features = [
       "True comprehension is an active conversation. When a concept feels dense, Noted generates probing questions to test your grasp. It's an interactive dialogue designed to shift your reading from passive consumption to deep mastery.",
     icon: <CircleHelp className="size-8 text-[#1c1917] dark:text-[#fafaf9]" />,
     cta: 'Begin the dialogue',
-    href: '/login',
+    href: '/auth',
   },
 ];
 
