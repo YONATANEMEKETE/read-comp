@@ -154,7 +154,7 @@ export default function ExplorePage() {
 
   if (filteredBooks.length === 0 && !isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[70vh] w-full">
+      <div className="flex flex-col items-center justify-center min-h-[70vh] w-full px-4 sm:px-6 lg:px-8 py-12">
         <EmptyList
           title="No books found"
           description="Try adjusting your search or filters to find more books."

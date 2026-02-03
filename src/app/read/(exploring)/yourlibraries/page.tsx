@@ -211,7 +211,7 @@ export default function YourLibraryPage() {
 
   if (filteredBooks.length === 0 && !isLoading) {
     return (
-      <div className="px-2">
+      <div className="flex flex-col items-center justify-center min-h-[70vh] w-full px-4 sm:px-6 lg:px-8 py-12">
         <EmptyList
           title="Your library is empty"
           description="Upload your first PDF to start your reading journey and build your personal collection."

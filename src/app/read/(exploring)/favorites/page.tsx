@@ -208,7 +208,7 @@ export default function FavoritesPage() {
 
   if (filteredBooks.length === 0 && !isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[70vh] w-full px-2">
+      <div className="flex flex-col items-center justify-center min-h-[70vh] w-full px-4 sm:px-6 lg:px-8 py-12">
         <EmptyList
           title="No favorite books yet"
           description="Mark books as favorites to see them here."
