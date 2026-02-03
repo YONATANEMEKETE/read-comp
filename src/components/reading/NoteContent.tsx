@@ -24,7 +24,8 @@ import {
   Undo,
   Redo,
   Check,
-  Loader2
+  Loader2,
+  ChevronRight
 } from 'lucide-react';
 import { getNoteAction, saveNoteAction } from '@/actions/notes';
 import { toast } from 'sonner';
@@ -78,11 +79,13 @@ interface NoteContentProps {
 const NoteContent = ({ bookId }: NoteContentProps) => {
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
   
   // Ref to track the timeout for debouncing
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastContentRef = useRef<string>('');
   const isInitialLoadDone = useRef<boolean>(false);
+  const toolbarRef = useRef<HTMLDivElement>(null);
 
   const { data: note, isLoading } = useQuery({
     queryKey: ['note', bookId],
@@ -123,7 +126,7 @@ const NoteContent = ({ bookId }: NoteContentProps) => {
     editorProps: {
       attributes: {
         class:
-          'prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[300px] px-6 py-4 font-serif text-stone-800 dark:text-stone-300 leading-relaxed',
+          'prose prose-stone dark:prose-invert max-w-none focus:outline-none min-h-[300px] px-3 sm:px-6 py-4 font-serif text-stone-800 dark:text-stone-300 leading-relaxed',
       },
     },
     onUpdate: ({ editor }) => {
@@ -175,6 +178,27 @@ const NoteContent = ({ bookId }: NoteContentProps) => {
       if (saveTimeoutRef.current) {
         clearTimeout(saveTimeoutRef.current);
       }
+    };
+  }, []);
+
+  // Check if toolbar has overflow (needs scrolling)
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (toolbarRef.current) {
+        const { scrollWidth, clientWidth } = toolbarRef.current;
+        setShowScrollIndicator(scrollWidth > clientWidth);
+      }
+    };
+
+    checkOverflow();
+    window.addEventListener('resize', checkOverflow);
+    
+    // Also check after a short delay to account for initial render
+    const timeoutId = setTimeout(checkOverflow, 100);
+    
+    return () => {
+      window.removeEventListener('resize', checkOverflow);
+      clearTimeout(timeoutId);
     };
   }, []);
 
@@ -252,57 +276,66 @@ const NoteContent = ({ bookId }: NoteContentProps) => {
       </div>
 
       {/* Toolbar */}
-      <div className="flex items-center gap-1 px-4 py-2 border-b border-sepia-divider/30 dark:border-sidebar-border/50 bg-stone-50/50 dark:bg-stone-900/30 shrink-0 flex-wrap">
-        <ToolbarButton
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          isActive={editorState.isBold}
-          disabled={!editorState.canBold}
-          icon={<Bold className="h-4 w-4" />}
-          tooltip="Bold (Ctrl+B)"
-        />
-        <ToolbarButton
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          isActive={editorState.isItalic}
-          disabled={!editorState.canItalic}
-          icon={<Italic className="h-4 w-4" />}
-          tooltip="Italic (Ctrl+I)"
-        />
+      <div className="flex items-center px-2 sm:px-4 py-2 border-b border-sepia-divider/30 dark:border-sidebar-border/50 bg-stone-50/50 dark:bg-stone-900/30 shrink-0 overflow-x-auto scrollbar-hide">
+        {/* Formatting Group */}
+        <div className="flex items-center gap-0.5 shrink-0">
+          <ToolbarButton
+            onClick={() => editor.chain().focus().toggleBold().run()}
+            isActive={editorState.isBold}
+            disabled={!editorState.canBold}
+            icon={<Bold className="h-4 w-4" />}
+            tooltip="Bold (Ctrl+B)"
+          />
+          <ToolbarButton
+            onClick={() => editor.chain().focus().toggleItalic().run()}
+            isActive={editorState.isItalic}
+            disabled={!editorState.canItalic}
+            icon={<Italic className="h-4 w-4" />}
+            tooltip="Italic (Ctrl+I)"
+          />
+        </div>
 
-        <Separator orientation="vertical" className="mx-1 h-4" />
+        <Separator orientation="vertical" className="mx-1 h-4 shrink-0" />
 
-        <ToolbarButton
-          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-          isActive={editorState.isHeading1}
-          disabled={!editorState.canHeading1}
-          icon={<Heading1 className="h-4 w-4" />}
-          tooltip="Heading 1"
-        />
-        <ToolbarButton
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          isActive={editorState.isHeading2}
-          disabled={!editorState.canHeading2}
-          icon={<Heading2 className="h-4 w-4" />}
-          tooltip="Heading 2"
-        />
+        {/* Headings Group */}
+        <div className="flex items-center gap-0.5 shrink-0">
+          <ToolbarButton
+            onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+            isActive={editorState.isHeading1}
+            disabled={!editorState.canHeading1}
+            icon={<Heading1 className="h-4 w-4" />}
+            tooltip="Heading 1"
+          />
+          <ToolbarButton
+            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+            isActive={editorState.isHeading2}
+            disabled={!editorState.canHeading2}
+            icon={<Heading2 className="h-4 w-4" />}
+            tooltip="Heading 2"
+          />
+        </div>
 
-        <Separator orientation="vertical" className="mx-1 h-4" />
+        <Separator orientation="vertical" className="mx-1 h-4 shrink-0" />
 
-        <ToolbarButton
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          isActive={editorState.isBulletList}
-          disabled={!editorState.canBulletList}
-          icon={<List className="h-4 w-4" />}
-          tooltip="Bullet List"
-        />
-        <ToolbarButton
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          isActive={editorState.isOrderedList}
-          disabled={!editorState.canOrderedList}
-          icon={<ListOrdered className="h-4 w-4" />}
-          tooltip="Numbered List"
-        />
+        {/* Lists Group */}
+        <div className="flex items-center gap-0.5 shrink-0">
+          <ToolbarButton
+            onClick={() => editor.chain().focus().toggleBulletList().run()}
+            isActive={editorState.isBulletList}
+            disabled={!editorState.canBulletList}
+            icon={<List className="h-4 w-4" />}
+            tooltip="Bullet List"
+          />
+          <ToolbarButton
+            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            isActive={editorState.isOrderedList}
+            disabled={!editorState.canOrderedList}
+            icon={<ListOrdered className="h-4 w-4" />}
+            tooltip="Numbered List"
+          />
+        </div>
 
-        <Separator orientation="vertical" className="mx-1 h-4" />
+        <Separator orientation="vertical" className="mx-1 h-4 shrink-0" />
 
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
@@ -312,20 +345,23 @@ const NoteContent = ({ bookId }: NoteContentProps) => {
           tooltip="Quote"
         />
 
-        <div className="flex-1" />
+        <div className="flex-1 min-w-[8px]" />
 
-        <ToolbarButton
-          onClick={() => editor.chain().focus().undo().run()}
-          disabled={!editorState.canUndo}
-          icon={<Undo className="h-4 w-4" />}
-          tooltip="Undo (Ctrl+Z)"
-        />
-        <ToolbarButton
-          onClick={() => editor.chain().focus().redo().run()}
-          disabled={!editorState.canRedo}
-          icon={<Redo className="h-4 w-4" />}
-          tooltip="Redo (Ctrl+Y)"
-        />
+        {/* History Group */}
+        <div className="flex items-center gap-0.5 shrink-0">
+          <ToolbarButton
+            onClick={() => editor.chain().focus().undo().run()}
+            disabled={!editorState.canUndo}
+            icon={<Undo className="h-4 w-4" />}
+            tooltip="Undo (Ctrl+Z)"
+          />
+          <ToolbarButton
+            onClick={() => editor.chain().focus().redo().run()}
+            disabled={!editorState.canRedo}
+            icon={<Redo className="h-4 w-4" />}
+            tooltip="Redo (Ctrl+Y)"
+          />
+        </div>
       </div>
 
       {/* Editor Content */}

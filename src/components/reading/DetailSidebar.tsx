@@ -6,14 +6,28 @@ import NoteContent from "./NoteContent";
 import QuoteContent from "./QuoteContent";
 import StoryContent from "./StoryContent";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 
 interface DetailSidebarProps {
   bookId?: string;
+  onClose?: () => void;
 }
 
-const DetailSidebar = ({ bookId }: DetailSidebarProps) => {
+const DetailSidebar = ({ bookId, onClose }: DetailSidebarProps) => {
   return (
     <aside className="w-full h-full bg-card dark:bg-sidebar-dark border-l border-sepia-divider dark:border-border flex flex-col shadow-soft z-20">
+      {/* Mobile Close Button */}
+      <div className="flex lg:hidden items-center justify-end px-4 pt-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-9 w-9 rounded-full cursor-pointer"
+          onClick={onClose}
+        >
+          <X className="h-5 w-5" />
+        </Button>
+      </div>
       <Tabs defaultValue="notes" className="flex flex-col flex-1 h-full">
         {/* Tab Navigation */}
         <div className="px-6 pt-6 border-b border-sepia-divider/50 dark:border-sidebar-border/50 shrink-0">

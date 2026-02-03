@@ -124,7 +124,7 @@ export function AppSidebar() {
 
       <SidebarFooter className="pb-6 pt-6 gap-2 border-t border-sidebar-border/50">
         <SidebarMenu>
-          <SidebarMenuItem>
+          {/* <SidebarMenuItem>
             <SidebarMenuButton
               asChild
               className="px-2.5 py-2 h-auto rounded-lg text-sidebar-foreground/60 hover:bg-sidebar-accent/50 transition-colors font-medium border border-transparent cursor-pointer"
@@ -134,7 +134,7 @@ export function AppSidebar() {
                 <span className="text-sm">Settings</span>
               </Link>
             </SidebarMenuButton>
-          </SidebarMenuItem>
+          </SidebarMenuItem> */}
 
           <SidebarMenuItem className="mt-2 text-left">
             <UserProfile />

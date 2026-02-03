@@ -71,7 +71,7 @@ const DetailContent = ({
           isSidebarOpen ? 'translate-x-0' : 'translate-x-full',
         )}
       >
-        <DetailSidebar bookId={bookId} />
+        <DetailSidebar bookId={bookId} onClose={() => setIsSidebarOpen(false)} />
       </div>
 
       {/* Mobile Overlay for Sidebar */}
