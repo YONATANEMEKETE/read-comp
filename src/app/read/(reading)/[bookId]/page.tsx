@@ -28,6 +28,12 @@ export default function ReadingPage({ params }: ReadingPageProps) {
   const lastSyncedPageRef = useRef<number>(1);
   const bookIdRef = useRef<string>('');
   const totalPagesRef = useRef<number>(0);
+  const latestPageRef = useRef<number>(1);
+
+  // Update latestPageRef whenever currentPage changes
+  useEffect(() => {
+    latestPageRef.current = currentPage;
+  }, [currentPage]);
 
   useEffect(() => {
     async function loadBook() {
@@ -41,6 +47,7 @@ export default function ReadingPage({ params }: ReadingPageProps) {
           totalPagesRef.current = result.data.totalPages || 0;
           const initialPage = result.data.userProgress?.progressPage || 1;
           setCurrentPage(initialPage);
+          latestPageRef.current = initialPage;
           lastSyncedPageRef.current = initialPage;
           setStatus(result.data.userProgress?.status || 'NEW');
         } else {
@@ -174,21 +181,22 @@ export default function ReadingPage({ params }: ReadingPageProps) {
 
   // Immediate sync function for beforeunload
   const immediateSync = useCallback(async () => {
-    if (currentPage !== lastSyncedPageRef.current && bookIdRef.current) {
+    const page = latestPageRef.current;
+    if (page !== lastSyncedPageRef.current && bookIdRef.current) {
       try {
         // Check if on final page
-        const isFinalPage = currentPage >= totalPagesRef.current && totalPagesRef.current > 0;
+        const isFinalPage = page >= totalPagesRef.current && totalPagesRef.current > 0;
         await updateReadingProgressAction(
           bookIdRef.current, 
-          currentPage,
+          page,
           isFinalPage ? 'FINISHED' : undefined
         );
-        lastSyncedPageRef.current = currentPage;
+        lastSyncedPageRef.current = page;
       } catch (error) {
         console.error('Failed to sync on exit:', error);
       }
     }
-  }, [currentPage]);
+  }, []); // No dependencies needed as we use refs
 
   // Beforeunload handler
   useEffect(() => {
