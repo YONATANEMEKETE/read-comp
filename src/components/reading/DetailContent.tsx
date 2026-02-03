@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { cn } from '@/lib/utils';
 import Loader from '../common/Loader';
@@ -28,6 +28,27 @@ const DetailContent = ({
   bookId,
 }: DetailContentProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const currentPageRef = useRef(initialPage);
+  
+  // Open sidebar by default on large screens
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsSidebarOpen(true);
+      }
+    };
+    
+    // Check initial size
+    handleResize();
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handlePageChange = useCallback((page: number) => {
+    currentPageRef.current = page;
+    onPageChange?.(page);
+  }, [onPageChange]);
 
   return (
     <div className="flex h-full w-full overflow-hidden relative">
@@ -35,8 +56,9 @@ const DetailContent = ({
       <main
         className={cn(
           'flex-1 bg-stone-100/50 dark:bg-stone-900/50 relative transition-all duration-300',
-          'lg:w-[70%] lg:flex-none',
-          isSidebarOpen ? 'hidden sm:flex' : 'flex',
+          // When sidebar is closed on large screens, take full width. When open, take 70%
+          'lg:flex-none',
+          isSidebarOpen ? 'lg:w-[70%] -translate-x-full sm:translate-x-0 opacity-0 sm:opacity-100 pointer-events-none sm:pointer-events-auto' : 'lg:w-full translate-x-0 opacity-100',
         )}
       >
         {isLoading || !pdfUrl ? (
@@ -44,16 +66,16 @@ const DetailContent = ({
         ) : (
           <PdfReader
             fileUrl={pdfUrl}
-            initialPage={initialPage}
-            onPageChange={onPageChange}
+            initialPage={currentPageRef.current}
+            onPageChange={handlePageChange}
           />
         )}
 
-        {/* Floating Sidebar Toggle - Only visible on Mobile/Tablet */}
+        {/* Floating Sidebar Toggle - Always visible */}
         <Button
           variant="secondary"
           size="icon"
-          className="absolute bottom-6 right-6 lg:hidden z-40 rounded-full shadow-lg border border-border/50 cursor-pointer"
+          className="absolute bottom-6 right-6 z-40 rounded-full shadow-lg border border-border/50 cursor-pointer"
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         >
           {isSidebarOpen ? (
@@ -67,7 +89,8 @@ const DetailContent = ({
       {/* Side Panel for Notes/Quotes/Stories */}
       <div
         className={cn(
-          'fixed inset-y-0 right-0 z-30 w-full sm:w-96 bg-background border-l border-border transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:w-[30%] lg:flex-none',
+          'fixed inset-y-0 right-0 z-30 w-full sm:w-96 bg-background border-l border-border transform transition-transform duration-300 ease-in-out lg:relative lg:w-[30%] lg:flex-none',
+          // Toggle on all screen sizes
           isSidebarOpen ? 'translate-x-0' : 'translate-x-full',
         )}
       >
