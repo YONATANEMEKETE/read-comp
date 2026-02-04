@@ -13,12 +13,6 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: false,
   },
-  session: {},
-  trustedOrigins: [
-    'http://localhost:3000',
-    'https://noteed-1.vercel.app',
-    process.env.BETTER_AUTH_URL as string,
-  ].filter(Boolean),
   plugins: [nextCookies()],
   socialProviders: {
     google: {
