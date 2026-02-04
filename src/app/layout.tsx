@@ -21,9 +21,53 @@ const notoSerif = Noto_Serif({
 });
 
 export const metadata: Metadata = {
-  title: 'Noted - A Quiet Space for Reading',
+  title: {
+    default: 'Noted - A Quiet Space for Reading',
+    template: '%s | Noted',
+  },
   description:
     'Read PDFs and write notes without leaving the page. Your thoughts stay connected to the book. A calm reading experience with no context switching.',
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_BASE_URL || 'https://noteed-1.vercel.app',
+  ),
+  openGraph: {
+    title: 'Noted - A Quiet Space for Reading',
+    description:
+      'Read PDFs and write notes without leaving the page. Your thoughts stay connected to the book.',
+    url: '/',
+    siteName: 'Noted',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Noted - A Quiet Space for Reading',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Noted - A Quiet Space for Reading',
+    description:
+      'Read PDFs and write notes without leaving the page. Your thoughts stay connected to the book.',
+    images: ['/og-image.jpg'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+  },
 };
 
 export default function RootLayout({
