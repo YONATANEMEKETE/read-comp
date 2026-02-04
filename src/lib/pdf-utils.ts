@@ -5,8 +5,9 @@ export async function extractFirstPageAsImage(
     // Dynamically import pdfjs-dist to avoid server-side issues
     const pdfjsLib = await import('pdfjs-dist');
 
-    // Set worker source to cdn
-    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`;
+    // Set worker source to cdn (using legacy build for better compatibility)
+    const pdfjsVersion = '3.11.174';
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsVersion}/legacy/build/pdf.worker.min.js`;
 
     // 1. Read the file as an ArrayBuffer
     const arrayBuffer = await pdfFile.arrayBuffer();

@@ -28,7 +28,7 @@ We use **UploadThing** for file storage. Two endpoints are defined:
 
 This utility handles the PDF thumbnail generation completely in the browser to save server resources.
 
-- **Library**: Uses `pdfjs-dist` (v5.x).
+- **Library**: Uses `pdfjs-dist` (v3.x).
 - **Dynamic Import**: Uses dynamic imports for the worker script to prevent SSR/Next.js build errors (`DOMMatrix` issues).
 - **Logic**:
   1.  Reads the PDF file as an ArrayBuffer.

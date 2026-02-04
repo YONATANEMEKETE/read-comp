@@ -9,7 +9,7 @@ interface PdfProviderProps {
 
 export default function PdfProvider({ children }: PdfProviderProps) {
   return (
-    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/legacy/build/pdf.worker.min.js">
       {children}
     </Worker>
   );
