@@ -13,6 +13,12 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'utfs.io',
       },
+      // https://4aemqjor6g.ufs.sh/f/Fpryp4YlG47cYFj4Kn3Lew36xTPUZmMN5kojiysXf9n1KHWh
+      // configure this
+      {
+        protocol: 'https',
+        hostname: '4aemqjor6g.ufs.sh',
+      },
     ],
   },
   webpack: (config) => {
