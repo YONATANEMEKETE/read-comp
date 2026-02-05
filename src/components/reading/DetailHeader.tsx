@@ -1,6 +1,6 @@
 'use client';
 
-import { MoreHorizontal, ArrowLeft } from 'lucide-react';
+import { MoreHorizontal, ArrowLeft, Maximize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import {
@@ -24,6 +24,7 @@ interface DetailHeaderProps {
   onRestartBook?: () => void;
   status?: 'NEW' | 'READING' | 'FINISHED';
   isOffline?: boolean;
+  onToggleFocusMode?: () => void;
 }
 
 export function DetailHeader({
@@ -37,6 +38,7 @@ export function DetailHeader({
   onRestartBook,
   status,
   isOffline: isOfflineProp = false,
+  onToggleFocusMode,
 }: DetailHeaderProps) {
   const hookOffline = useOffline();
   const isOffline = isOfflineProp || hookOffline;
@@ -105,6 +107,16 @@ export function DetailHeader({
             </div>
           </div>
         )}
+
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onToggleFocusMode}
+          className="size-8 sm:size-10 p-0 text-stone-400 hover:text-stone-800 transition-colors cursor-pointer shrink-0"
+          title="Focus mode"
+        >
+          <Maximize2 size={18} />
+        </Button>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

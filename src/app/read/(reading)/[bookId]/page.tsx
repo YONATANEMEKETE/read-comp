@@ -21,6 +21,7 @@ export default function ReadingPage({ params }: ReadingPageProps) {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [status, setStatus] = useState<'NEW' | 'READING' | 'FINISHED'>('NEW');
+  const [isFocusMode, setIsFocusMode] = useState<boolean>(false);
   const isOffline = useOffline();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -334,19 +335,22 @@ export default function ReadingPage({ params }: ReadingPageProps) {
 
   return (
     <div className="h-[100dvh] w-full flex flex-col overflow-hidden bg-background">
-      <DetailHeader
-        title={book.title}
-        author={book.author}
-        totalPages={book.totalPages}
-        currentPage={currentPage}
-        isFavorite={book.userProgress?.isFavorite || false}
-        isSaving={isSaving}
-        onToggleFavorite={() => {}}
-        onMarkAsFinished={handleMarkAsFinished}
-        onRestartBook={handleRestartBook}
-        status={status}
-        isOffline={isOffline}
-      />
+      {!isFocusMode && (
+        <DetailHeader
+          title={book.title}
+          author={book.author}
+          totalPages={book.totalPages}
+          currentPage={currentPage}
+          isFavorite={book.userProgress?.isFavorite || false}
+          isSaving={isSaving}
+          onToggleFavorite={() => {}}
+          onMarkAsFinished={handleMarkAsFinished}
+          onRestartBook={handleRestartBook}
+          status={status}
+          isOffline={isOffline}
+          onToggleFocusMode={() => setIsFocusMode(true)}
+        />
+      )}
       <div className="flex-1 overflow-hidden relative">
         <DetailContent 
           pdfUrl={book.pdfUrl} 
@@ -354,6 +358,8 @@ export default function ReadingPage({ params }: ReadingPageProps) {
           onPageChange={handlePageChange}
           bookId={book.id}
           isOffline={isOffline}
+          isFocusMode={isFocusMode}
+          onExitFocusMode={() => setIsFocusMode(false)}
         />
       </div>
     </div>

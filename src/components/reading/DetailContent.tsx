@@ -19,6 +19,8 @@ interface DetailContentProps {
   onPageChange?: (page: number) => void;
   bookId?: string;
   isOffline?: boolean;
+  isFocusMode?: boolean;
+  onExitFocusMode?: () => void;
 }
 
 const DetailContent = ({
@@ -28,6 +30,8 @@ const DetailContent = ({
   onPageChange,
   bookId,
   isOffline = false,
+  isFocusMode = false,
+  onExitFocusMode,
 }: DetailContentProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const currentPageRef = useRef(initialPage);
@@ -41,6 +45,10 @@ const DetailContent = ({
 
   // Open sidebar by default on large screens
   useEffect(() => {
+    if (isFocusMode) {
+      setIsSidebarOpen(false);
+      return;
+    }
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
         setIsSidebarOpen(true);
@@ -52,7 +60,7 @@ const DetailContent = ({
     
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [isFocusMode]);
 
   const handlePageChange = useCallback((page: number) => {
     currentPageRef.current = page;
@@ -82,38 +90,52 @@ const DetailContent = ({
           />
         )}
 
-        {/* Floating Sidebar Toggle - Always visible */}
-        <Button
-          variant="secondary"
-          size="icon"
-          className="absolute bottom-6 right-6 z-40 rounded-full shadow-lg border border-border/50 cursor-pointer"
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        >
-          {isSidebarOpen ? (
-            <PanelRightClose size={20} />
-          ) : (
-            <PanelRightOpen size={20} />
-          )}
-        </Button>
+        {/* Floating Sidebar Toggle - Always visible unless focus mode */}
+        {!isFocusMode && (
+          <Button
+            variant="secondary"
+            size="icon"
+            className="absolute bottom-6 right-6 z-40 rounded-full shadow-lg border border-border/50 cursor-pointer"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          >
+            {isSidebarOpen ? (
+              <PanelRightClose size={20} />
+            ) : (
+              <PanelRightOpen size={20} />
+            )}
+          </Button>
+        )}
+
+        {isFocusMode && (
+          <Button
+            variant="secondary"
+            className="absolute top-6 right-6 z-40 rounded-full shadow-lg border border-border/50 cursor-pointer px-3 h-9"
+            onClick={onExitFocusMode}
+          >
+            Exit Focus
+          </Button>
+        )}
       </main>
 
       {/* Side Panel for Notes/Quotes/Stories */}
-      <div
-        className={cn(
-          'fixed inset-y-0 right-0 z-30 w-full sm:w-96 bg-background border-l border-border transform transition-transform duration-300 ease-in-out lg:relative lg:w-[30%] lg:flex-none',
-          // Toggle on all screen sizes
-          isSidebarOpen ? 'translate-x-0' : 'translate-x-full',
-        )}
-      >
-        <DetailSidebar
-          bookId={bookId}
-          isOffline={isOffline}
-          onClose={() => setIsSidebarOpen(false)}
-        />
-      </div>
+      {!isFocusMode && (
+        <div
+          className={cn(
+            'fixed inset-y-0 right-0 z-30 w-full sm:w-96 bg-background border-l border-border transform transition-transform duration-300 ease-in-out lg:relative lg:w-[30%] lg:flex-none',
+            // Toggle on all screen sizes
+            isSidebarOpen ? 'translate-x-0' : 'translate-x-full',
+          )}
+        >
+          <DetailSidebar
+            bookId={bookId}
+            isOffline={isOffline}
+            onClose={() => setIsSidebarOpen(false)}
+          />
+        </div>
+      )}
 
       {/* Mobile Overlay for Sidebar */}
-      {isSidebarOpen && (
+      {isSidebarOpen && !isFocusMode && (
         <div
           className="fixed inset-0 bg-black/20 backdrop-blur-[1px] z-20 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
