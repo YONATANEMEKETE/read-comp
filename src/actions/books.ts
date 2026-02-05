@@ -90,6 +90,9 @@ export async function getBookWithProgressAction(
       
       // Update the local book object
       (book as any).userProgress[0] = updatedUserBook;
+
+      // Revalidate the library page to show status change
+      revalidatePath('/read');
     }
 
     return {

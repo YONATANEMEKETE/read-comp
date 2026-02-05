@@ -29,7 +29,7 @@ import {
 } from 'lucide-react';
 import { getNoteAction, saveNoteAction } from '@/actions/notes';
 import { toast } from 'sonner';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface ToolbarButtonProps {
   onClick: () => void;
@@ -77,9 +77,9 @@ interface NoteContentProps {
 }
 
 const NoteContent = ({ bookId }: NoteContentProps) => {
-  const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [showScrollIndicator, setShowScrollIndicator] = useState(false);
+  const queryClient = useQueryClient();
   
   // Ref to track the timeout for debouncing
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -98,7 +98,24 @@ const NoteContent = ({ bookId }: NoteContentProps) => {
       return null;
     },
     enabled: !!bookId,
-    staleTime: Infinity,
+    staleTime: 1000 * 60, // 1 minute stale time instead of Infinity
+  });
+
+  const { mutate: saveNote, isPending: isSaving } = useMutation({
+    mutationFn: async (content: string) => {
+      if (!bookId) return;
+      return await saveNoteAction(bookId, content);
+    },
+    onSuccess: (result) => {
+      if (result?.success) {
+        setLastSaved(new Date());
+        queryClient.invalidateQueries({ queryKey: ['note', bookId] });
+      }
+    },
+    onError: (error) => {
+      console.error('Failed to auto-save note:', error);
+      toast.error('Failed to save note');
+    }
   });
 
   const editor = useEditor({
@@ -142,22 +159,10 @@ const NoteContent = ({ bookId }: NoteContentProps) => {
       // Don't save if content hasn't really changed
       if (content === lastContentRef.current) return;
 
-      setIsSaving(true);
-      
       // Set new timeout for auto-save
-      saveTimeoutRef.current = setTimeout(async () => {
-        try {
-          const result = await saveNoteAction(bookId, content);
-          if (result.success) {
-            setLastSaved(new Date());
-            lastContentRef.current = content;
-          }
-        } catch (error) {
-          console.error('Failed to auto-save note:', error);
-          toast.error('Failed to save note');
-        } finally {
-          setIsSaving(false);
-        }
+      saveTimeoutRef.current = setTimeout(() => {
+        lastContentRef.current = content;
+        saveNote(content);
       }, 3000);
     },
   });

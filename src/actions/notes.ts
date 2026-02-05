@@ -102,6 +102,9 @@ export async function saveNoteAction(
       });
     }
 
+    // Revalidate the path
+    revalidatePath(`/read/${bookId}`);
+
     return {
       success: true,
       message: 'Note saved successfully.',
