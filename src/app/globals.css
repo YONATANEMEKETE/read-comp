@@ -256,6 +256,14 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /* PDF selection highlight color */
+  .rpv-highlight__selected-text {
+    background: rgba(154, 132, 112, 0.28);
+  }
+  .dark .rpv-highlight__selected-text {
+    background: rgba(154, 132, 112, 0.35);
+  }
 }
 
 @layer base {

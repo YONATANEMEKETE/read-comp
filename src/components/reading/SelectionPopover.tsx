@@ -50,18 +50,16 @@ const SelectionPopover = ({
     <div
       className="rpv-highlight__target absolute z-50"
       style={positionStyle}
-      onMouseDown={(event) => {
-        event.preventDefault();
+      onMouseDownCapture={(event) => {
         event.stopPropagation();
       }}
-      onMouseUp={(event) => {
-        event.preventDefault();
+      onMouseUpCapture={(event) => {
         event.stopPropagation();
       }}
     >
       <div
         className={cn(
-          'relative -translate-x-1/2 -translate-y-full rounded-2xl border border-sepia-divider/80 dark:border-stone-700 bg-[#f6f2ea] dark:bg-[#1b1a17] shadow-book px-3.5 py-3 min-w-[240px] max-w-[320px] select-none',
+          'relative -translate-x-1/2 -translate-y-full rounded-2xl border border-sepia-divider/80 dark:border-stone-700 bg-[#f6f2ea] dark:bg-[#1b1a17] shadow-book px-3.5 py-3 min-w-[240px] max-w-[320px]',
           'animate-in fade-in zoom-in-95 duration-200'
         )}
       >
@@ -139,7 +137,7 @@ const SelectionPopover = ({
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
                 placeholder="Cited by..."
-                className="border-none bg-transparent text-xs font-serif text-stone-700 dark:text-stone-200 focus-visible:ring-0 h-8 p-0"
+                className="border-none bg-transparent text-xs font-serif text-stone-700 dark:text-stone-200 focus-visible:ring-0 h-8 p-0 select-text"
               />
             </div>
             <div className="flex items-center gap-2">
