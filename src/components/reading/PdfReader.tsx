@@ -18,6 +18,7 @@ type Props = {
   initialPage?: number;
   onPageChange?: (page: number) => void;
   bookId?: string;
+  isOffline?: boolean;
 };
 
 const PdfReader: React.FC<Props> = ({
@@ -25,6 +26,7 @@ const PdfReader: React.FC<Props> = ({
   initialPage = 0,
   onPageChange,
   bookId,
+  isOffline = false,
 }) => {
   const { theme } = useTheme();
   const [quoteModeText, setQuoteModeText] = useState<string | null>(null);
@@ -76,7 +78,7 @@ const PdfReader: React.FC<Props> = ({
           onAddStory={() => handleAddStory(selectedText)}
           onStartQuote={() => setQuoteModeText(selectedText)}
           onSaveQuote={(author) => handleAddQuote(selectedText, author)}
-          canSave={!!bookId}
+          canSave={!!bookId && !isOffline}
           onCancel={() => {
             setQuoteModeText(null);
             cancel();
@@ -86,11 +88,16 @@ const PdfReader: React.FC<Props> = ({
     },
   });
 
+  const plugins = isOffline ? [] : [highlightPluginInstance];
+
   return (
-    <div className="h-full w-full overflow-hidden">
+    <div
+      className={`h-full w-full overflow-hidden ${isOffline ? 'select-none' : ''}`}
+      style={isOffline ? { userSelect: 'none' } : undefined}
+    >
       <Viewer
         fileUrl={fileUrl}
-        plugins={[highlightPluginInstance]}
+        plugins={plugins}
         theme={theme}
         initialPage={initialPage}
         onPageChange={handlePageChange}

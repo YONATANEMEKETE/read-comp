@@ -11,10 +11,11 @@ import { X } from "lucide-react";
 
 interface DetailSidebarProps {
   bookId?: string;
+  isOffline?: boolean;
   onClose?: () => void;
 }
 
-const DetailSidebar = ({ bookId, onClose }: DetailSidebarProps) => {
+const DetailSidebar = ({ bookId, isOffline = false, onClose }: DetailSidebarProps) => {
   return (
     <aside className="w-full h-full bg-card dark:bg-sidebar-dark border-l border-sepia-divider dark:border-border flex flex-col shadow-soft z-20">
       {/* Mobile Close Button */}
@@ -59,13 +60,13 @@ const DetailSidebar = ({ bookId, onClose }: DetailSidebarProps) => {
         {/* Tab Content Area */}
         <div className="flex-1 overflow-hidden relative">
           <TabsContent value="notes" forceMount className="h-full m-0 data-[state=inactive]:hidden">
-            <NoteContent bookId={bookId} />
+            <NoteContent bookId={bookId} isOffline={isOffline} />
           </TabsContent>
           <TabsContent value="quotes" forceMount className="h-full m-0 data-[state=inactive]:hidden">
-            <QuoteContent bookId={bookId} />
+            <QuoteContent bookId={bookId} isOffline={isOffline} />
           </TabsContent>
           <TabsContent value="stories" forceMount className="h-full m-0 data-[state=inactive]:hidden">
-            <StoryContent bookId={bookId} />
+            <StoryContent bookId={bookId} isOffline={isOffline} />
           </TabsContent>
         </div>
       </Tabs>

@@ -18,6 +18,7 @@ interface DetailContentProps {
   initialPage?: number;
   onPageChange?: (page: number) => void;
   bookId?: string;
+  isOffline?: boolean;
 }
 
 const DetailContent = ({
@@ -26,6 +27,7 @@ const DetailContent = ({
   initialPage = 0,
   onPageChange,
   bookId,
+  isOffline = false,
 }: DetailContentProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const currentPageRef = useRef(initialPage);
@@ -76,6 +78,7 @@ const DetailContent = ({
             initialPage={initialPage}
             onPageChange={handlePageChange}
             bookId={bookId}
+            isOffline={isOffline}
           />
         )}
 
@@ -102,7 +105,11 @@ const DetailContent = ({
           isSidebarOpen ? 'translate-x-0' : 'translate-x-full',
         )}
       >
-        <DetailSidebar bookId={bookId} onClose={() => setIsSidebarOpen(false)} />
+        <DetailSidebar
+          bookId={bookId}
+          isOffline={isOffline}
+          onClose={() => setIsSidebarOpen(false)}
+        />
       </div>
 
       {/* Mobile Overlay for Sidebar */}

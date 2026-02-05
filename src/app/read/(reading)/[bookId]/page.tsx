@@ -7,6 +7,7 @@ import { BookWithProgress } from '@/types/book';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { useOffline } from '@/hooks/use-offline';
 
 interface ReadingPageProps {
   params: Promise<{
@@ -20,6 +21,7 @@ export default function ReadingPage({ params }: ReadingPageProps) {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [status, setStatus] = useState<'NEW' | 'READING' | 'FINISHED'>('NEW');
+  const isOffline = useOffline();
   const router = useRouter();
   const queryClient = useQueryClient();
   
@@ -41,6 +43,23 @@ export default function ReadingPage({ params }: ReadingPageProps) {
       try {
         const resolvedParams = await params;
         bookIdRef.current = resolvedParams.bookId;
+
+        if (isOffline) {
+          const cached = localStorage.getItem(`noted.book.${resolvedParams.bookId}`);
+          if (cached) {
+            const cachedBook = JSON.parse(cached) as BookWithProgress;
+            setBook(cachedBook);
+            totalPagesRef.current = cachedBook.totalPages || 0;
+            const initialPage = cachedBook.userProgress?.progressPage || 1;
+            setCurrentPage(initialPage);
+            latestPageRef.current = initialPage;
+            lastSyncedPageRef.current = initialPage;
+            setStatus(cachedBook.userProgress?.status || 'NEW');
+            setError(null);
+            return;
+          }
+        }
+
         const result = await getBookWithProgressAction(resolvedParams.bookId);
         
         if (result.success && result.data) {
@@ -52,6 +71,11 @@ export default function ReadingPage({ params }: ReadingPageProps) {
           lastSyncedPageRef.current = initialPage;
           setStatus(result.data.userProgress?.status || 'NEW');
 
+          localStorage.setItem(
+            `noted.book.${resolvedParams.bookId}`,
+            JSON.stringify(result.data)
+          );
+
           // Invalidate queries to ensure library view is up to date with the (potentially updated) status
           queryClient.invalidateQueries({ queryKey: ['user-books'] });
           queryClient.invalidateQueries({ queryKey: ['favorite-books'] });
@@ -60,16 +84,49 @@ export default function ReadingPage({ params }: ReadingPageProps) {
           setError(result.message);
         }
       } catch (err) {
-        setError('Failed to load book data.');
+        if (isOffline) {
+          setError('Offline and no cached book data was found.');
+        } else {
+          setError('Failed to load book data.');
+        }
         console.error(err);
       }
     }
     
     loadBook();
-  }, [params]);
+  }, [params, isOffline]);
+
+  useEffect(() => {
+    if (!isOffline && error && !book) {
+      // Retry once when back online
+      (async () => {
+        try {
+          const resolvedParams = await params;
+          const result = await getBookWithProgressAction(resolvedParams.bookId);
+          if (result.success && result.data) {
+            setBook(result.data);
+            totalPagesRef.current = result.data.totalPages || 0;
+            const initialPage = result.data.userProgress?.progressPage || 1;
+            setCurrentPage(initialPage);
+            latestPageRef.current = initialPage;
+            lastSyncedPageRef.current = initialPage;
+            setStatus(result.data.userProgress?.status || 'NEW');
+            localStorage.setItem(
+              `noted.book.${resolvedParams.bookId}`,
+              JSON.stringify(result.data)
+            );
+            setError(null);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      })();
+    }
+  }, [isOffline, error, book, params]);
 
   // Debounced sync function
   const scheduleSync = useCallback((page: number) => {
+    if (isOffline) return;
     console.log('scheduleSync called for page:', page, 'bookId:', bookIdRef.current);
     
     // Clear any existing timeout
@@ -120,7 +177,7 @@ export default function ReadingPage({ params }: ReadingPageProps) {
         console.log('Sync skipped - conditions not met');
       }
     }, 5000); // 5 seconds
-  }, []);
+  }, [isOffline]);
 
   // Handle page change from PDF reader
   const handlePageChange = useCallback((page: number) => {
@@ -151,12 +208,15 @@ export default function ReadingPage({ params }: ReadingPageProps) {
     if (pageNumber !== lastSyncedPageRef.current) {
       console.log('Page change detected:', pageNumber);
       setCurrentPage(pageNumber);
-      scheduleSync(pageNumber);
+      if (!isOffline) {
+        scheduleSync(pageNumber);
+      }
     }
-  }, [scheduleSync]);
+  }, [scheduleSync, isOffline]);
 
   // Handle mark as finished
   const handleMarkAsFinished = useCallback(async () => {
+    if (isOffline) return;
     if (!bookIdRef.current) return;
     
     setIsSaving(true);
@@ -182,10 +242,11 @@ export default function ReadingPage({ params }: ReadingPageProps) {
     } finally {
       setIsSaving(false);
     }
-  }, [router]);
+  }, [router, isOffline]);
 
   // Handle restart book
   const handleRestartBook = useCallback(async () => {
+    if (isOffline) return;
     if (!bookIdRef.current) return;
     
     setIsSaving(true);
@@ -206,10 +267,11 @@ export default function ReadingPage({ params }: ReadingPageProps) {
     } finally {
       setIsSaving(false);
     }
-  }, []);
+  }, [isOffline]);
 
   // Immediate sync function for beforeunload
   const immediateSync = useCallback(async () => {
+    if (isOffline) return;
     const page = latestPageRef.current;
     if (page !== lastSyncedPageRef.current && bookIdRef.current) {
       try {
@@ -225,7 +287,7 @@ export default function ReadingPage({ params }: ReadingPageProps) {
         console.error('Failed to sync on exit:', error);
       }
     }
-  }, []); // No dependencies needed as we use refs
+  }, [isOffline]); // No dependencies needed as we use refs
 
   // Beforeunload handler
   useEffect(() => {
@@ -283,6 +345,7 @@ export default function ReadingPage({ params }: ReadingPageProps) {
         onMarkAsFinished={handleMarkAsFinished}
         onRestartBook={handleRestartBook}
         status={status}
+        isOffline={isOffline}
       />
       <div className="flex-1 overflow-hidden relative">
         <DetailContent 
@@ -290,6 +353,7 @@ export default function ReadingPage({ params }: ReadingPageProps) {
           initialPage={initialPage}
           onPageChange={handlePageChange}
           bookId={book.id}
+          isOffline={isOffline}
         />
       </div>
     </div>

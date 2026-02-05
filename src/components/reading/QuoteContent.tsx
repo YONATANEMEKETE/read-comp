@@ -10,18 +10,21 @@ import { useQuotes } from '@/hooks/use-quotes';
 
 interface QuoteContentProps {
   bookId?: string;
+  isOffline?: boolean;
 }
 
-const QuoteContent = ({ bookId }: QuoteContentProps) => {
+const QuoteContent = ({ bookId, isOffline = false }: QuoteContentProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const { quotes, isLoading, saveQuote, deleteQuote } = useQuotes(bookId);
 
   const handleSaveQuote = async (text: string, author: string) => {
+    if (isOffline) return;
     await saveQuote(text, author);
   };
 
   const handleDeleteQuote = (id: string) => {
+    if (isOffline) return;
     deleteQuote(id);
   };
 
@@ -34,6 +37,11 @@ const QuoteContent = ({ bookId }: QuoteContentProps) => {
 
   return (
     <div className="flex flex-col h-full relative">
+      {isOffline && (
+        <div className="px-6 py-2 text-xs text-amber-700 bg-amber-50 border-b border-amber-200">
+          Offline mode: adding and deleting quotes is disabled.
+        </div>
+      )}
       {/* Search Header */}
       <div className="px-6 py-4 border-b border-sepia-divider/30 dark:border-stone-800/50 bg-stone-50/30 dark:bg-stone-900/20 shrink-0">
         <div className="relative group">
@@ -90,7 +98,7 @@ const QuoteContent = ({ bookId }: QuoteContentProps) => {
         <Button
           onClick={() => setIsModalOpen(true)}
           className="bg-primary text-white font-medium text-sm h-12 w-full rounded-full shadow-lg hover:shadow-xl hover:bg-[#8b7662] transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 pointer-events-auto cursor-pointer active:scale-95"
-          disabled={!bookId}
+          disabled={!bookId || isOffline}
         >
           <Plus className="w-5 h-5" />
           Add Quote

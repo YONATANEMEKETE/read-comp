@@ -43,7 +43,6 @@ const withPWAConfig = withPWA({
   workboxOptions: {
     skipWaiting: true,
     clientsClaim: true,
-    navigateFallback: '/offline',
     runtimeCaching: [
       {
         urlPattern: /^https?:.*\.(?:png|jpg|jpeg|svg|gif|webp)$/i,
@@ -61,6 +60,10 @@ const withPWAConfig = withPWA({
         handler: 'CacheFirst',
         options: {
           cacheName: 'pdfs',
+          cacheableResponse: {
+            statuses: [0, 200, 206],
+          },
+          rangeRequests: true,
           expiration: {
             maxEntries: 32,
             maxAgeSeconds: 60 * 60 * 24 * 30,
@@ -81,8 +84,9 @@ const withPWAConfig = withPWA({
       },
     ],
     additionalManifestEntries: [
-      { url: '/offline', revision: '1' },
       { url: '/', revision: '1' },
+      { url: '/logo.png', revision: '1' },
+      { url: '/logo-white.png', revision: '1' },
     ],
   },
 });

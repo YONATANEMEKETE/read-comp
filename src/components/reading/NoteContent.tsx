@@ -74,9 +74,10 @@ const ToolbarButton = ({
 
 interface NoteContentProps {
   bookId?: string;
+  isOffline?: boolean;
 }
 
-const NoteContent = ({ bookId }: NoteContentProps) => {
+const NoteContent = ({ bookId, isOffline = false }: NoteContentProps) => {
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [showScrollIndicator, setShowScrollIndicator] = useState(false);
   const queryClient = useQueryClient();
@@ -147,6 +148,7 @@ const NoteContent = ({ bookId }: NoteContentProps) => {
       },
     },
     onUpdate: ({ editor }) => {
+      if (isOffline) return;
       if (!bookId) return;
       
       const content = editor.getHTML();
@@ -176,6 +178,13 @@ const NoteContent = ({ bookId }: NoteContentProps) => {
       isInitialLoadDone.current = true;
     }
   }, [editor, note]);
+
+  // Toggle editability when offline
+  useEffect(() => {
+    if (editor) {
+      editor.setEditable(!isOffline);
+    }
+  }, [editor, isOffline]);
 
   // Clean up timeout on unmount
   useEffect(() => {
@@ -265,6 +274,11 @@ const NoteContent = ({ bookId }: NoteContentProps) => {
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-sidebar-dark relative">
+      {isOffline && (
+        <div className="px-4 py-2 text-xs text-amber-700 bg-amber-50 border-b border-amber-200">
+          Offline mode: notes are read-only.
+        </div>
+      )}
       {/* Saving Indicator Overlay */}
       <div className="absolute top-2 right-4 z-10 pointer-events-none">
         {isSaving ? (

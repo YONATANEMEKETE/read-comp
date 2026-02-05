@@ -22,6 +22,7 @@ interface DetailHeaderProps {
   onMarkAsFinished?: () => void;
   onRestartBook?: () => void;
   status?: 'NEW' | 'READING' | 'FINISHED';
+  isOffline?: boolean;
 }
 
 export function DetailHeader({
@@ -34,6 +35,7 @@ export function DetailHeader({
   onMarkAsFinished,
   onRestartBook,
   status,
+  isOffline = false,
 }: DetailHeaderProps) {
   const progressPercentage =
     totalPages > 0 ? Math.round((currentPage / totalPages) * 100) : 0;
@@ -110,7 +112,7 @@ export function DetailHeader({
             <DropdownMenuItem 
               className="cursor-pointer" 
               onClick={onMarkAsFinished}
-              disabled={status === 'FINISHED'}
+              disabled={status === 'FINISHED' || isOffline}
             >
               {status === 'FINISHED' ? 'Already Finished' : 'Mark as Finished'}
             </DropdownMenuItem>
@@ -118,6 +120,7 @@ export function DetailHeader({
               <DropdownMenuItem 
                 className="cursor-pointer text-amber-600" 
                 onClick={onRestartBook}
+                disabled={isOffline}
               >
                 Restart Book
               </DropdownMenuItem>

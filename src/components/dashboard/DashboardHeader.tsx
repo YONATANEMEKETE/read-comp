@@ -15,12 +15,14 @@ import { cn } from '@/lib/utils';
 import { useViewStore } from '@/store/useViewStore';
 import { useFilterStore } from '@/store/useFilterStore';
 import { useSearchStore } from '@/store/useSearchStore';
+import { useOffline } from '@/hooks/use-offline';
 
 export function DashboardHeader() {
   const { view, setView } = useViewStore();
   const { filters, setFilters } = useFilterStore();
   const { searchTerm, setSearchTerm } = useSearchStore();
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
+  const isOffline = useOffline();
 
   const activeFilterCount = [filters.reading, filters.onShelf, filters.finished].filter(Boolean).length;
 
@@ -44,6 +46,7 @@ export function DashboardHeader() {
               variant="ghost"
               size="icon"
               onClick={() => setView('grid')}
+              disabled={isOffline}
               className={cn(
                 'rounded-full w-7 h-7 sm:w-8 sm:h-8 transition-colors relative z-10 cursor-pointer',
                 view === 'grid'
@@ -64,6 +67,7 @@ export function DashboardHeader() {
               variant="ghost"
               size="icon"
               onClick={() => setView('list')}
+              disabled={isOffline}
               className={cn(
                 'rounded-full w-7 h-7 sm:w-8 sm:h-8 transition-colors relative z-10 cursor-pointer',
                 view === 'list'
