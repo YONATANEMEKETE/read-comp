@@ -6,10 +6,7 @@ import QuoteCard from './quotes/QuoteCard';
 import AddQuoteModal from './quotes/AddQuoteModal';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { getQuotesAction, saveQuoteAction, deleteQuoteAction } from '@/actions/quotes';
-import { toast } from 'sonner';
-import { Quote } from '@prisma/client';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuotes } from '@/hooks/use-quotes';
 
 interface QuoteContentProps {
   bookId?: string;
@@ -18,114 +15,14 @@ interface QuoteContentProps {
 const QuoteContent = ({ bookId }: QuoteContentProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const queryClient = useQueryClient();
-
-  const { data: quotes = [], isLoading } = useQuery({
-    queryKey: ['quotes', bookId],
-    queryFn: async () => {
-      if (!bookId) return [];
-      const result = await getQuotesAction(bookId);
-      if (result.success && result.data) {
-        return result.data as Quote[];
-      }
-      return [];
-    },
-    enabled: !!bookId,
-    staleTime: Infinity, // Keep data fresh until manually invalidated
-  });
-
-  const saveMutation = useMutation({
-    mutationFn: async ({ text, author }: { text: string; author: string }) => {
-      if (!bookId) throw new Error('No book ID');
-      const result = await saveQuoteAction(bookId, text, author);
-      if (!result.success) throw new Error(result.message);
-      return result.data as Quote;
-    },
-    onMutate: async ({ text, author }) => {
-      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await queryClient.cancelQueries({ queryKey: ['quotes', bookId] });
-
-      // Snapshot the previous value
-      const previousQuotes = queryClient.getQueryData<Quote[]>([
-        'quotes',
-        bookId,
-      ]);
-
-      // Optimistically update to the new value
-      const tempId = `temp-${Date.now()}`;
-      const optimisticQuote: Quote = {
-        id: tempId,
-        text,
-        citedPerson: author || null,
-        userId: 'temp-user',
-        bookId: bookId!,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        deletedAt: null,
-      };
-
-      queryClient.setQueryData<Quote[]>(['quotes', bookId], (old) => [
-        optimisticQuote,
-        ...(old || []),
-      ]);
-
-      return { previousQuotes, tempId };
-    },
-    onError: (err, variables, context) => {
-      // Revert to the previous value on error
-      if (context?.previousQuotes) {
-        queryClient.setQueryData(['quotes', bookId], context.previousQuotes);
-      }
-      toast.error(err.message);
-    },
-    onSuccess: (data, variables, context) => {
-      // Replace optimistic quote with the real one
-      queryClient.setQueryData<Quote[]>(['quotes', bookId], (old) =>
-        old?.map((q) => (q.id === context.tempId ? data : q)),
-      );
-    },
-    onSettled: () => {
-      // Always refetch in the background to ensure we're in sync
-      queryClient.invalidateQueries({ queryKey: ['quotes', bookId] });
-    },
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: async (quoteId: string) => {
-      const result = await deleteQuoteAction(quoteId);
-      if (!result.success) throw new Error(result.message);
-      return quoteId;
-    },
-    onMutate: async (quoteId) => {
-      await queryClient.cancelQueries({ queryKey: ['quotes', bookId] });
-      const previousQuotes = queryClient.getQueryData<Quote[]>([
-        'quotes',
-        bookId,
-      ]);
-
-      queryClient.setQueryData<Quote[]>(['quotes', bookId], (old) =>
-        old ? old.filter((q) => q.id !== quoteId) : [],
-      );
-
-      return { previousQuotes };
-    },
-    onError: (err, variables, context) => {
-      if (context?.previousQuotes) {
-        queryClient.setQueryData(['quotes', bookId], context.previousQuotes);
-      }
-      toast.error('Failed to delete quote');
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['quotes', bookId] });
-    },
-  });
+  const { quotes, isLoading, saveQuote, deleteQuote } = useQuotes(bookId);
 
   const handleSaveQuote = async (text: string, author: string) => {
-    saveMutation.mutate({ text, author });
+    await saveQuote(text, author);
   };
 
   const handleDeleteQuote = (id: string) => {
-    deleteMutation.mutate(id);
+    deleteQuote(id);
   };
 
   const filteredQuotes = quotes.filter(

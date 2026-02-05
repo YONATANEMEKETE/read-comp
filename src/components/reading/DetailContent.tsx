@@ -75,6 +75,7 @@ const DetailContent = ({
             fileUrl={pdfUrl}
             initialPage={initialPage}
             onPageChange={handlePageChange}
+            bookId={bookId}
           />
         )}
 
