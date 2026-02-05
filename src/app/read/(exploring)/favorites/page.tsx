@@ -168,11 +168,13 @@ export default function FavoritesPage() {
 
   if (isError)
     return (
-      <FailedToLoadBook
-        title="Something went wrong while loading your favorites"
-        description="We couldn't load your favorite books this time. Please check your connection and try again."
-        onRetry={() => refetch()}
-      />
+      <div className="flex flex-col items-center justify-center min-h-[70vh] w-full px-4 sm:px-6 lg:px-8 py-12">
+        <FailedToLoadBook
+          title="Something went wrong while loading your favorites"
+          description="We couldn't load your favorite books this time. Please check your connection and try again."
+          onRetry={() => refetch()}
+        />
+      </div>
     );
 
   // Check if ANY filter is active

@@ -42,16 +42,16 @@ export default function ExplorePage() {
         // Handle different possible structures of cached data
         if (Array.isArray(old)) {
           // If it's a simple array of books
-          return old.map(b =>
+          return old.map((b) =>
             b.id === bookId
               ? {
                   ...b,
                   userProgress: {
                     ...b.userProgress,
-                    isFavorite: isFavorite
-                  }
+                    isFavorite: isFavorite,
+                  },
                 }
-              : b
+              : b,
           );
         } else if (old.pages) {
           // If it's a paginated response
@@ -66,13 +66,13 @@ export default function ExplorePage() {
                           ...b,
                           userProgress: {
                             ...b.userProgress,
-                            isFavorite: isFavorite
-                          }
+                            isFavorite: isFavorite,
+                          },
                         }
-                      : b
+                      : b,
                   )
-                : page.books
-            }))
+                : page.books,
+            })),
           };
         } else if (old.books) {
           // If it's an object with a books property
@@ -85,12 +85,12 @@ export default function ExplorePage() {
                         ...b,
                         userProgress: {
                           ...b.userProgress,
-                          isFavorite: isFavorite
-                        }
+                          isFavorite: isFavorite,
+                        },
                       }
-                    : b
+                    : b,
                 )
-              : old.books
+              : old.books,
           };
         }
 
@@ -113,11 +113,13 @@ export default function ExplorePage() {
 
   if (isError)
     return (
-      <FailedToLoadBook
-        title="Something went wrong while loading suggestions"
-        description="We couldn't load suggested books this time. Please check your connection and try again."
-        onRetry={() => refetch()}
-      />
+      <div className="flex flex-col items-center justify-center min-h-[70vh] w-full px-4 sm:px-6 lg:px-8 py-12">
+        <FailedToLoadBook
+          title="Something went wrong while loading suggestions"
+          description="We couldn't load suggested books this time. Please check your connection and try again."
+          onRetry={() => refetch()}
+        />
+      </div>
     );
 
   // Check if ANY filter is active
@@ -127,30 +129,29 @@ export default function ExplorePage() {
   // Filter SUGGESTED BOOKS based on status and search term (client-side filtering)
   const filteredBooks = isLoading
     ? []
-    : books
-        .filter((b) => {
-          // Apply search filter first - check if book title or author matches search term
-          const matchesSearch =
-            !searchTerm ||
-            b.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            b.author.toLowerCase().includes(searchTerm.toLowerCase());
+    : books.filter((b) => {
+        // Apply search filter first - check if book title or author matches search term
+        const matchesSearch =
+          !searchTerm ||
+          b.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          b.author.toLowerCase().includes(searchTerm.toLowerCase());
 
-          if (!matchesSearch) return false;
+        if (!matchesSearch) return false;
 
-          // If NO filters are active, show books that match search
-          if (!hasActiveFilters) return true;
+        // If NO filters are active, show books that match search
+        if (!hasActiveFilters) return true;
 
-          // Get the book's status (READING, FINISHED, or NEW/undefined for On Shelf)
-          const status = b.userProgress?.status;
+        // Get the book's status (READING, FINISHED, or NEW/undefined for On Shelf)
+        const status = b.userProgress?.status;
 
-          // Check if this book matches any active filter (OR logic)
-          if (status === 'READING' && filters.reading) return true;
-          if (status === 'FINISHED' && filters.finished) return true;
-          if ((status === 'NEW' || !status) && filters.onShelf) return true;
+        // Check if this book matches any active filter (OR logic)
+        if (status === 'READING' && filters.reading) return true;
+        if (status === 'FINISHED' && filters.finished) return true;
+        if ((status === 'NEW' || !status) && filters.onShelf) return true;
 
-          // If no filter matches, don't show this book
-          return false;
-        });
+        // If no filter matches, don't show this book
+        return false;
+      });
 
   if (filteredBooks.length === 0 && !isLoading) {
     return (
@@ -178,9 +179,12 @@ export default function ExplorePage() {
     <div className="flex-1 overflow-y-auto scroll-smooth">
       <div className="max-w-7xl mx-auto py-6 md:py-8 px-4 sm:px-6 lg:px-8">
         <div className="mb-6 md:mb-10">
-          <h1 className="text-xl sm:text-2xl font-bold text-stone-900 dark:text-white mb-1 md:mb-2">Explore Books</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-stone-900 dark:text-white mb-1 md:mb-2">
+            Explore Books
+          </h1>
           <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400">
-            {filteredBooks.length} book{filteredBooks.length !== 1 ? 's' : ''} available
+            {filteredBooks.length} book{filteredBooks.length !== 1 ? 's' : ''}{' '}
+            available
           </p>
         </div>
 
@@ -200,7 +204,12 @@ export default function ExplorePage() {
           ) : (
             <>
               {filteredBooks.map((book) => (
-                <BookCard key={book.id} book={book} view={view} onToggleFavorite={handleToggleFavorite} />
+                <BookCard
+                  key={book.id}
+                  book={book}
+                  view={view}
+                  onToggleFavorite={handleToggleFavorite}
+                />
               ))}
             </>
           )}
