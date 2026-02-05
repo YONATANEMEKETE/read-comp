@@ -1,4 +1,6 @@
 import type { NextConfig } from 'next';
+import type { Configuration } from 'webpack';
+import withPWA from '@ducanh2912/next-pwa';
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -21,8 +23,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  webpack: (config) => {
-    config.resolve.alias.canvas = false;
+  webpack: (config: Configuration) => {
+    if (!config.resolve) {
+      config.resolve = {};
+    }
+    if (!config.resolve.alias) {
+      config.resolve.alias = {};
+    }
+    (config.resolve.alias as Record<string, any>).canvas = false;
     return config;
   },
   turbopack: {
@@ -32,4 +40,38 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+const withPWAConfig = withPWA({
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development',
+  register: true,
+  extendDefaultRuntimeCaching: true,
+  workboxOptions: {
+    skipWaiting: true,
+    runtimeCaching: [
+      {
+        urlPattern: /^https?:.*\.(?:png|jpg|jpeg|svg|gif|webp)$/i,
+        handler: 'CacheFirst',
+        options: {
+          cacheName: 'images',
+          expiration: {
+            maxEntries: 128,
+            maxAgeSeconds: 60 * 60 * 24 * 30,
+          },
+        },
+      },
+      {
+        urlPattern: /^https?:.*\.(?:pdf)$/i,
+        handler: 'CacheFirst',
+        options: {
+          cacheName: 'pdfs',
+          expiration: {
+            maxEntries: 32,
+            maxAgeSeconds: 60 * 60 * 24 * 30,
+          },
+        },
+      },
+    ],
+  },
+});
+
+export default withPWAConfig(nextConfig);
