@@ -51,6 +51,11 @@ export default function ReadingPage({ params }: ReadingPageProps) {
           latestPageRef.current = initialPage;
           lastSyncedPageRef.current = initialPage;
           setStatus(result.data.userProgress?.status || 'NEW');
+
+          // Invalidate queries to ensure library view is up to date with the (potentially updated) status
+          queryClient.invalidateQueries({ queryKey: ['user-books'] });
+          queryClient.invalidateQueries({ queryKey: ['favorite-books'] });
+          queryClient.invalidateQueries({ queryKey: ['suggested-books'] });
         } else {
           setError(result.message);
         }
