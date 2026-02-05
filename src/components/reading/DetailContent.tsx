@@ -30,6 +30,13 @@ const DetailContent = ({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const currentPageRef = useRef(initialPage);
   
+  // Sync initialPage to ref when loading is finished
+  useEffect(() => {
+    if (!isLoading) {
+      currentPageRef.current = initialPage;
+    }
+  }, [isLoading, initialPage]);
+
   // Open sidebar by default on large screens
   useEffect(() => {
     const handleResize = () => {
@@ -66,7 +73,7 @@ const DetailContent = ({
         ) : (
           <PdfReader
             fileUrl={pdfUrl}
-            initialPage={currentPageRef.current}
+            initialPage={initialPage}
             onPageChange={handlePageChange}
           />
         )}

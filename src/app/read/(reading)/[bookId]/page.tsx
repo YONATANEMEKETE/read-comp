@@ -29,6 +29,7 @@ export default function ReadingPage({ params }: ReadingPageProps) {
   const bookIdRef = useRef<string>('');
   const totalPagesRef = useRef<number>(0);
   const latestPageRef = useRef<number>(1);
+  const isInitialMountRef = useRef<boolean>(true);
 
   // Update latestPageRef whenever currentPage changes
   useEffect(() => {
@@ -118,12 +119,35 @@ export default function ReadingPage({ params }: ReadingPageProps) {
 
   // Handle page change from PDF reader
   const handlePageChange = useCallback((page: number) => {
-    console.log('handlePageChange called from PDF:', page, '(0-based)');
     // PDF viewer returns 0-based index, convert to 1-based
     const pageNumber = page + 1;
-    console.log('Converted to 1-based page:', pageNumber);
-    setCurrentPage(pageNumber);
-    scheduleSync(pageNumber);
+
+    // Protection logic for initial mount/loading
+    if (isInitialMountRef.current) {
+      // If we got the page we expected, we can stop being in "initial mount" mode
+      if (pageNumber === lastSyncedPageRef.current) {
+        console.log('PDF Viewer settled on correct initial page:', pageNumber);
+        isInitialMountRef.current = false;
+        return; // No need to sync what we already have
+      }
+      
+      // If the viewer is reporting page 1 but we are supposed to be elsewhere, 
+      // it's likely just the viewer's default state before it jumps. Ignore it.
+      if (pageNumber === 1 && lastSyncedPageRef.current !== 1) {
+        console.log('Ignoring default page 1 event while waiting for jump to:', lastSyncedPageRef.current);
+        return;
+      }
+
+      // If we got a different page, it might be a user interaction or the jump finished
+      isInitialMountRef.current = false;
+    }
+
+    // Normal sync logic
+    if (pageNumber !== lastSyncedPageRef.current) {
+      console.log('Page change detected:', pageNumber);
+      setCurrentPage(pageNumber);
+      scheduleSync(pageNumber);
+    }
   }, [scheduleSync]);
 
   // Handle mark as finished

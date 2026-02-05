@@ -467,6 +467,10 @@ export async function updateReadingProgressAction(
       data: updateData,
     });
 
+    // Revalidate the relevant paths
+    revalidatePath('/read');
+    revalidatePath(`/read/${bookId}`);
+
     return {
       success: true,
       message: 'Reading progress updated successfully.',
