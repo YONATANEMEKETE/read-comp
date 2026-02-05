@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from '@/components/ui/sonner';
 import { QueryProvider } from '@/components/providers/QueryProvider';
 import PdfProvider from '@/components/reading/PdfProvider';
+import { CommandCenter } from '@/components/command-center/CommandCenter';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -91,6 +92,7 @@ export default function RootLayout({
               <main>{children}</main>
             </PdfProvider>
             <Toaster />
+            <CommandCenter />
           </ThemeProvider>
         </QueryProvider>
       </body>
