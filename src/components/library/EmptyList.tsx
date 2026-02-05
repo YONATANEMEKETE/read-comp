@@ -9,6 +9,7 @@ interface EmptyListProps {
   buttonText?: string;
   buttonIcon?: React.ReactNode;
   onButtonClick?: () => void;
+  buttonDisabled?: boolean;
   className?: string;
 }
 
@@ -19,6 +20,7 @@ export function EmptyList({
   buttonText,
   buttonIcon,
   onButtonClick,
+  buttonDisabled = false,
   className,
 }: EmptyListProps) {
   return (
@@ -46,6 +48,7 @@ export function EmptyList({
       {showButton && buttonText && (
         <Button
           onClick={onButtonClick}
+          disabled={buttonDisabled}
           className="flex items-center gap-2 px-6 md:px-8 py-3 md:py-3.5 bg-primary hover:bg-primary/90 text-white rounded-full font-medium shadow-soft transition-all active:scale-[0.98] cursor-pointer text-sm md:text-base"
         >
           {buttonIcon}

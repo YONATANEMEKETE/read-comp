@@ -37,6 +37,11 @@ export function DashboardHeader() {
           <h2 className="text-lg sm:text-xl font-bold text-foreground font-sans truncate">
             Library
           </h2>
+          {isOffline && (
+            <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-amber-100 text-amber-700 border border-amber-200">
+              Offline
+            </span>
+          )}
         </div>
 
         {/* Right: Actions (View Toggle & Filter) */}

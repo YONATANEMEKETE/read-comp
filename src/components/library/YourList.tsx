@@ -16,12 +16,14 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSearchStore } from '@/store/useSearchStore';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useOffline } from '@/hooks/use-offline';
 
 export function YourList() {
   const queryClient = useQueryClient();
   const { view } = useViewStore();
   const { filters } = useFilterStore();
   const { searchTerm } = useSearchStore();
+  const isOffline = useOffline();
 
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
 
@@ -219,11 +221,15 @@ export function YourList() {
           showButton={true}
           buttonText="Upload PDF"
           buttonIcon={<Upload className="h-4 w-4" />}
-          onButtonClick={() => setIsUploadDialogOpen(true)}
+          onButtonClick={() => {
+            if (!isOffline) setIsUploadDialogOpen(true);
+          }}
+          buttonDisabled={isOffline}
         />
         <UploadBookDialog
           open={isUploadDialogOpen}
           onOpenChange={setIsUploadDialogOpen}
+          isOffline={isOffline}
         />
       </>
     );
@@ -284,7 +290,9 @@ export function YourList() {
                     visible: { opacity: 1, scale: 1 },
                   }}
                   className="flex flex-col opacity-60"
-                  onClick={() => setIsUploadDialogOpen(true)}
+                  onClick={() => {
+                    if (!isOffline) setIsUploadDialogOpen(true);
+                  }}
                 >
                   <div className="aspect-[3/4] w-full rounded-xl sm:rounded-2xl border-2 border-dashed border-sepia-divider mb-3 sm:mb-4 flex flex-col items-center justify-center group cursor-pointer hover:border-primary/50 transition-colors">
                     <span className="text-stone-300 text-3xl sm:text-4xl mb-1 sm:mb-2 font-light">
@@ -303,6 +311,7 @@ export function YourList() {
       <UploadBookDialog
         open={isUploadDialogOpen}
         onOpenChange={setIsUploadDialogOpen}
+        isOffline={isOffline}
       />
     </>
   );

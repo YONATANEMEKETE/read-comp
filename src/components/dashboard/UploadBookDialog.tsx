@@ -31,6 +31,7 @@ import { useQueryClient } from '@tanstack/react-query';
 interface UploadBookDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  isOffline?: boolean;
 }
 
 type UploadStatus = 'idle' | 'uploading' | 'success' | 'error';
@@ -38,6 +39,7 @@ type UploadStatus = 'idle' | 'uploading' | 'success' | 'error';
 export function UploadBookDialog({
   open,
   onOpenChange,
+  isOffline = false,
 }: UploadBookDialogProps) {
   const [isDragging, setIsDragging] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
@@ -118,6 +120,7 @@ export function UploadBookDialog({
   };
 
   const processFile = async (file: File) => {
+    if (isOffline) return;
     try {
       // Auto-start upload
       setStatus('uploading');
@@ -171,6 +174,7 @@ export function UploadBookDialog({
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
+    if (isOffline) return;
     if (status === 'uploading' || status === 'success') return;
     setIsDragging(true);
   };
@@ -182,6 +186,7 @@ export function UploadBookDialog({
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
+    if (isOffline) return;
 
     if (status === 'uploading' || status === 'success') return;
 
@@ -199,6 +204,7 @@ export function UploadBookDialog({
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (isOffline) return;
     const file = e.target.files?.[0];
     if (file && validateFile(file)) {
       setSelectedFile(file);
@@ -214,6 +220,7 @@ export function UploadBookDialog({
   };
 
   const handleSave = async () => {
+    if (isOffline) return;
     if (!uploadedUrl || !thumbnailUrl) return;
 
     // Capture values before closing/resetting
@@ -330,6 +337,11 @@ export function UploadBookDialog({
             Add a new PDF to your personal library.
           </DialogDescription>
         </DialogHeader>
+        {isOffline && (
+          <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-700">
+            Offline mode: uploads are disabled.
+          </div>
+        )}
 
         <div className="space-y-4 sm:space-y-6">
           {/* File Upload Area */}
@@ -355,7 +367,7 @@ export function UploadBookDialog({
                 accept="application/pdf"
                 onChange={handleFileSelect}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                disabled={status !== 'idle'}
+                disabled={status !== 'idle' || isOffline}
               />
             )}
 
@@ -495,7 +507,7 @@ export function UploadBookDialog({
                 placeholder="e.g. The Midnight Library"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                disabled={isSaving}
+                disabled={isSaving || isOffline}
                 className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-card border-border rounded-md text-foreground placeholder-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary shadow-inner-soft text-sm"
               />
             </div>
@@ -513,7 +525,7 @@ export function UploadBookDialog({
                 placeholder="e.g. Matt Haig"
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
-                disabled={isSaving}
+                disabled={isSaving || isOffline}
                 className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-card border-border rounded-md text-foreground placeholder-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary shadow-inner-soft text-sm"
               />
             </div>
@@ -532,7 +544,7 @@ export function UploadBookDialog({
 
             <Button
               onClick={handleSave}
-              disabled={!isReadyToAdd || status === 'uploading'}
+              disabled={!isReadyToAdd || status === 'uploading' || isOffline}
               className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-primary text-primary-foreground font-medium shadow-sm hover:bg-primary/90 transition-all active:scale-[0.98] text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer h-11 sm:h-auto"
             >
               {isCoverGenerating ? (

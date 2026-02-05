@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useOffline } from '@/hooks/use-offline';
 
 interface DetailHeaderProps {
   title?: string;
@@ -35,8 +36,10 @@ export function DetailHeader({
   onMarkAsFinished,
   onRestartBook,
   status,
-  isOffline = false,
+  isOffline: isOfflineProp = false,
 }: DetailHeaderProps) {
+  const hookOffline = useOffline();
+  const isOffline = isOfflineProp || hookOffline;
   const progressPercentage =
     totalPages > 0 ? Math.round((currentPage / totalPages) * 100) : 0;
 
@@ -53,6 +56,11 @@ export function DetailHeader({
           />
           <span className="text-sm font-medium hidden sm:inline truncate">Back to Library</span>
         </Link>
+        {isOffline && (
+          <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-amber-100 text-amber-700 border border-amber-200">
+            Offline
+          </span>
+        )}
       </div>
 
       <div className="flex flex-col items-center flex-1 min-w-0 px-2 sm:w-1/3 text-center">

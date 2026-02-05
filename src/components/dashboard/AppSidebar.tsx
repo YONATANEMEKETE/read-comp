@@ -30,6 +30,7 @@ import { UserProfile } from './UserProfile';
 import { UploadBookDialog } from './UploadBookDialog';
 import { cn } from '@/lib/utils';
 import { Logo } from '../common/Logo';
+import { useOffline } from '@/hooks/use-offline';
 
 const navItems = [
   {
@@ -57,6 +58,7 @@ const navItems = [
 export function AppSidebar() {
   const pathname = usePathname();
   const [uploadDialogOpen, setUploadDialogOpen] = React.useState(false);
+  const isOffline = useOffline();
 
   return (
     <Sidebar className="border-r border-sidebar-border bg-sidebar/50 backdrop-blur-md">
@@ -72,6 +74,13 @@ export function AppSidebar() {
             </span>
           </div>
         </Link>
+        {isOffline && (
+          <div className="mt-3">
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-amber-100 text-amber-700 border border-amber-200">
+              Offline
+            </span>
+          </div>
+        )}
       </SidebarHeader>
 
       <SidebarContent className="px-4">
@@ -113,7 +122,10 @@ export function AppSidebar() {
 
         <div className="px-2 pt-2 pb-2">
           <Button
-            onClick={() => setUploadDialogOpen(true)}
+            onClick={() => {
+              if (!isOffline) setUploadDialogOpen(true);
+            }}
+            disabled={isOffline}
             className="w-full h-10 rounded-xl bg-sidebar-primary hover:bg-sidebar-primary/90 text-sidebar-primary-foreground text-sm font-semibold shadow-sm transition-all active:scale-[0.98] gap-2.5 group border-none cursor-pointer"
           >
             <Upload size={16} />
@@ -145,6 +157,7 @@ export function AppSidebar() {
       <UploadBookDialog
         open={uploadDialogOpen}
         onOpenChange={setUploadDialogOpen}
+        isOffline={isOffline}
       />
     </Sidebar>
   );
