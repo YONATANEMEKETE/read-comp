@@ -33,11 +33,6 @@ const nextConfig: NextConfig = {
     (config.resolve.alias as Record<string, any>).canvas = false;
     return config;
   },
-  turbopack: {
-    resolveAlias: {
-      canvas: './src/lib/empty.ts',
-    },
-  },
 };
 
 const withPWAConfig = withPWA({
@@ -47,6 +42,8 @@ const withPWAConfig = withPWA({
   extendDefaultRuntimeCaching: true,
   workboxOptions: {
     skipWaiting: true,
+    clientsClaim: true,
+    navigateFallback: '/offline',
     runtimeCaching: [
       {
         urlPattern: /^https?:.*\.(?:png|jpg|jpeg|svg|gif|webp)$/i,
@@ -70,6 +67,22 @@ const withPWAConfig = withPWA({
           },
         },
       },
+      {
+        urlPattern: ({ request }) => request.mode === 'navigate',
+        handler: 'NetworkFirst',
+        options: {
+          cacheName: 'pages',
+          networkTimeoutSeconds: 5,
+          expiration: {
+            maxEntries: 32,
+            maxAgeSeconds: 60 * 60 * 24 * 7,
+          },
+        },
+      },
+    ],
+    additionalManifestEntries: [
+      { url: '/offline', revision: '1' },
+      { url: '/', revision: '1' },
     ],
   },
 });
